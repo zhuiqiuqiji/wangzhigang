@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>跳一跳跳跃挑战 - 豪华版</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="game-container">
+        <canvas id="gameCanvas"></canvas>
+        
+        <div class="hud">
+            <div class="score-display">
+                <span class="score-label">得分</span>
+                <span class="score-value" id="scoreValue">0</span>
+                <span class="combo-value" id="comboValue"></span>
+            </div>
+            
+            <div class="top-buttons">
+                <button class="icon-btn" id="pauseBtn" title="暂停">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="6" y="4" width="4" height="16"></rect>
+                        <rect x="14" y="4" width="4" height="16"></rect>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        
+        <div class="power-bar-container">
+            <div class="power-bar" id="powerBar"></div>
+            <div class="power-bar-glow"></div>
+        </div>
+        
+        <div class="combo-popup" id="comboPopup"></div>
+        
+        <div class="start-overlay" id="startOverlay">
+            <div class="start-panel">
+                <div class="game-logo">
+                    <span class="logo-text">跳</span>
+                    <span class="logo-text">一</span>
+                    <span class="logo-text">跳</span>
+                </div>
+                <p class="game-subtitle">跳跃挑战 · 豪华版</p>
+                <p class="game-instruction">按住鼠标蓄力，松开跳跃</p>
+                <p class="game-tip">落在平台中心可获得额外加分</p>
+                <div class="main-menu-buttons">
+                    <button class="primary-btn" id="startBtn">开始游戏</button>
+                    <button class="secondary-btn" id="skinsBtn">皮肤商城</button>
+                    <button class="secondary-btn" id="leaderboardBtn">排行榜</button>
+                    <button class="secondary-btn" id="settingsBtn">游戏设置</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="pause-overlay hidden" id="pauseOverlay">
+            <div class="pause-panel">
+                <h2 class="panel-title">游戏暂停</h2>
+                <div class="pause-buttons">
+                    <button class="primary-btn" id="resumeBtn">继续游戏</button>
+                    <button class="secondary-btn" id="pauseSkinsBtn">皮肤商城</button>
+                    <button class="secondary-btn" id="pauseSettingsBtn">游戏设置</button>
+                    <button class="danger-btn" id="quitBtn">返回主菜单</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="game-over-overlay hidden" id="gameOverOverlay">
+            <div class="game-over-panel">
+                <div class="game-over-header">
+                    <h2 class="game-over-title">游戏结束</h2>
+                    <div class="game-over-score">
+                        <span class="score-number" id="finalScoreValue">0</span>
+                        <span class="score-label">本局得分</span>
+                    </div>
+                </div>
+                <div class="game-over-stats">
+                    <div class="stat-item">
+                        <span class="stat-value" id="bestScoreValue">0</span>
+                        <span class="stat-label">最高纪录</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="totalJumpsValue">0</span>
+                        <span class="stat-label">总跳跃数</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="maxComboValue">0</span>
+                        <span class="stat-label">最大连击</span>
+                    </div>
+                </div>
+                <div class="game-over-buttons">
+                    <button class="primary-btn" id="restartBtn">再来一局</button>
+                    <button class="secondary-btn" id="homeBtn">返回主菜单</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="skins-overlay hidden" id="skinsOverlay">
+            <div class="skins-panel">
+                <div class="panel-header">
+                    <h2 class="panel-title">皮肤商城</h2>
+                    <button class="close-btn" id="closeSkinsBtn">×</button>
+                </div>
+                <div class="tabs">
+                    <button class="tab-btn active" data-tab="characters">角色皮肤</button>
+                    <button class="tab-btn" data-tab="platforms">平台主题</button>
+                </div>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="charactersTab">
+                        <div class="skins-grid" id="charactersGrid"></div>
+                    </div>
+                    <div class="tab-pane" id="platformsTab">
+                        <div class="skins-grid" id="platformsGrid"></div>
+                    </div>
+                </div>
+                <div class="coins-display">
+                    <span class="coins-icon">🪙</span>
+                    <span class="coins-value" id="coinsValue">0</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="leaderboard-overlay hidden" id="leaderboardOverlay">
+            <div class="leaderboard-panel">
+                <div class="panel-header">
+                    <h2 class="panel-title">排行榜</h2>
+                    <button class="close-btn" id="closeLeaderboardBtn">×</button>
+                </div>
+                <div class="leaderboard-tabs">
+                    <button class="tab-btn active" data-leaderboard="local">本地排行</button>
+                    <button class="tab-btn" data-leaderboard="global">全球排行</button>
+                </div>
+                <div class="leaderboard-list" id="leaderboardList"></div>
+                <div class="player-rank">
+                    <span class="rank-label">我的排名</span>
+                    <span class="rank-value" id="playerRankValue">--</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="settings-overlay hidden" id="settingsOverlay">
+            <div class="settings-panel">
+                <div class="panel-header">
+                    <h2 class="panel-title">游戏设置</h2>
+                    <button class="close-btn" id="closeSettingsBtn">×</button>
+                </div>
+                <div class="settings-list">
+                    <div class="setting-item">
+                        <span class="setting-label">季节主题</span>
+                        <select class="setting-select" id="seasonSelect">
+                            <option value="auto">自动切换</option>
+                            <option value="spring">🌸 春天</option>
+                            <option value="summer">☀️ 夏天</option>
+                            <option value="autumn">🍂 秋天</option>
+                            <option value="winter">❄️ 冬天</option>
+                            <option value="night">🌙 夜晚</option>
+                        </select>
+                    </div>
+                    <div class="setting-item">
+                        <span class="setting-label">背景音乐</span>
+                        <label class="switch">
+                            <input type="checkbox" id="musicToggle" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <span class="setting-label">音效</span>
+                        <label class="switch">
+                            <input type="checkbox" id="soundToggle" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <span class="setting-label">振动反馈</span>
+                        <label class="switch">
+                            <input type="checkbox" id="vibrationToggle" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <span class="setting-label">粒子效果</span>
+                        <label class="switch">
+                            <input type="checkbox" id="particlesToggle" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+                <button class="danger-btn" id="resetDataBtn">重置游戏数据</button>
+            </div>
+        </div>
+        
+        <div class="notification" id="notification"></div>
+    </div>
+    
+    <script src="js/game.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #0f0f23;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    touch-action: none;
+}
+
+.game-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    max-width: 900px;
+    max-height: 700px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#gameCanvas {
+    display: block;
+    background: #1a1a2e;
+    border-radius: 8px;
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.5),
+                0 0 80px rgba(78, 205, 196, 0.1);
+    cursor: crosshair;
+    touch-action: none;
+}
+
+@media (max-width: 768px) {
+    .game-container {
+        max-width: 100%;
+        max-height: 100%;
+        padding: 10px;
+    }
+
+    #gameCanvas {
+        border-radius: 4px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    }
+}
+
+@media (max-height: 500px) and (orientation: landscape) {
+    .game-container {
+        max-height: 100vh;
+    }
+
+    #gameCanvas {
+        max-height: 100vh;
+    }
+}

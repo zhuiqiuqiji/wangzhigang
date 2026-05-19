@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>消消乐三消游戏</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="game-container">
+        <header class="game-header">
+            <div class="stat-card">
+                <span class="stat-label">剩余步数</span>
+                <span id="steps" class="stat-value">30</span>
+            </div>
+            <h1 class="game-title">消消乐</h1>
+            <div class="stat-card">
+                <span class="stat-label">得分</span>
+                <span id="score" class="stat-value">0</span>
+            </div>
+        </header>
+
+        <div class="game-board-wrapper">
+            <div id="game-board" class="game-board"></div>
+        </div>
+
+        <div class="game-tip">
+            <span>点击或拖拽交换相邻方块，三个及以上同色连成一线即可消除</span>
+        </div>
+    </div>
+
+    <div id="game-over" class="modal hidden">
+        <div class="modal-content">
+            <h2>游戏结束</h2>
+            <p class="final-score-label">最终得分</p>
+            <p id="final-score" class="final-score">0</p>
+            <button id="restart-btn" class="restart-btn">再玩一次</button>
+        </div>
+    </div>
+
+    <script src="js/game.js"></script>
+</body>
+</html>
