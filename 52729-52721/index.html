@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中国象棋对弈游戏</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="game-container">
+        <div class="game-header">
+            <h1>中国象棋</h1>
+            <div class="game-mode-selector">
+                <select id="game-mode">
+                    <option value="pvp">双人对战</option>
+                    <option value="pve-easy">人机对战 - 初级</option>
+                    <option value="pve-medium">人机对战 - 中级</option>
+                    <option value="pve-hard">人机对战 - 高级</option>
+                </select>
+                <button id="new-game-btn">新游戏</button>
+            </div>
+        </div>
+        
+        <div class="game-main">
+            <div class="side-panel left-panel">
+                <div class="panel-title">红方吃子</div>
+                <div id="red-captured" class="captured-pieces"></div>
+                
+                <div class="panel-title" style="margin-top: 20px;">威胁分析</div>
+                <div id="threat-analysis" class="threat-analysis">
+                    <div class="threat-item">无威胁</div>
+                </div>
+                
+                <div class="panel-title" style="margin-top: 20px;">走法提示</div>
+                <div id="best-moves" class="best-moves">
+                    <div class="best-move-item">等待分析...</div>
+                </div>
+            </div>
+            
+            <div class="board-container">
+                <div class="current-player">
+                    当前执子：<span id="current-player">红方</span>
+                    <span id="ai-thinking" class="ai-thinking" style="display:none;">AI思考中...</span>
+                </div>
+                
+                <div id="board" class="chess-board"></div>
+                
+                <div id="game-status" class="game-status"></div>
+                
+                <div class="game-controls">
+                    <button id="undo-btn">悔棋</button>
+                    <button id="draw-btn">求和</button>
+                    <button id="resign-btn">认输</button>
+                    <button id="hint-btn">走法提示</button>
+                    <button id="analyze-btn">分析</button>
+                </div>
+                
+                <div class="replay-controls" style="display:none;">
+                    <button id="replay-prev">上一步</button>
+                    <button id="replay-play">播放</button>
+                    <button id="replay-next">下一步</button>
+                    <button id="replay-stop">停止</button>
+                </div>
+            </div>
+            
+            <div class="side-panel right-panel">
+                <div class="panel-title">黑方吃子</div>
+                <div id="black-captured" class="captured-pieces"></div>
+                
+                <div class="panel-title" style="margin-top: 20px;">走棋历史</div>
+                <div id="move-history" class="move-history"></div>
+                
+                <div class="panel-title" style="margin-top: 20px;">残局挑战</div>
+                <div class="endgame-list">
+                    <button class="endgame-btn" data-endgame="stallmate">七星聚会</button>
+                    <button class="endgame-btn" data-endgame="checkmate1">大胆车</button>
+                    <button class="endgame-btn" data-endgame="checkmate2">马后炮</button>
+                    <button class="endgame-btn" data-endgame="checkmate3">重炮杀</button>
+                </div>
+                
+                <div class="panel-title" style="margin-top: 20px;">棋谱</div>
+                <div class="notation-controls">
+                    <button id="export-fen">导出FEN</button>
+                    <button id="import-fen">导入FEN</button>
+                    <button id="save-record">保存棋谱</button>
+                    <button id="load-record">加载棋谱</button>
+                    <button id="replay-btn">回放棋谱</button>
+                </div>
+                
+                <textarea id="fen-input" class="fen-input" placeholder="输入FEN字符串..." style="display:none;"></textarea>
+            </div>
+        </div>
+        
+        <div id="modal" class="modal" style="display:none;">
+            <div class="modal-content">
+                <h3 id="modal-title">提示</h3>
+                <p id="modal-message"></p>
+                <div class="modal-buttons">
+                    <button id="modal-confirm">确定</button>
+                    <button id="modal-cancel">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="js/chess.js"></script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>泡泡龙 - 豪华版</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="game-container">
+        <h1 class="game-title">泡泡龙</h1>
+        
+        <div class="level-select" id="levelSelect">
+            <h2>选择关卡</h2>
+            <div class="level-grid" id="levelGrid"></div>
+        </div>
+        
+        <div class="game-screen" id="gameScreen" style="display: none;">
+            <div class="game-hud">
+                <div class="hud-left">
+                    <div class="level-info">
+                        <span class="level-label">关卡</span>
+                        <span class="level-value" id="currentLevel">1</span>
+                    </div>
+                    <div class="target-score">
+                        <span class="target-label">目标</span>
+                        <span class="target-value" id="targetScore">1000</span>
+                    </div>
+                </div>
+                <div class="hud-center">
+                    <div class="score-panel">
+                        <span class="score-label">得分</span>
+                        <span class="score-value" id="score">0</span>
+                    </div>
+                    <div class="combo-display" id="comboDisplay"></div>
+                </div>
+                <div class="hud-right">
+                    <div class="next-bubble-panel">
+                        <span class="next-label">下一发</span>
+                        <div class="next-bubble" id="nextBubble"></div>
+                    </div>
+                    <button class="back-btn" id="backToLevelSelect">返回</button>
+                </div>
+            </div>
+            
+            <canvas id="gameCanvas" width="600" height="700"></canvas>
+            
+            <div class="item-bar">
+                <button class="item-btn" id="itemSight" title="瞄准镜 - 延长辅助线">
+                    <span class="item-icon">🔍</span>
+                    <span class="item-count" id="countSight">3</span>
+                </button>
+                <button class="item-btn" id="itemUndo" title="回退 - 撤销上一步">
+                    <span class="item-icon">↩️</span>
+                    <span class="item-count" id="countUndo">2</span>
+                </button>
+                <button class="item-btn" id="itemShuffle" title="洗牌 - 更换当前泡泡颜色">
+                    <span class="item-icon">🔀</span>
+                    <span class="item-count" id="countShuffle">5</span>
+                </button>
+            </div>
+        </div>
+        
+        <div class="result-modal" id="resultModal">
+            <div class="result-content">
+                <h2 id="resultTitle">关卡通过!</h2>
+                <div class="stars-display" id="starsDisplay">⭐⭐⭐</div>
+                <div class="result-stats">
+                    <p>得分: <span id="resultScore">0</span></p>
+                    <p>连消奖励: <span id="resultCombo">0</span></p>
+                    <p>道具加分: <span id="resultItem">0</span></p>
+                </div>
+                <div class="result-buttons">
+                    <button id="btnRetry">重玩</button>
+                    <button id="btnNext">下一关</button>
+                    <button id="btnBack">返回选关</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="game-over-modal" id="gameOverModal">
+            <div class="game-over-content">
+                <h2>游戏结束</h2>
+                <p>得分: <span id="finalScore">0</span></p>
+                <div class="game-over-buttons">
+                    <button id="retryBtn">重试</button>
+                    <button id="backBtn">返回选关</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="js/game.js"></script>
+</body>
+</html>

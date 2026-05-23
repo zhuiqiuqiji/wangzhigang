@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>涂鸦跳跃 - 豪华版</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="game-container">
+        <div class="score-board">
+            <div class="current-score">分数: <span id="score">0</span></div>
+            <div class="combo-display hidden">连击 x<span id="combo">0</span></div>
+            <div class="high-score">最高分: <span id="highScore">0</span></div>
+        </div>
+        
+        <div class="powerup-indicator hidden" id="powerupIndicator">
+            <span id="powerupIcon"></span>
+            <span id="powerupTimer"></span>
+        </div>
+        
+        <canvas id="gameCanvas"></canvas>
+        
+        <div id="startScreen" class="overlay">
+            <h1>涂鸦跳跃</h1>
+            <p class="subtitle">豪华版</p>
+            <div class="menu-buttons">
+                <button id="startBtn" class="primary-btn">开始游戏</button>
+                <button id="skinBtn" class="secondary-btn">🎨 皮肤商店</button>
+                <button id="settingBtn" class="secondary-btn">⚙️ 设置</button>
+                <button id="rankBtn" class="secondary-btn">🏆 排行榜</button>
+            </div>
+            <p class="hint">使用 ← → 方向键或倾斜手机控制</p>
+        </div>
+        
+        <div id="gameOverScreen" class="overlay hidden">
+            <h1>游戏结束</h1>
+            <p>你的分数: <span id="finalScore">0</span></p>
+            <p>最高分: <span id="finalHighScore">0</span></p>
+            <p class="new-record hidden">🎉 新纪录!</p>
+            <div class="end-stats">
+                <div>连跳最高: <span id="maxCombo">0</span></div>
+                <div>踩平台数: <span id="platformsHit">0</span></div>
+            </div>
+            <div class="menu-buttons">
+                <button id="restartBtn" class="primary-btn">再玩一次</button>
+                <button id="homeBtn" class="secondary-btn">返回主页</button>
+            </div>
+        </div>
+        
+        <div id="skinScreen" class="overlay hidden">
+            <h2>🎨 皮肤商店</h2>
+            <div class="skin-grid" id="skinGrid"></div>
+            <button id="skinBackBtn" class="secondary-btn">返回</button>
+        </div>
+        
+        <div id="settingScreen" class="overlay hidden">
+            <h2>⚙️ 设置</h2>
+            <div class="setting-item">
+                <label>操作方式:</label>
+                <select id="controlMode">
+                    <option value="keyboard">键盘控制</option>
+                    <option value="tilt">重力感应</option>
+                    <option value="touch">触屏控制</option>
+                </select>
+            </div>
+            <div class="setting-item">
+                <label>游戏主题:</label>
+                <select id="themeSelect">
+                    <option value="paper">笔记本</option>
+                    <option value="space">太空</option>
+                    <option value="forest">森林</option>
+                    <option value="ocean">海洋</option>
+                </select>
+            </div>
+            <div class="setting-item">
+                <label>音效:</label>
+                <input type="checkbox" id="soundEnabled" checked>
+            </div>
+            <button id="settingBackBtn" class="secondary-btn">返回</button>
+        </div>
+        
+        <div id="rankScreen" class="overlay hidden">
+            <h2>🏆 排行榜</h2>
+            <div class="rank-list" id="rankList"></div>
+            <button id="rankBackBtn" class="secondary-btn">返回</button>
+        </div>
+        
+        <div id="pauseBtn" class="pause-btn hidden">⏸️</div>
+    </div>
+    
+    <script src="js/game.js"></script>
+</body>
+</html>

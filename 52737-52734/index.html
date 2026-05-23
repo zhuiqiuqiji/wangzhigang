@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>黄金矿工 - 豪华版</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="game-container">
+        <canvas id="gameCanvas" width="900" height="600"></canvas>
+        
+        <div id="startScreen" class="overlay">
+            <div class="overlay-content large">
+                <h1>⛏️ 黄金矿工</h1>
+                <p class="subtitle">豪华版 - 12种矿物 · 商店系统 · 双人对战</p>
+                
+                <div class="mode-select">
+                    <h3>选择游戏模式</h3>
+                    <div class="mode-buttons">
+                        <button class="mode-btn active" data-mode="single">👤 单人模式</button>
+                        <button class="mode-btn" data-mode="versus">👥 双人对战</button>
+                    </div>
+                </div>
+
+                <div class="menu-buttons">
+                    <button id="startBtn" class="game-btn">开始游戏</button>
+                    <button id="shopBtn" class="game-btn secondary">🛒 商店</button>
+                    <button id="skinBtn" class="game-btn secondary">👕 皮肤</button>
+                </div>
+
+                <div class="stats-display">
+                    <span>💰 总金币: <span id="totalCoins">0</span></span>
+                </div>
+
+                <p class="tips">单人模式: 点击发射钩爪 | 双人模式: 玩家1用空格，玩家2用↓键</p>
+            </div>
+        </div>
+
+        <div id="shopScreen" class="overlay hidden">
+            <div class="overlay-content large">
+                <h2>🛒 矿工商店</h2>
+                <p class="subtitle">购买道具提升你的挖矿能力！</p>
+                <p class="shop-coins">💰 可用金币: <span id="shopCoins">0</span></p>
+                
+                <div class="shop-items" id="shopItems"></div>
+                
+                <div class="shop-inventory">
+                    <h4>已有道具</h4>
+                    <div id="inventoryDisplay" class="inventory-list"></div>
+                </div>
+                
+                <button id="closeShopBtn" class="game-btn">返回</button>
+            </div>
+        </div>
+
+        <div id="skinScreen" class="overlay hidden">
+            <div class="overlay-content large">
+                <h2>👕 皮肤中心</h2>
+                <p class="subtitle">选择你喜欢的角色和矿场皮肤！</p>
+                
+                <div class="skin-section">
+                    <h3>角色皮肤</h3>
+                    <div class="skin-grid" id="characterSkins"></div>
+                </div>
+                
+                <div class="skin-section">
+                    <h3>矿场皮肤</h3>
+                    <div class="skin-grid" id="mineSkins"></div>
+                </div>
+                
+                <button id="closeSkinBtn" class="game-btn">返回</button>
+            </div>
+        </div>
+
+        <div id="levelCompleteScreen" class="overlay hidden">
+            <div class="overlay-content">
+                <h2>🎉 关卡完成！</h2>
+                <p id="levelCompleteInfo" class="result-info"></p>
+                <div class="level-buttons">
+                    <button id="shopBetweenBtn" class="game-btn secondary">🛒 商店</button>
+                    <button id="nextLevelBtn" class="game-btn">进入下一关</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="gameOverScreen" class="overlay hidden">
+            <div class="overlay-content">
+                <h2 id="gameOverTitle">⏰ 时间到！</h2>
+                <p id="gameOverInfo" class="result-info"></p>
+                <div class="level-buttons">
+                    <button id="shopAfterBtn" class="game-btn secondary">🛒 商店</button>
+                    <button id="restartBtn" class="game-btn">重新开始</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="versusResultScreen" class="overlay hidden">
+            <div class="overlay-content">
+                <h2 id="versusTitle">🏆 对战结束！</h2>
+                <div class="versus-scores">
+                    <div class="player-score">
+                        <span class="player-label">玩家1</span>
+                        <span id="p1Score" class="score">0</span>
+                    </div>
+                    <div class="vs-label">VS</div>
+                    <div class="player-score">
+                        <span class="player-label">玩家2</span>
+                        <span id="p2Score" class="score">0</span>
+                    </div>
+                </div>
+                <p id="versusWinner" class="result-info"></p>
+                <button id="versusRestartBtn" class="game-btn">再来一局</button>
+            </div>
+        </div>
+
+        <div id="eventNotification" class="event-notification hidden"></div>
+
+        <div id="itemBar" class="item-bar hidden">
+            <div class="item-slot" data-item="dynamite">
+                <span class="item-icon">💥</span>
+                <span class="item-count" id="dynamiteCount">0</span>
+                <span class="item-key">1</span>
+            </div>
+            <div class="item-slot" data-item="potion">
+                <span class="item-icon">⏳</span>
+                <span class="item-count" id="potionCount">0</span>
+                <span class="item-key">2</span>
+            </div>
+            <div class="item-slot" data-item="strength">
+                <span class="item-icon">💪</span>
+                <span class="item-count" id="strengthCount">0</span>
+                <span class="item-key">3</span>
+            </div>
+            <div class="item-slot" data-item="magnet">
+                <span class="item-icon">🧲</span>
+                <span class="item-count" id="magnetCount">0</span>
+                <span class="item-key">4</span>
+            </div>
+        </div>
+
+        <div id="p2ItemBar" class="item-bar p2 hidden">
+            <div class="item-slot" data-item="dynamite">
+                <span class="item-icon">💥</span>
+                <span class="item-count" id="p2DynamiteCount">0</span>
+                <span class="item-key">7</span>
+            </div>
+            <div class="item-slot" data-item="potion">
+                <span class="item-icon">⏳</span>
+                <span class="item-count" id="p2PotionCount">0</span>
+                <span class="item-key">8</span>
+            </div>
+            <div class="item-slot" data-item="strength">
+                <span class="item-icon">💪</span>
+                <span class="item-count" id="p2StrengthCount">0</span>
+                <span class="item-key">9</span>
+            </div>
+            <div class="item-slot" data-item="magnet">
+                <span class="item-icon">🧲</span>
+                <span class="item-count" id="p2MagnetCount">0</span>
+                <span class="item-key">0</span>
+            </div>
+        </div>
+    </div>
+    <script src="js/game.js"></script>
+</body>
+</html>

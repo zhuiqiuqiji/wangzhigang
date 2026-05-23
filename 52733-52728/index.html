@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>专业台球游戏</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="game-container">
+        <div class="game-header">
+            <h1>🎱 专业台球</h1>
+            <div class="mode-selector">
+                <label>游戏模式:</label>
+                <select id="gameMode">
+                    <option value="8ball">8球制</option>
+                    <option value="9ball">9球制</option>
+                    <option value="straight">14-1连续</option>
+                    <option value="snooker">斯诺克(简化)</option>
+                </select>
+                <label style="margin-left: 20px;">对手:</label>
+                <select id="opponentType">
+                    <option value="human">双人对战</option>
+                    <option value="ai-easy">AI - 简单</option>
+                    <option value="ai-medium">AI - 中等</option>
+                    <option value="ai-hard">AI - 困难</option>
+                </select>
+            </div>
+            <div class="game-info">
+                <div class="player-info player1">
+                    <span class="player-label">玩家1</span>
+                    <span class="ball-type" id="player1-type">-</span>
+                    <span class="ball-count" id="player1-count">0</span>
+                </div>
+                <div class="turn-indicator">
+                    <span id="current-turn">玩家1 回合</span>
+                </div>
+                <div class="player-info player2">
+                    <span class="player-label" id="player2-label">玩家2</span>
+                    <span class="ball-type" id="player2-type">-</span>
+                    <span class="ball-count" id="player2-count">0</span>
+                </div>
+            </div>
+            <div class="game-status" id="game-status">拖动鼠标瞄准，释放击球</div>
+        </div>
+        <div class="main-game-area">
+            <div class="side-panel left-panel">
+                <div class="panel-section">
+                    <h3>杆法控制</h3>
+                    <div class="spin-control">
+                        <label>击球点</label>
+                        <div class="spin-grid" id="spinGrid">
+                            <div class="spin-cell" data-spin="0,1">↑高杆</div>
+                            <div class="spin-cell" data-spin="-1,0">←左旋</div>
+                            <div class="spin-cell active" data-spin="0,0">●中点</div>
+                            <div class="spin-cell" data-spin="1,0">右旋→</div>
+                            <div class="spin-cell" data-spin="0,-1">↓低杆</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-section">
+                    <h3>辅助选项</h3>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="aimAssist" checked>
+                        瞄准辅助线
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="trajectoryPred" checked>
+                        轨迹预测
+                    </label>
+                </div>
+            </div>
+            <div class="canvas-container">
+                <canvas id="gameCanvas"></canvas>
+                <div class="power-bar">
+                    <div class="power-fill" id="powerFill"></div>
+                    <span class="power-label">力度</span>
+                </div>
+            </div>
+            <div class="side-panel right-panel">
+                <div class="panel-section">
+                    <h3>回放控制</h3>
+                    <button id="replayBtn" class="btn small-btn">📽 回放上一杆</button>
+                    <button id="slowMotionBtn" class="btn small-btn">⏱ 慢动作模式</button>
+                </div>
+                <div class="panel-section">
+                    <h3>击球统计</h3>
+                    <div class="stats">
+                        <div class="stat-item">
+                            <span>总击球:</span>
+                            <span id="totalShots">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span>进球率:</span>
+                            <span id="potRate">0%</span>
+                        </div>
+                        <div class="stat-item">
+                            <span>最高分:</span>
+                            <span id="highScore">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="game-controls">
+            <button id="restartBtn" class="btn">重新开始</button>
+            <button id="pauseBtn" class="btn">暂停</button>
+        </div>
+    </div>
+
+    <div class="modal" id="gameOverModal">
+        <div class="modal-content">
+            <h2 id="winnerText">游戏结束</h2>
+            <p id="winnerReason"></p>
+            <button id="playAgainBtn" class="btn">再来一局</button>
+        </div>
+    </div>
+
+    <script src="js/physics.js"></script>
+    <script src="js/ball.js"></script>
+    <script src="js/table.js"></script>
+    <script src="js/cue.js"></script>
+    <script src="js/ai.js"></script>
+    <script src="js/game.js"></script>
+</body>
+</html>

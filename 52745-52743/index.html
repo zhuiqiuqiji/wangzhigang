@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>赛车漂移竞速</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="game-container">
+        <canvas id="gameCanvas"></canvas>
+        
+        <div id="start-screen" class="screen">
+            <div class="start-content">
+                <h1 class="game-title">赛车漂移竞速</h1>
+                <p class="subtitle">DRIFT RACING</p>
+                
+                <div class="selection-panel">
+                    <div class="selection-group">
+                        <label class="selection-label">选择赛车</label>
+                        <div class="selection-buttons" id="car-selection">
+                            <button class="select-btn active" data-car="balanced">平衡型</button>
+                            <button class="select-btn" data-car="speed">速度型</button>
+                            <button class="select-btn" data-car="handling">操控型</button>
+                            <button class="select-btn" data-car="drift">漂移型</button>
+                        </div>
+                    </div>
+                    
+                    <div class="selection-group">
+                        <label class="selection-label">赛道主题</label>
+                        <div class="selection-buttons" id="theme-selection">
+                            <button class="select-btn active" data-theme="neon">霓虹都市</button>
+                            <button class="select-btn" data-theme="desert">沙漠赛道</button>
+                            <button class="select-btn" data-theme="forest">森林赛道</button>
+                            <button class="select-btn" data-theme="snow">冰雪赛道</button>
+                        </div>
+                    </div>
+                    
+                    <div class="selection-group">
+                        <label class="selection-label">AI难度</label>
+                        <div class="selection-buttons" id="difficulty-selection">
+                            <button class="select-btn" data-difficulty="easy">简单</button>
+                            <button class="select-btn active" data-difficulty="normal">普通</button>
+                            <button class="select-btn" data-difficulty="hard">困难</button>
+                            <button class="select-btn" data-difficulty="expert">专家</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="controls-info">
+                    <div class="control-key">
+                        <span class="key">↑</span>
+                        <span class="label">加速</span>
+                    </div>
+                    <div class="control-key">
+                        <span class="key">↓</span>
+                        <span class="label">减速</span>
+                    </div>
+                    <div class="control-key">
+                        <span class="key">←</span>
+                        <span class="label">左转</span>
+                    </div>
+                    <div class="control-key">
+                        <span class="key">→</span>
+                        <span class="label">右转</span>
+                    </div>
+                    <div class="control-key">
+                        <span class="key">空格</span>
+                        <span class="label">氮气</span>
+                    </div>
+                </div>
+                <p class="hint">完成 3 圈比赛，按顺序通过所有检查点</p>
+                <button id="start-btn" class="neon-btn">开始游戏</button>
+            </div>
+        </div>
+        
+        <div id="hud" class="hidden">
+            <div class="hud-panel hud-left">
+                <div class="hud-item">
+                    <span class="label">圈数</span>
+                    <span id="lap-display" class="value">1 / 3</span>
+                </div>
+                <div class="hud-item">
+                    <span class="label">排名</span>
+                    <span id="rank-display" class="value">1st</span>
+                </div>
+            </div>
+            <div class="hud-panel hud-right">
+                <div class="hud-item">
+                    <span class="label">单圈</span>
+                    <span id="lap-time" class="value">00:00.00</span>
+                </div>
+                <div class="hud-item">
+                    <span class="label">总计时</span>
+                    <span id="total-time" class="value">00:00.00</span>
+                </div>
+            </div>
+            <div class="checkpoint-display">
+                <span class="label">检查点</span>
+                <span id="checkpoint-progress" class="value">0 / 8</span>
+            </div>
+        </div>
+        
+        <div id="end-screen" class="screen hidden">
+            <div class="end-content">
+                <h2 class="result-title">比赛结束</h2>
+                <div class="results-table">
+                    <div class="result-header">
+                        <span>排名</span>
+                        <span>圈数</span>
+                        <span>用时</span>
+                    </div>
+                    <div id="results-body" class="results-body">
+                    </div>
+                </div>
+                <div class="lap-times">
+                    <h3>各圈用时</h3>
+                    <div id="lap-times-list"></div>
+                </div>
+                <div class="total-result">
+                    <span>总用时</span>
+                    <span id="final-total-time" class="highlight">00:00.00</span>
+                </div>
+                <button id="restart-btn" class="neon-btn">再来一局</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="js/utils.js"></script>
+    <script src="js/car-configs.js"></script>
+    <script src="js/particles.js"></script>
+    <script src="js/track.js"></script>
+    <script src="js/car.js"></script>
+    <script src="js/checkpoint.js"></script>
+    <script src="js/track-editor.js"></script>
+    <script src="js/game.js"></script>
+</body>
+</html>

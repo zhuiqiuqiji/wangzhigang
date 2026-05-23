@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>保卫萝卜 - 塔防游戏</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="game-container">
+        <div class="game-header">
+            <div class="header-left">
+                <div class="lives-container">
+                    <span class="carrot-icon">🥕</span>
+                    <div class="lives-bar">
+                        <div class="lives-fill" id="livesFill"></div>
+                    </div>
+                    <span class="lives-text" id="livesText">15/15</span>
+                </div>
+            </div>
+            <div class="header-center">
+                <h1 class="game-title">保卫萝卜</h1>
+                <div class="wave-info">
+                    <span>波次: </span>
+                    <span id="waveText">0 / 13</span>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="gold-container">
+                    <span class="gold-icon">💰</span>
+                    <span class="gold-text" id="goldText">250</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="theme-selector" id="themeSelection"></div>
+
+        <div class="game-main">
+            <div class="game-canvas-wrapper">
+                <canvas id="gameCanvas" width="800" height="600"></canvas>
+                <div class="game-overlay" id="gameOverlay" style="display: none;">
+                    <div class="overlay-content">
+                        <div class="overlay-icon" id="overlayIcon">🎉</div>
+                        <h2 class="overlay-title" id="overlayTitle">游戏胜利!</h2>
+                        <p class="overlay-subtitle" id="overlaySubtitle">恭喜你成功保卫了萝卜!</p>
+                        <button class="restart-btn" id="restartBtn">重新开始</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="side-panel">
+                <div class="panel-section">
+                    <h3>🦸 英雄选择</h3>
+                    <div class="hero-selection" id="heroSelection"></div>
+                </div>
+
+                <div class="panel-section">
+                    <h3>✨ 技能</h3>
+                    <div class="skill-buttons" id="skillButtons"></div>
+                </div>
+
+                <div class="panel-section">
+                    <h3>🎮 控制</h3>
+                    <div class="game-controls">
+                        <button class="control-btn" id="startWaveBtn">开始游戏</button>
+                        <button class="control-btn" id="pauseBtn">暂停</button>
+                    </div>
+                </div>
+
+                <div class="hero-info-panel" id="heroInfo" style="display: none;"></div>
+            </div>
+        </div>
+
+        <div class="game-footer">
+            <div class="tower-selection" id="towerSelection"></div>
+        </div>
+
+        <div class="tower-info-panel" id="towerInfoPanel" style="display: none;">
+            <div class="panel-header">
+                <h3 id="towerName">防御塔</h3>
+                <button class="close-btn" id="closePanelBtn">×</button>
+            </div>
+            <div class="panel-content">
+                <div class="tower-stats">
+                    <div class="stat-row">
+                        <span class="stat-label">等级:</span>
+                        <span class="stat-value" id="towerLevel">1</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">伤害:</span>
+                        <span class="stat-value" id="towerDamage">10</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">射程:</span>
+                        <span class="stat-value" id="towerRange">100</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">攻速:</span>
+                        <span class="stat-value" id="towerSpeed">1.0/s</span>
+                    </div>
+                </div>
+                <div class="panel-actions">
+                    <button class="action-btn upgrade-btn" id="upgradeBtn">
+                        升级 (💰<span id="upgradeCost">75</span>)
+                    </button>
+                    <button class="action-btn sell-btn" id="sellBtn">
+                        出售 (💰<span id="sellValue">25</span>)
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="editor-panel" id="editorPanel" style="display: none;">
+            <h3>🗺️ 关卡编辑器</h3>
+            <div class="editor-controls">
+                <button class="editor-btn" data-mode="path">绘制路径</button>
+                <button class="editor-btn" data-mode="tower">标记塔位</button>
+                <button class="editor-btn" data-mode="eraser">橡皮擦</button>
+                <button class="editor-btn" id="clearEditor">清空</button>
+                <button class="editor-btn" id="exportLevel">导出</button>
+                <button class="editor-btn" id="importLevel">导入</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/game/Map.js"></script>
+    <script src="js/game/Monster.js"></script>
+    <script src="js/game/Projectile.js"></script>
+    <script src="js/game/Tower.js"></script>
+    <script src="js/game/Hero.js"></script>
+    <script src="js/game/SkillSystem.js"></script>
+    <script src="js/game/LevelEditor.js"></script>
+    <script src="js/game/Game.js"></script>
+    <script src="js/ui/UI.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

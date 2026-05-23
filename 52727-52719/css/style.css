@@ -1,0 +1,428 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+}
+
+.game-container {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    padding: 15px;
+    max-width: 1240px;
+    position: relative;
+}
+
+.game-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    padding: 10px 15px;
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    border-radius: 15px;
+}
+
+.score-panel {
+    display: flex;
+    gap: 20px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    align-items: center;
+}
+
+.score-panel span {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 6px 12px;
+    border-radius: 20px;
+}
+
+.stars {
+    display: flex;
+    gap: 5px;
+}
+
+.star {
+    font-size: 24px;
+    color: #ccc;
+    text-shadow: none;
+    transition: all 0.3s ease;
+}
+
+.star.earned {
+    color: #FFD700;
+    text-shadow: 0 0 10px #FFD700;
+}
+
+.controls button {
+    padding: 8px 18px;
+    font-size: 14px;
+    font-weight: bold;
+    color: white;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-left: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.controls button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.controls button:active {
+    transform: translateY(0);
+}
+
+.bird-selector {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    justify-content: center;
+}
+
+.bird-option {
+    position: relative;
+    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.5);
+    transition: all 0.3s ease;
+    border: 3px solid transparent;
+}
+
+.bird-option:hover {
+    background: rgba(255, 255, 255, 0.8);
+    transform: scale(1.05);
+}
+
+.bird-option.active {
+    border-color: #FF6B6B;
+    background: rgba(255, 107, 107, 0.3);
+}
+
+.bird-option.disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.bird-icon {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    margin: 0 auto;
+}
+
+.bird-icon.red {
+    background: radial-gradient(circle at 30% 30%, #FF8A65, #FF5722);
+}
+
+.bird-icon.blue {
+    background: radial-gradient(circle at 30% 30%, #64B5F6, #2196F3);
+}
+
+.bird-icon.yellow {
+    background: radial-gradient(circle at 30% 30%, #FFD54F, #FFC107);
+}
+
+.bird-icon.black {
+    background: radial-gradient(circle at 30% 30%, #757575, #212121);
+}
+
+.bird-icon.green {
+    background: radial-gradient(circle at 30% 30%, #81C784, #4CAF50);
+}
+
+.bird-icon.white {
+    background: radial-gradient(circle at 30% 30%, #FFFFFF, #E0E0E0);
+    border: 2px solid #ccc;
+}
+
+.bird-count {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: #f44336;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#gameCanvas {
+    display: block;
+    background: linear-gradient(180deg, #87CEEB 0%, #98D8C8 70%, #8B4513 70%, #654321 100%);
+    border-radius: 10px;
+    box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.1);
+    cursor: crosshair;
+}
+
+.skill-hint {
+    position: absolute;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-size: 14px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.skill-hint.show {
+    opacity: 1;
+}
+
+.game-message {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255, 255, 255, 0.98);
+    padding: 40px 60px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+    z-index: 1000;
+    animation: popup 0.3s ease-out;
+}
+
+@keyframes popup {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+.stars-display {
+    font-size: 50px;
+    margin-bottom: 20px;
+}
+
+.stars-display .star {
+    font-size: 50px;
+    margin: 0 5px;
+}
+
+.game-message h2 {
+    font-size: 32px;
+    margin-bottom: 15px;
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.game-message p {
+    font-size: 18px;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.message-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.message-buttons button {
+    padding: 10px 30px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.message-buttons button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+}
+
+.modal-content {
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    max-width: 600px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.modal-content h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.chapter-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.chapter-card {
+    padding: 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.chapter-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.chapter-card.locked {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+.chapter-card h3 {
+    margin-bottom: 10px;
+    font-size: 24px;
+}
+
+.chapter-card .levels {
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+.close-btn {
+    display: block;
+    margin: 0 auto;
+    padding: 10px 30px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    background: #666;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.close-btn:hover {
+    background: #444;
+}
+
+.editor-modal {
+    max-width: 1100px;
+}
+
+.editor-toolbar {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+}
+
+.tool-btn {
+    padding: 8px 15px;
+    font-size: 13px;
+    font-weight: bold;
+    color: white;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.tool-btn:hover, .tool-btn.active {
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+#editorCanvas {
+    display: block;
+    background: linear-gradient(180deg, #87CEEB 0%, #98D8C8 70%, #8B4513 70%, #654321 100%);
+    border-radius: 10px;
+    border: 2px solid #ccc;
+    cursor: crosshair;
+}
+
+.editor-controls {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.editor-controls button {
+    padding: 8px 20px;
+    font-size: 14px;
+    font-weight: bold;
+    color: white;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.editor-controls button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.level-code {
+    margin-top: 15px;
+    padding: 10px;
+    background: #f5f5f5;
+    border-radius: 8px;
+    font-family: monospace;
+    font-size: 12px;
+    word-break: break-all;
+}

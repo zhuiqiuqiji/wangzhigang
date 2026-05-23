@@ -1,0 +1,373 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    overflow: hidden;
+    background: #0a1628;
+}
+
+.game-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+#gameCanvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    cursor: crosshair;
+}
+
+.ui-panel {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    right: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.coins-display {
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.9), rgba(255, 165, 0, 0.9));
+    padding: 12px 24px;
+    border-radius: 30px;
+    font-size: 24px;
+    font-weight: bold;
+    color: #fff;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    pointer-events: auto;
+    transition: transform 0.2s ease;
+}
+
+.coins-display:hover {
+    transform: scale(1.05);
+}
+
+.coin-icon {
+    font-size: 28px;
+    animation: coinSpin 3s linear infinite;
+}
+
+@keyframes coinSpin {
+    0%, 100% { transform: rotateY(0deg); }
+    50% { transform: rotateY(180deg); }
+}
+
+.hidden {
+    display: none !important;
+}
+
+.cannon-level {
+    background: linear-gradient(135deg, rgba(30, 58, 95, 0.95), rgba(10, 22, 40, 0.95));
+    padding: 15px 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    border: 2px solid rgba(255, 215, 0, 0.3);
+    pointer-events: auto;
+}
+
+.level-label {
+    display: block;
+    color: #ffd700;
+    font-size: 14px;
+    margin-bottom: 8px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.level-buttons {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.level-btn {
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 2px solid transparent;
+}
+
+.level-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+.level-btn.active {
+    background: linear-gradient(135deg, #ffd700, #ff8c00);
+    color: #1a1a2e;
+    border-color: #fff;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+}
+
+.cost-display {
+    display: block;
+    color: #87ceeb;
+    font-size: 12px;
+    text-align: center;
+}
+
+.welfare-tip {
+    position: absolute;
+    bottom: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, rgba(255, 99, 71, 0.95), rgba(255, 69, 0, 0.95));
+    padding: 15px 30px;
+    border-radius: 30px;
+    color: #fff;
+    font-size: 18px;
+    font-weight: bold;
+    box-shadow: 0 4px 20px rgba(255, 99, 71, 0.5);
+    z-index: 20;
+    animation: pulse 1s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: translateX(-50%) scale(1); }
+    50% { transform: translateX(-50%) scale(1.05); }
+}
+
+.welfare-tip.hidden {
+    display: none;
+}
+
+.skills-panel {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 20px;
+    z-index: 15;
+    pointer-events: auto;
+}
+
+.skill-btn {
+    width: 70px;
+    height: 70px;
+    border: none;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(30, 58, 95, 0.95), rgba(10, 22, 40, 0.95));
+    color: #fff;
+    font-size: 32px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    border: 3px solid rgba(255, 215, 0, 0.5);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+.skill-btn:hover:not(:disabled) {
+    transform: scale(1.1);
+    border-color: rgba(255, 215, 0, 0.9);
+    box-shadow: 0 6px 25px rgba(255, 215, 0, 0.4);
+}
+
+.skill-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.skill-btn.active {
+    border-color: #00ff00;
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.6);
+    animation: skillActive 1s ease-in-out infinite;
+}
+
+@keyframes skillActive {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+.skill-cooldown {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.7);
+    transition: height 0.1s linear;
+}
+
+.skill-cooldown-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 18px;
+    font-weight: bold;
+    color: #fff;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+    z-index: 2;
+}
+
+.skill-label {
+    position: absolute;
+    bottom: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 12px;
+    color: #ffd700;
+    white-space: nowrap;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.skill-hotkey {
+    position: absolute;
+    top: 2px;
+    right: 5px;
+    font-size: 11px;
+    color: #87ceeb;
+    font-weight: bold;
+}
+
+.freeze-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(100, 200, 255, 0.15);
+    pointer-events: none;
+    z-index: 5;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.freeze-overlay.active {
+    opacity: 1;
+    animation: freezePulse 1s ease-in-out infinite;
+}
+
+@keyframes freezePulse {
+    0%, 100% { background: rgba(100, 200, 255, 0.1); }
+    50% { background: rgba(100, 200, 255, 0.2); }
+}
+
+.laser-beam {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    z-index: 6;
+}
+
+.boss-warning {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 48px;
+    font-weight: bold;
+    color: #ff0000;
+    text-shadow: 0 0 20px #ff0000;
+    animation: bossWarning 0.5s ease-in-out infinite;
+    z-index: 25;
+    pointer-events: none;
+}
+
+@keyframes bossWarning {
+    0%, 100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    50% { opacity: 0.5; transform: translate(-50%, -50%) scale(1.1); }
+}
+
+.golden-effect {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    z-index: 5;
+    background: radial-gradient(circle, rgba(255, 215, 0, 0.3) 0%, transparent 70%);
+    animation: goldenFlash 0.5s ease-out;
+}
+
+@keyframes goldenFlash {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+.game-title {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 72px;
+    font-weight: bold;
+    color: rgba(255, 255, 255, 0.05);
+    pointer-events: none;
+    user-select: none;
+    z-index: 1;
+    white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+    .ui-panel {
+        top: 10px;
+        left: 10px;
+        right: 10px;
+        flex-direction: column;
+        gap: 10px;
+        align-items: stretch;
+    }
+    
+    .coins-display {
+        justify-content: center;
+        font-size: 20px;
+        padding: 10px 20px;
+    }
+    
+    .cannon-level {
+        padding: 10px 15px;
+    }
+    
+    .level-btn {
+        width: 35px;
+        height: 35px;
+        font-size: 14px;
+    }
+    
+    .game-title {
+        font-size: 48px;
+    }
+    
+    .skills-panel {
+        gap: 10px;
+        bottom: 20px;
+    }
+    
+    .skill-btn {
+        width: 55px;
+        height: 55px;
+        font-size: 24px;
+    }
+    
+    .skill-label {
+        font-size: 10px;
+        bottom: -20px;
+    }
+}

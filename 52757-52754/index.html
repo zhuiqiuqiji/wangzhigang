@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>捕鱼达人</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="game-container">
+        <canvas id="gameCanvas"></canvas>
+        
+        <div class="ui-panel">
+            <div class="coins-display">
+                <span class="coin-icon">💰</span>
+                <span id="coins">100</span>
+            </div>
+            
+            <div class="cannon-level">
+                <span class="level-label">炮台等级</span>
+                <div class="level-buttons">
+                    <button class="level-btn active" data-level="1">1</button>
+                    <button class="level-btn" data-level="2">2</button>
+                    <button class="level-btn" data-level="3">3</button>
+                    <button class="level-btn" data-level="4">4</button>
+                    <button class="level-btn" data-level="5">5</button>
+                    <button class="level-btn" data-level="6">6</button>
+                    <button class="level-btn" data-level="7">7</button>
+                </div>
+                <span class="cost-display">消耗: <span id="cost">1</span> 金币</span>
+            </div>
+        </div>
+        
+        <div id="welfare-tip" class="welfare-tip hidden">
+            金币不足！低保恢复中... <span id="welfare-countdown">10</span>s
+        </div>
+        
+        <div class="skills-panel">
+            <button id="skill-lock" class="skill-btn" data-skill="lock">
+                <span class="skill-hotkey">Q</span>
+                🎯
+                <div class="skill-cooldown" id="cooldown-lock"></div>
+                <span class="skill-cooldown-text" id="cooldown-text-lock"></span>
+                <span class="skill-label">锁定瞄准</span>
+            </button>
+            <button id="skill-freeze" class="skill-btn" data-skill="freeze">
+                <span class="skill-hotkey">W</span>
+                ❄️
+                <div class="skill-cooldown" id="cooldown-freeze"></div>
+                <span class="skill-cooldown-text" id="cooldown-text-freeze"></span>
+                <span class="skill-label">冰冻减速</span>
+            </button>
+            <button id="skill-crit" class="skill-btn" data-skill="crit">
+                <span class="skill-hotkey">E</span>
+                ✨
+                <div class="skill-cooldown" id="cooldown-crit"></div>
+                <span class="skill-cooldown-text" id="cooldown-text-crit"></span>
+                <span class="skill-label">金币暴击</span>
+            </button>
+        </div>
+        
+        <div id="freeze-overlay" class="freeze-overlay"></div>
+        <div id="boss-warning" class="boss-warning hidden">⚠️ BOSS出现！⚠️</div>
+        
+        <div class="game-title">
+            🎣 捕鱼达人
+        </div>
+    </div>
+    
+    <script src="js/utils.js"></script>
+    <script src="js/fish.js"></script>
+    <script src="js/cannon.js"></script>
+    <script src="js/bullet.js"></script>
+    <script src="js/game.js"></script>
+</body>
+</html>
