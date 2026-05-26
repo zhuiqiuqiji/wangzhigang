@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>捕鸟达人射击</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="game-container">
+        <canvas id="gameCanvas"></canvas>
+        
+        <div class="ui-panel">
+            <div class="score-display">
+                <span class="icon">🎯</span>
+                <span class="label">得分:</span>
+                <span id="scoreValue" class="value">0</span>
+            </div>
+            <div class="bullets-display">
+                <span class="icon">💥</span>
+                <span class="label">子弹:</span>
+                <span id="bulletsValue" class="value">20</span>
+            </div>
+        </div>
+        
+        <div id="gameOverPanel" class="game-over-panel hidden">
+            <div class="game-over-content">
+                <h2>🎮 游戏结束!</h2>
+                <p class="final-score">最终得分: <span id="finalScore">0</span></p>
+                <button id="restartBtn" class="restart-btn">🔄 重新开始</button>
+            </div>
+        </div>
+        
+        <div id="startPanel" class="start-panel">
+            <div class="start-content">
+                <h1>🦆 捕鸟达人 🎯</h1>
+                <p class="game-intro">移动鼠标瞄准，点击射击鸟类！</p>
+                <div class="bird-info">
+                    <p>🐦 野鸭: 10分</p>
+                    <p>🕊️ 鸽子: 15分</p>
+                    <p>🦅 老鹰: 25分</p>
+                </div>
+                <p class="bullet-info">共20发子弹，看看你能得多少分！</p>
+                <button id="startBtn" class="start-btn">开始游戏</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="js/game.js"></script>
+</body>
+</html>

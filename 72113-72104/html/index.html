@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>飞行棋游戏 - 豪华版</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <div class="game-container">
+        <div class="game-header">
+            <h1>🎮 飞行棋豪华版</h1>
+            <div class="game-info">
+                <div class="current-player">
+                    <span>当前玩家:</span>
+                    <span id="currentPlayerName" class="player-name">红方</span>
+                </div>
+                <div class="dice-container">
+                    <div id="dice" class="dice">1</div>
+                    <div id="dice2" class="dice" style="display:none;">1</div>
+                    <button id="rollDiceBtn" class="roll-btn">掷骰子</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="game-main">
+            <div class="left-panel">
+                <div class="setup-panel">
+                    <h3>⚙️ 游戏设置</h3>
+                    <div class="ai-setup">
+                        <h4>AI对手设置</h4>
+                        <div class="ai-player-config">
+                            <label><input type="checkbox" id="ai1" checked> 绿方 (AI)</label>
+                            <select id="ai1Strategy">
+                                <option value="balanced">平衡策略</option>
+                                <option value="aggressive">进攻优先</option>
+                                <option value="defensive">优先进终点</option>
+                                <option value="offensive">优先出击</option>
+                            </select>
+                        </div>
+                        <div class="ai-player-config">
+                            <label><input type="checkbox" id="ai2" checked> 黄方 (AI)</label>
+                            <select id="ai2Strategy">
+                                <option value="balanced">平衡策略</option>
+                                <option value="aggressive">进攻优先</option>
+                                <option value="defensive">优先进终点</option>
+                                <option value="offensive">优先出击</option>
+                            </select>
+                        </div>
+                        <div class="ai-player-config">
+                            <label><input type="checkbox" id="ai3" checked> 蓝方 (AI)</label>
+                            <select id="ai3Strategy">
+                                <option value="balanced">平衡策略</option>
+                                <option value="aggressive">进攻优先</option>
+                                <option value="defensive">优先进终点</option>
+                                <option value="offensive">优先出击</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="theme-selector">
+                        <h4>🎨 棋盘主题</h4>
+                        <div class="theme-options">
+                            <button class="theme-btn active" data-theme="classic">经典</button>
+                            <button class="theme-btn" data-theme="ocean">海洋</button>
+                            <button class="theme-btn" data-theme="forest">森林</button>
+                            <button class="theme-btn" data-theme="neon">霓虹</button>
+                        </div>
+                    </div>
+
+                    <div class="skin-selector">
+                        <h4>✈️ 飞机皮肤</h4>
+                        <div class="skin-options">
+                            <button class="skin-btn active" data-skin="classic">经典</button>
+                            <button class="skin-btn" data-skin="star">星星</button>
+                            <button class="skin-btn" data-skin="heart">爱心</button>
+                            <button class="skin-btn" data-skin="diamond">钻石</button>
+                        </div>
+                    </div>
+
+                    <button id="startGameBtn" class="start-btn">开始游戏</button>
+                </div>
+
+                <div class="items-panel">
+                    <h3>🎁 道具背包</h3>
+                    <div class="item-slots">
+                        <div class="item-slot" data-item="fixedDice" title="指定点数骰子 - 选择下一次点数">
+                            <span class="item-icon">🎯</span>
+                            <span class="item-count" id="item-fixedDice">2</span>
+                        </div>
+                        <div class="item-slot" data-item="doubleDice" title="双骰子 - 同时掷两个骰子">
+                            <span class="item-icon">🎲🎲</span>
+                            <span class="item-count" id="item-doubleDice">2</span>
+                        </div>
+                        <div class="item-slot" data-item="shield" title="保护罩 - 免疫一次被击退">
+                            <span class="item-icon">🛡️</span>
+                            <span class="item-count" id="item-shield">2</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="achievements-panel">
+                    <h3>🏆 成就徽章</h3>
+                    <div class="achievement-list">
+                        <div class="achievement" data-id="firstWin">
+                            <span class="ach-icon">🥇</span>
+                            <span class="ach-name">首胜</span>
+                        </div>
+                        <div class="achievement" data-id="combo5">
+                            <span class="ach-icon">🔥</span>
+                            <span class="ach-name">五连击</span>
+                        </div>
+                        <div class="achievement" data-id="revenge">
+                            <span class="ach-icon">⚔️</span>
+                            <span class="ach-name">复仇者</span>
+                        </div>
+                        <div class="achievement" data-id="perfect">
+                            <span class="ach-icon">💯</span>
+                            <span class="ach-name">完美胜利</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="board-container">
+                <canvas id="gameBoard" width="600" height="600"></canvas>
+                
+                <div class="combo-display" id="comboDisplay">
+                    <span class="combo-count">0</span>
+                    <span class="combo-text">连击!</span>
+                </div>
+
+                <div class="revenge-modal" id="revengeModal">
+                    <div class="revenge-content">
+                        <h3>⚔️ 复仇机会!</h3>
+                        <p>你被击退了，是否使用反击？</p>
+                        <div class="revenge-buttons">
+                            <button id="revengeYes" class="revenge-btn yes">使用反击</button>
+                            <button id="revengeNo" class="revenge-btn no">放弃</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="side-panel">
+                <div class="players-panel">
+                    <h3>👥 玩家状态</h3>
+                    <div class="player-status" id="playerStatus0">
+                        <span class="player-indicator red"></span>
+                        <span class="player-label">红方</span>
+                        <span class="player-type">玩家</span>
+                        <span class="plane-count">停机坪: <span id="planesHome0">4</span></span>
+                        <span class="combo-badge" id="combo0" style="display:none;">🔥</span>
+                    </div>
+                    <div class="player-status" id="playerStatus1">
+                        <span class="player-indicator green"></span>
+                        <span class="player-label">绿方</span>
+                        <span class="player-type" id="playerType1">AI</span>
+                        <span class="plane-count">停机坪: <span id="planesHome1">4</span></span>
+                        <span class="combo-badge" id="combo1" style="display:none;">🔥</span>
+                    </div>
+                    <div class="player-status" id="playerStatus2">
+                        <span class="player-indicator yellow"></span>
+                        <span class="player-label">黄方</span>
+                        <span class="player-type" id="playerType2">AI</span>
+                        <span class="plane-count">停机坪: <span id="planesHome2">4</span></span>
+                        <span class="combo-badge" id="combo2" style="display:none;">🔥</span>
+                    </div>
+                    <div class="player-status" id="playerStatus3">
+                        <span class="player-indicator blue"></span>
+                        <span class="player-label">蓝方</span>
+                        <span class="player-type" id="playerType3">AI</span>
+                        <span class="plane-count">停机坪: <span id="planesHome3">4</span></span>
+                        <span class="combo-badge" id="combo3" style="display:none;">🔥</span>
+                    </div>
+                </div>
+
+                <div class="replay-controls">
+                    <h3>📹 回放控制</h3>
+                    <div class="replay-buttons">
+                        <button id="saveReplayBtn" class="replay-btn">💾 保存</button>
+                        <button id="loadReplayBtn" class="replay-btn">📂 加载</button>
+                    </div>
+                </div>
+
+                <div class="game-log">
+                    <h3>📜 游戏日志</h3>
+                    <div id="gameLog" class="log-content"></div>
+                </div>
+
+                <div class="action-buttons">
+                    <button id="restartBtn" class="restart-btn">🔄 重新开始</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="winnerModal" class="modal">
+            <div class="modal-content">
+                <h2>🎉 恭喜获胜！🎉</h2>
+                <p id="winnerText">红方获胜！</p>
+                <div id="earnedAchievements" class="earned-achievements"></div>
+                <button id="playAgainBtn" class="play-again-btn">再玩一局</button>
+            </div>
+        </div>
+
+        <div id="fixedDiceModal" class="modal">
+            <div class="modal-content">
+                <h2>🎯 选择点数</h2>
+                <div class="dice-options">
+                    <button class="dice-option" data-value="1">1</button>
+                    <button class="dice-option" data-value="2">2</button>
+                    <button class="dice-option" data-value="3">3</button>
+                    <button class="dice-option" data-value="4">4</button>
+                    <button class="dice-option" data-value="5">5</button>
+                    <button class="dice-option" data-value="6">6</button>
+                </div>
+                <button id="cancelFixedDice" class="cancel-btn">取消</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/game.js"></script>
+</body>
+</html>

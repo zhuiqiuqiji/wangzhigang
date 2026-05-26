@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>围棋对弈</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>围棋对弈</h1>
+        
+        <div class="game-info">
+            <div class="info-item">
+                <span>当前手数:</span>
+                <span id="moveCount">0</span>
+            </div>
+            <div class="info-item">
+                <span>黑方提子:</span>
+                <span id="blackCaptures">0</span>
+            </div>
+            <div class="info-item">
+                <span>白方提子:</span>
+                <span id="whiteCaptures">0</span>
+            </div>
+            <div class="info-item">
+                <span>当前玩家:</span>
+                <span id="currentPlayer">黑方</span>
+            </div>
+        </div>
+
+        <div class="controls">
+            <label for="boardSize">棋盘尺寸:</label>
+            <select id="boardSize">
+                <option value="9">9×9</option>
+                <option value="13">13×13</option>
+                <option value="19" selected>19×19</option>
+            </select>
+            <button id="passBtn">虚手 (Pass)</button>
+            <button id="restartBtn">重新开始</button>
+        </div>
+
+        <div class="board-container">
+            <canvas id="goBoard"></canvas>
+        </div>
+
+        <div id="gameOverModal" class="modal">
+            <div class="modal-content">
+                <h2>游戏结束</h2>
+                <div id="resultContent"></div>
+                <button id="closeModal">确定</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/game.js"></script>
+</body>
+</html>

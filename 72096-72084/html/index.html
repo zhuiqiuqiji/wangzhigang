@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>宠物连连看 - 豪华版</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <div class="game-container">
+        <header class="game-header">
+            <h1>🐾 宠物连连看 🐾</h1>
+            
+            <div class="top-bar">
+                <div class="theme-switcher">
+                    <span class="theme-label">主题:</span>
+                    <button class="theme-btn active" data-theme="purple">💜</button>
+                    <button class="theme-btn" data-theme="forest">🌲</button>
+                    <button class="theme-btn" data-theme="ocean">🌊</button>
+                    <button class="theme-btn" data-theme="sunset">🌅</button>
+                    <button class="theme-btn" data-theme="candy">🍬</button>
+                </div>
+                
+                <div class="mode-switcher">
+                    <span class="mode-label">模式:</span>
+                    <button class="mode-btn active" data-mode="classic">经典</button>
+                    <button class="mode-btn" data-mode="time">限时</button>
+                    <button class="mode-btn" data-mode="steps">限步</button>
+                </div>
+            </div>
+            
+            <div class="game-stats">
+                <div class="stat-item">
+                    <span class="stat-label">得分</span>
+                    <span id="score" class="stat-value">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">剩余</span>
+                    <span id="remaining" class="stat-value">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">关卡</span>
+                    <span id="level" class="stat-value">1</span>
+                </div>
+                <div class="stat-item" id="timer-container" style="display:none;">
+                    <span class="stat-label">⏱️ 时间</span>
+                    <span id="timer" class="stat-value">--</span>
+                </div>
+                <div class="stat-item" id="steps-container" style="display:none;">
+                    <span class="stat-label">👣 步数</span>
+                    <span id="steps" class="stat-value">--</span>
+                </div>
+                <div class="stat-item combo-item" id="combo-container">
+                    <span class="stat-label">🔥 连击</span>
+                    <span id="combo" class="stat-value">0</span>
+                </div>
+            </div>
+            
+            <div class="item-bar">
+                <button class="item-btn" id="item-hint" title="提示 - 高亮一对可消除">
+                    <span class="item-icon">💡</span>
+                    <span class="item-count" id="hint-count">3</span>
+                </button>
+                <button class="item-btn" id="item-bomb" title="炸弹 - 随机消除一对">
+                    <span class="item-icon">💣</span>
+                    <span class="item-count" id="bomb-count">2</span>
+                </button>
+                <button class="item-btn" id="item-time" title="延时 - +30秒 (限时模式)">
+                    <span class="item-icon">⏰</span>
+                    <span class="item-count" id="time-count">1</span>
+                </button>
+                <button class="item-btn" id="item-shuffle" title="洗牌 - 重新排列">
+                    <span class="item-icon">🔀</span>
+                    <span class="item-count" id="shuffle-count">∞</span>
+                </button>
+            </div>
+            
+            <div class="game-controls">
+                <button id="restart-btn" class="control-btn">🔄 重来</button>
+                <button id="album-btn" class="control-btn">� 图鉴</button>
+                <button id="editor-btn" class="control-btn">�️ 编辑器</button>
+            </div>
+        </header>
+        
+        <main class="game-board-container">
+            <div id="game-board" class="game-board"></div>
+            <svg id="path-svg" class="path-svg"></svg>
+            <div id="combo-popup" class="combo-popup hidden"></div>
+        </main>
+        
+        <div id="game-modal" class="modal hidden">
+            <div class="modal-content">
+                <h2 id="modal-title">🎉 恭喜通关！</h2>
+                <div id="star-rating" class="star-rating">
+                    <span class="star">☆</span>
+                    <span class="star">☆</span>
+                    <span class="star">☆</span>
+                </div>
+                <p id="modal-message" class="modal-message"></p>
+                <div class="modal-stats" id="modal-stats"></div>
+                <div class="modal-buttons">
+                    <button id="modal-btn" class="modal-btn">下一关</button>
+                    <button id="modal-retry" class="modal-btn secondary">重玩本关</button>
+                </div>
+            </div>
+        </div>
+        
+        <div id="album-modal" class="modal hidden">
+            <div class="modal-content album-content">
+                <h2>📖 宠物图鉴</h2>
+                <p class="album-progress">收集进度: <span id="album-count">0</span> / <span id="album-total">0</span></p>
+                <div id="album-grid" class="album-grid"></div>
+                <button class="modal-btn album-close-btn" id="album-close">关闭</button>
+            </div>
+        </div>
+        
+        <div id="editor-modal" class="modal hidden">
+            <div class="modal-content editor-content">
+                <h2>🛠️ 关卡编辑器</h2>
+                <div class="editor-controls">
+                    <div class="editor-row">
+                        <label>行数:</label>
+                        <input type="number" id="editor-rows" min="4" max="12" value="8">
+                        <label>列数:</label>
+                        <input type="number" id="editor-cols" min="4" max="16" value="10">
+                    </div>
+                    <div class="editor-row">
+                        <label>图标种类:</label>
+                        <input type="number" id="editor-types" min="4" max="50" value="10">
+                        <label>关卡名:</label>
+                        <input type="text" id="editor-name" placeholder="自定义关卡">
+                    </div>
+                </div>
+                <div class="editor-pet-selector">
+                    <p>选择要使用的宠物:</p>
+                    <div id="editor-pet-grid" class="editor-pet-grid"></div>
+                </div>
+                <div class="editor-buttons">
+                    <button class="modal-btn" id="editor-play">🎮 开始游戏</button>
+                    <button class="modal-btn secondary" id="editor-export">📤 导出</button>
+                    <button class="modal-btn secondary" id="editor-import">📥 导入</button>
+                    <button class="modal-btn secondary" id="editor-close">关闭</button>
+                </div>
+                <textarea id="editor-io" class="editor-io" placeholder="在此粘贴关卡代码以导入..."></textarea>
+            </div>
+        </div>
+    </div>
+
+<script src="../js/game.js"></script>
+</body>
+</html>

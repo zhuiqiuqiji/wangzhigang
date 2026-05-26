@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>双人五子棋 - 增强版</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="title">双人五子棋</h1>
+            <p class="subtitle">经典对弈 · AI对战 · 智慧对决</p>
+        </header>
+
+        <div class="game-settings">
+            <div class="setting-group">
+                <label>游戏模式:</label>
+                <select id="gameMode">
+                    <option value="pvp">双人对战</option>
+                    <option value="pve">人机对战</option>
+                </select>
+            </div>
+            <div class="setting-group" id="aiLevelGroup" style="display:none;">
+                <label>AI难度:</label>
+                <select id="aiLevel">
+                    <option value="1">简单</option>
+                    <option value="2" selected>普通</option>
+                    <option value="3">困难</option>
+                </select>
+            </div>
+            <div class="setting-group">
+                <label>禁手规则:</label>
+                <label class="switch">
+                    <input type="checkbox" id="forbiddenRule" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="setting-group">
+                <label>棋盘主题:</label>
+                <select id="themeSelect">
+                    <option value="wood">木质</option>
+                    <option value="classic">经典</option>
+                    <option value="ocean">海洋</option>
+                    <option value="matcha">抹茶</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="game-info">
+            <div class="info-item">
+                <span class="label">当前执子:</span>
+                <span id="currentPlayer" class="player-indicator black">黑方</span>
+            </div>
+            <div class="info-item">
+                <span class="label">走棋步数:</span>
+                <span id="moveCount" class="count">0</span>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="board-container">
+                <div id="board" class="board"></div>
+                <div id="gameResult" class="game-result hidden"></div>
+                <div id="forbiddenWarning" class="forbidden-warning hidden">禁手！黑棋不能落子此处</div>
+            </div>
+
+            <div class="side-panel">
+                <div class="panel-section">
+                    <h3>AI分析</h3>
+                    <div class="analysis-panel">
+                        <div class="analysis-item">
+                            <span>胜率评估:</span>
+                            <span id="winRate">--</span>
+                        </div>
+                        <div class="analysis-item">
+                            <span>推荐走法:</span>
+                            <span id="bestMove">--</span>
+                        </div>
+                    </div>
+                    <button id="analyzeBtn" class="btn small">分析局面</button>
+                </div>
+
+                <div class="panel-section">
+                    <h3>棋谱记录</h3>
+                    <div id="moveList" class="move-list"></div>
+                </div>
+
+                <div class="panel-section">
+                    <h3>操作</h3>
+                    <div class="btn-group">
+                        <button id="undoBtn" class="btn small">悔棋</button>
+                        <button id="restartBtn" class="btn small">重新开始</button>
+                    </div>
+                    <div class="btn-group">
+                        <button id="exportSgfBtn" class="btn small">导出SGF</button>
+                        <button id="toggleSoundBtn" class="btn small">音效: 开</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/rules.js"></script>
+    <script src="../js/ai.js"></script>
+    <script src="../js/history.js"></script>
+    <script src="../js/themes.js"></script>
+    <script src="../js/sgf.js"></script>
+    <script src="../js/audio.js"></script>
+    <script src="../js/game.js"></script>
+</body>
+</html>

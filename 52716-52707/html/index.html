@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>麻将连连看</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <div class="game-container">
+        <header class="game-header">
+            <button id="back-btn" class="btn btn-secondary">← 返回</button>
+            <div class="game-info">
+                <h1 class="game-title" id="level-title">第 1 关</h1>
+                <div class="level-stars" id="level-stars">★★★</div>
+            </div>
+            <div class="game-stats">
+                <div class="stat-item">
+                    <span class="stat-label">得分</span>
+                    <span id="score" class="stat-value">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">剩余</span>
+                    <span id="remaining" class="stat-value">0</span>
+                </div>
+                <div class="stat-item" id="time-stat">
+                    <span class="stat-label">时间</span>
+                    <span id="time" class="stat-value">--</span>
+                </div>
+                <div class="stat-item" id="step-stat">
+                    <span class="stat-label">步数</span>
+                    <span id="steps" class="stat-value">0</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="items-bar">
+            <button class="item-btn" data-item="hint" title="提示">
+                <span class="item-icon">💡</span>
+                <span class="item-count" id="hint-count">3</span>
+            </button>
+            <button class="item-btn" data-item="shuffle" title="洗牌">
+                <span class="item-icon">🔀</span>
+                <span class="item-count" id="shuffle-count">3</span>
+            </button>
+            <button class="item-btn" data-item="bomb" title="炸弹">
+                <span class="item-icon">💣</span>
+                <span class="item-count" id="bomb-count">1</span>
+            </button>
+            <button class="item-btn" data-item="undo" title="回溯">
+                <span class="item-icon">⏪</span>
+                <span class="item-count" id="undo-count">3</span>
+            </button>
+            <button class="item-btn" id="pause-btn" title="暂停">
+                <span class="item-icon">⏸️</span>
+            </button>
+        </div>
+
+        <main class="game-board-container">
+            <div id="game-board" class="game-board"></div>
+            <svg id="path-canvas" class="path-canvas"></svg>
+        </main>
+
+        <div id="modal" class="modal hidden">
+            <div class="modal-content">
+                <h2 id="modal-title" class="modal-title"></h2>
+                <div id="modal-stars" class="modal-stars">★★★</div>
+                <p id="modal-message" class="modal-message"></p>
+                <div class="modal-stats">
+                    <div class="modal-stat">
+                        <span class="modal-stat-label">得分</span>
+                        <span class="modal-stat-value" id="modal-score">0</span>
+                    </div>
+                    <div class="modal-stat">
+                        <span class="modal-stat-label">用时</span>
+                        <span class="modal-stat-value" id="modal-time">0:00</span>
+                    </div>
+                    <div class="modal-stat">
+                        <span class="modal-stat-label">步数</span>
+                        <span class="modal-stat-value" id="modal-steps">0</span>
+                    </div>
+                </div>
+                <div class="modal-buttons">
+                    <button id="modal-restart" class="btn btn-gray">🔄 重玩</button>
+                    <button id="modal-confirm" class="btn btn-gold">确定</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="pause-modal" class="modal hidden">
+            <div class="modal-content">
+                <h2 class="modal-title">⏸️ 游戏暂停</h2>
+                <p class="modal-message">休息一下，准备好再继续！</p>
+                <div class="modal-buttons">
+                    <button id="resume-btn" class="btn btn-gold">▶️ 继续游戏</button>
+                    <button id="menu-btn" class="btn btn-secondary">🏠 返回菜单</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/themes.js"></script>
+    <script src="../js/levels.js"></script>
+    <script src="../js/storage.js"></script>
+    <script src="../js/pathfinder.js"></script>
+    <script src="../js/board.js"></script>
+    <script src="../js/animation.js"></script>
+    <script src="../js/game.js"></script>
+</body>
+</html>

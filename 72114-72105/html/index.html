@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>泡泡消除发射游戏</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <div class="game-container">
+        <div class="game-header">
+            <div class="left-panel">
+                <div class="level-panel">
+                    <span class="level-label">关卡:</span>
+                    <span id="level" class="level-value">1</span>
+                </div>
+                <div class="score-panel">
+                    <span class="score-label">得分:</span>
+                    <span id="score" class="score-value">0</span>
+                </div>
+                <div id="comboDisplay" class="combo-display"></div>
+            </div>
+            <div class="right-panel">
+                <div class="next-bubble-panel">
+                    <span class="next-label">下一个:</span>
+                    <div id="nextBubble" class="next-bubble"></div>
+                </div>
+                <button id="menuBtn" class="menu-btn">菜单</button>
+            </div>
+        </div>
+        
+        <div class="stars-panel" id="starsPanel">
+            <span class="star" id="star1">★</span>
+            <span class="star" id="star2">★</span>
+            <span class="star" id="star3">★</span>
+        </div>
+        
+        <div class="canvas-container">
+            <canvas id="gameCanvas" width="480" height="640"></canvas>
+            <div id="gameOver" class="game-over">
+                <h2 id="gameOverTitle">游戏结束</h2>
+                <div class="final-stars" id="finalStars">
+                    <span class="star">★</span>
+                    <span class="star">★</span>
+                    <span class="star">★</span>
+                </div>
+                <p>最终得分: <span id="finalScore">0</span></p>
+                <div class="game-over-buttons">
+                    <button id="restartBtn">重新开始</button>
+                    <button id="nextLevelBtn">下一关</button>
+                </div>
+            </div>
+            <div id="menuOverlay" class="menu-overlay">
+                <div class="menu-content">
+                    <h2>游戏菜单</h2>
+                    <div class="level-select">
+                        <h3>选择关卡</h3>
+                        <div id="levelGrid" class="level-grid"></div>
+                    </div>
+                    <div class="theme-select">
+                        <h3>选择主题</h3>
+                        <div class="theme-buttons">
+                            <button class="theme-btn active" data-theme="classic">经典</button>
+                            <button class="theme-btn" data-theme="ocean">海洋</button>
+                            <button class="theme-btn" data-theme="forest">森林</button>
+                            <button class="theme-btn" data-theme="fire">火焰</button>
+                        </div>
+                    </div>
+                    <button id="resumeBtn" class="resume-btn">继续游戏</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="items-panel">
+            <button class="item-btn" id="itemAim" data-item="aim">
+                <span class="item-icon">🎯</span>
+                <span class="item-count" id="aimCount">3</span>
+            </button>
+            <button class="item-btn" id="itemUndo" data-item="undo">
+                <span class="item-icon">↩️</span>
+                <span class="item-count" id="undoCount">3</span>
+            </button>
+            <button class="item-btn" id="itemSwap" data-item="swap">
+                <span class="item-icon">🔄</span>
+                <span class="item-count" id="swapCount">3</span>
+            </button>
+        </div>
+    </div>
+    <script src="../js/game.js"></script>
+</body>
+</html>

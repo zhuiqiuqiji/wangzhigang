@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>拼字填词游戏 - 豪华版</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <nav class="main-nav">
+            <div class="nav-brand">🎮 拼字填词</div>
+            <div class="nav-menu">
+                <button class="nav-btn active" data-view="game">🎯 游戏</button>
+                <button class="nav-btn" data-view="daily">📅 每日挑战</button>
+                <button class="nav-btn" data-view="community">🏆 社区</button>
+                <button class="nav-btn" data-view="leaderboard">🥇 排行榜</button>
+                <button class="nav-btn" data-view="generator">⚙️ 生成器</button>
+            </div>
+        </nav>
+
+        <div id="gameView" class="view active">
+            <header>
+                <h1 id="puzzleTitle">拼字填词游戏</h1>
+                <div class="game-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">⏱️ 时间</span>
+                        <span class="stat-value" id="timerDisplay">00:00</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">💡 提示</span>
+                        <span class="stat-value" id="hintsUsed">0</span>
+                    </div>
+                    <div class="progress-container">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill"></div>
+                        </div>
+                        <span class="progress-text" id="progressText">0%</span>
+                    </div>
+                </div>
+            </header>
+
+            <div class="game-settings">
+                <div class="setting-group">
+                    <label>谜题模式:</label>
+                    <select id="modeSelect">
+                        <option value="classic">经典 Crossword</option>
+                        <option value="arrow">箭头填词</option>
+                        <option value="codeword">密码填词</option>
+                    </select>
+                </div>
+                <div class="setting-group">
+                    <label>语言词库:</label>
+                    <select id="languageSelect">
+                        <option value="english">英文</option>
+                        <option value="chinese">中文拼音</option>
+                        <option value="mixed">中英文混合</option>
+                    </select>
+                </div>
+                <div class="setting-group">
+                    <label>主题分类:</label>
+                    <select id="categorySelect">
+                        <option value="programming">编程</option>
+                        <option value="animals">动物</option>
+                        <option value="fruits">水果</option>
+                        <option value="technology">科技</option>
+                        <option value="nature">自然</option>
+                    </select>
+                </div>
+                <button id="generateBtn" class="btn btn-small">🎲 生成新谜题</button>
+            </div>
+
+            <div id="codewordHints" class="codeword-hints" style="display: none;"></div>
+
+            <main class="game-wrapper">
+                <div class="grid-container">
+                    <div class="crossword-grid" id="crosswordGrid"></div>
+                </div>
+                
+                <aside class="sidebar">
+                    <div class="clues-section">
+                        <h2>横向 →</h2>
+                        <div class="clues-list" id="acrossClues"></div>
+                    </div>
+                    <div class="clues-section">
+                        <h2>纵向 ↓</h2>
+                        <div class="clues-list" id="downClues"></div>
+                    </div>
+                </aside>
+            </main>
+            
+            <div class="game-controls">
+                <div class="control-group">
+                    <span class="control-label">提示:</span>
+                    <button id="hintLetterBtn" class="btn btn-hint">🔤 揭示字母</button>
+                    <button id="hintWordBtn" class="btn btn-hint">📝 揭示整词</button>
+                    <button id="checkBtn" class="btn btn-hint">✅ 检查错误</button>
+                </div>
+                <div class="control-group">
+                    <span class="control-label">操作:</span>
+                    <button id="resetBtn" class="btn">🔄 重新开始</button>
+                    <button id="printBtn" class="btn btn-secondary">🖨️ 打印</button>
+                    <button id="exportBtn" class="btn btn-secondary">💾 导出</button>
+                    <button id="importBtn" class="btn btn-secondary">📂 导入</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="dailyView" class="view">
+            <header>
+                <h1>📅 每日挑战</h1>
+                <p class="subtitle">每天一道精选谜题，挑战你的词汇量！</p>
+            </header>
+            <div class="daily-challenge">
+                <div class="daily-info">
+                    <p>今日日期: <strong id="todayDate"></strong></p>
+                    <p id="dailyStatus" class="status-badge">未完成</p>
+                </div>
+                <div id="dailyLeaderboard" class="daily-leaderboard"></div>
+                <button id="startDailyBtn" class="btn btn-large">开始今日挑战</button>
+            </div>
+        </div>
+
+        <div id="communityView" class="view">
+            <header>
+                <h1>🏆 谜题社区</h1>
+                <p class="subtitle">浏览、游玩和分享用户创建的谜题</p>
+            </header>
+            <div id="communityPuzzles" class="community-puzzles"></div>
+        </div>
+
+        <div id="leaderboardView" class="view">
+            <header>
+                <h1>🥇 排行榜</h1>
+                <p class="subtitle">全球玩家成绩排名</p>
+            </header>
+            <div class="leaderboard-tabs">
+                <button class="tab-btn active" data-tab="overall">总排行榜</button>
+                <button class="tab-btn" data-tab="daily">今日排行</button>
+            </div>
+            <div id="leaderboardContent" class="leaderboard-content"></div>
+        </div>
+
+        <div id="generatorView" class="view">
+            <header>
+                <h1>⚙️ 谜题生成器</h1>
+                <p class="subtitle">自定义生成专属于你的谜题</p>
+            </header>
+            <div class="generator-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>谜题名称</label>
+                        <input type="text" id="genName" placeholder="我的自定义谜题">
+                    </div>
+                    <div class="form-group">
+                        <label>难度</label>
+                        <select id="genDifficulty">
+                            <option value="easy">简单</option>
+                            <option value="medium" selected>中等</option>
+                            <option value="hard">困难</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>语言词库</label>
+                        <select id="genLanguage">
+                            <option value="english">英文</option>
+                            <option value="chinese">中文拼音</option>
+                            <option value="mixed">中英文混合</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>主题分类</label>
+                        <select id="genCategory">
+                            <option value="programming">编程</option>
+                            <option value="animals">动物</option>
+                            <option value="fruits">水果</option>
+                            <option value="technology">科技</option>
+                            <option value="nature">自然</option>
+                            <option value="all">全部</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>单词数量 (5-15)</label>
+                    <input type="range" id="genWordCount" min="5" max="15" value="10">
+                    <span id="wordCountValue">10</span>
+                </div>
+                <div class="form-group">
+                    <label>谜题模式</label>
+                    <select id="genMode">
+                        <option value="classic">经典 Crossword</option>
+                        <option value="arrow">箭头填词</option>
+                        <option value="codeword">密码填词</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>自定义词库 (每行: 单词,提示，留空则使用内置词库)</label>
+                    <textarea id="genCustomWords" rows="6" placeholder="HELLO,问候语&#10;WORLD,世界&#10;..."></textarea>
+                </div>
+                <div class="form-buttons">
+                    <button id="generateCustomBtn" class="btn btn-large">🎲 生成谜题</button>
+                    <button id="saveToCommunityBtn" class="btn btn-large btn-secondary">📤 生成并上传到社区</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal" id="winModal">
+            <div class="modal-content">
+                <h2>🎉 恭喜通关！</h2>
+                <div class="win-stats"></div>
+                <div class="form-group">
+                    <label>输入你的名字上榜:</label>
+                    <input type="text" id="playerName" placeholder="匿名玩家">
+                </div>
+                <div class="form-buttons">
+                    <button id="submitScore" class="btn">🏆 提交成绩</button>
+                    <button id="playAgainBtn" class="btn btn-secondary">🔄 再玩一次</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="js/wordbank.js"></script>
+    <script src="js/generator.js"></script>
+    <script src="js/community.js"></script>
+    <script src="js/game.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const navBtns = document.querySelectorAll('.nav-btn');
+            const views = document.querySelectorAll('.view');
+            
+            navBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const targetView = btn.dataset.view;
+                    
+                    navBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    
+                    views.forEach(v => v.classList.remove('active'));
+                    document.getElementById(targetView + 'View').classList.add('active');
+                    
+                    if (targetView === 'community') {
+                        renderCommunityPuzzles(
+                            document.getElementById('communityPuzzles'),
+                            (puzzle) => {
+                                document.querySelector('[data-view="game"]').click();
+                                document.getElementById('puzzleTitle').textContent = puzzle.name || '社区谜题';
+                                initGame(puzzle);
+                            }
+                        );
+                    } else if (targetView === 'leaderboard') {
+                        renderLeaderboard(document.getElementById('leaderboardContent'), false);
+                    } else if (targetView === 'daily') {
+                        const today = new Date().toISOString().split('T')[0];
+                        document.getElementById('todayDate').textContent = today;
+                        
+                        const hasCompleted = CommunityStorage.hasCompletedDaily();
+                        const statusEl = document.getElementById('dailyStatus');
+                        statusEl.textContent = hasCompleted ? '已完成' : '未完成';
+                        statusEl.className = 'status-badge ' + (hasCompleted ? 'completed' : '');
+                        
+                        renderLeaderboard(document.getElementById('dailyLeaderboard'), true);
+                    }
+                });
+            });
+
+            document.getElementById('startDailyBtn').addEventListener('click', () => {
+                const dailyPuzzle = generateDailyPuzzle();
+                document.querySelector('[data-view="game"]').click();
+                document.getElementById('puzzleTitle').textContent = '📅 每日挑战 - ' + dailyPuzzle.date;
+                initGame(dailyPuzzle);
+            });
+
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    tabBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    const isDaily = btn.dataset.tab === 'daily';
+                    renderLeaderboard(document.getElementById('leaderboardContent'), isDaily);
+                });
+            });
+
+            document.getElementById('generateBtn').addEventListener('click', () => {
+                const mode = document.getElementById('modeSelect').value;
+                const language = document.getElementById('languageSelect').value;
+                const category = document.getElementById('categorySelect').value;
+                
+                let words;
+                if (language === 'all') {
+                    words = getAllWords();
+                } else {
+                    words = getWordsByCategory(language, category, 12);
+                }
+                
+                let puzzle;
+                if (mode === 'arrow') {
+                    puzzle = generateArrowPuzzle(words);
+                } else if (mode === 'codeword') {
+                    puzzle = generateCodewordPuzzle(words);
+                } else {
+                    puzzle = generateCrossword(words);
+                }
+                
+                puzzle.mode = mode;
+                document.getElementById('puzzleTitle').textContent = 
+                    `${getModeName(mode)} - ${getCategoryName(language, category)}`;
+                initGame(puzzle);
+            });
+
+            document.getElementById('genWordCount').addEventListener('input', (e) => {
+                document.getElementById('wordCountValue').textContent = e.target.value;
+            });
+
+            document.getElementById('generateCustomBtn').addEventListener('click', generateCustomPuzzle);
+            document.getElementById('saveToCommunityBtn').addEventListener('click', () => generateCustomPuzzle(true));
+
+            function generateCustomPuzzle(saveToCommunity = false) {
+                const name = document.getElementById('genName').value || '自定义谜题';
+                const difficulty = document.getElementById('genDifficulty').value;
+                const language = document.getElementById('genLanguage').value;
+                const category = document.getElementById('genCategory').value;
+                const wordCount = parseInt(document.getElementById('genWordCount').value);
+                const mode = document.getElementById('genMode').value;
+                const customWordsText = document.getElementById('genCustomWords').value;
+                
+                let words;
+                if (customWordsText.trim()) {
+                    words = customWordsText.split('\n')
+                        .map(line => line.trim())
+                        .filter(line => line.length > 0)
+                        .map(line => {
+                            const [word, ...clueParts] = line.split(',');
+                            return {
+                                word: word.toUpperCase().trim(),
+                                clue: clueParts.join(',').trim()
+                            };
+                        })
+                        .filter(w => w.word.length >= 2 && w.clue.length > 0);
+                } else {
+                    if (category === 'all') {
+                        words = getAllWords(language);
+                    } else {
+                        words = getWordsByCategory(language, category, wordCount);
+                    }
+                }
+                
+                if (words.length < 3) {
+                    alert('请至少提供3个有效单词！');
+                    return;
+                }
+                
+                let puzzle;
+                if (mode === 'arrow') {
+                    puzzle = generateArrowPuzzle(words);
+                } else if (mode === 'codeword') {
+                    puzzle = generateCodewordPuzzle(words);
+                } else {
+                    puzzle = generateCrossword(words);
+                }
+                
+                puzzle.name = name;
+                puzzle.difficulty = difficulty;
+                puzzle.mode = mode;
+                
+                if (saveToCommunity) {
+                    const author = prompt('请输入作者名称:', '匿名用户') || '匿名用户';
+                    const description = prompt('请输入谜题描述:', '');
+                    puzzle.author = author;
+                    puzzle.description = description;
+                    
+                    const saved = CommunityStorage.saveCommunityPuzzle(puzzle);
+                    CommunityStorage.saveCustomPuzzle(puzzle);
+                    alert(`谜题"${name}"已上传到社区！`);
+                }
+                
+                document.querySelector('[data-view="game"]').click();
+                document.getElementById('puzzleTitle').textContent = name;
+                initGame(puzzle);
+            }
+
+            function getModeName(mode) {
+                const names = {
+                    classic: '经典模式',
+                    arrow: '箭头模式',
+                    codeword: '密码模式'
+                };
+                return names[mode] || mode;
+            }
+
+            function getCategoryName(language, category) {
+                const langNames = {
+                    english: '英文',
+                    chinese: '中文',
+                    mixed: '混合'
+                };
+                const catNames = {
+                    programming: '编程',
+                    animals: '动物',
+                    fruits: '水果',
+                    technology: '科技',
+                    nature: '自然'
+                };
+                return `${langNames[language] || language} - ${catNames[category] || category}`;
+            }
+        });
+    </script>
+</body>
+</html>

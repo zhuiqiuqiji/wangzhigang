@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>黑白棋 - 翻转棋</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>黑白棋</h1>
+            <p class="subtitle">翻转棋 · Othello</p>
+        </header>
+
+        <div class="score-board">
+            <div class="player black-player">
+                <div class="piece black"></div>
+                <span class="label">黑方</span>
+                <span id="black-score" class="score">2</span>
+            </div>
+            <div class="status">
+                <div id="game-status" class="game-status">黑方回合</div>
+            </div>
+            <div class="player white-player">
+                <div class="piece white"></div>
+                <span class="label">白方</span>
+                <span id="white-score" class="score">2</span>
+            </div>
+        </div>
+
+        <div class="board-container">
+            <div id="board" class="board"></div>
+        </div>
+
+        <div class="controls">
+            <button id="restart-btn" class="btn">重新开始</button>
+        </div>
+
+        <div id="game-over-modal" class="modal hidden">
+            <div class="modal-content">
+                <h2 id="winner-text">游戏结束</h2>
+                <p id="final-score"></p>
+                <button id="play-again-btn" class="btn">再来一局</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/game.js"></script>
+</body>
+</html>

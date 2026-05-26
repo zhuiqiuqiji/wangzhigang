@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>推箱子益智游戏</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="theme-default">
+  <div class="game-container">
+    <h1>🎮 推箱子</h1>
+    
+    <div class="status-bar">
+      <div class="status-item">
+        <span class="status-label">关卡</span>
+        <span class="status-value" id="level-num">1</span>
+        <span id="level-name" style="font-size: 0.9rem; color: #a0aec0;"></span>
+        <span class="difficulty-badge" id="level-difficulty">入门</span>
+      </div>
+      <div class="status-item">
+        <span class="status-label">步数</span>
+        <span class="status-value" id="move-count">0</span>
+      </div>
+    </div>
+    
+    <div id="game-view">
+      <div id="game-board"></div>
+      
+      <div class="controls main-controls">
+        <div class="control-row">
+          <button class="btn btn-prev" onclick="prevLevel()">
+            ⬅️ 上一关
+          </button>
+          <button class="btn btn-next" id="next-level-btn" onclick="nextLevel()">
+            ➡️ 下一关
+          </button>
+        </div>
+        <div class="control-row">
+          <button class="btn btn-undo" id="undo-btn" onclick="undo()">
+            ↩️ 撤销
+          </button>
+          <button class="btn btn-redo" id="redo-btn" onclick="redo()">
+            ↪️ 重做
+          </button>
+          <button class="btn btn-reset" onclick="resetLevel()">
+            🔄 重置
+          </button>
+        </div>
+        <div class="control-row">
+          <button class="btn btn-levels" onclick="showLevelSelect()">
+            📋 关卡选择
+          </button>
+          <button class="btn btn-theme" onclick="showThemeSelect()">
+            🎨 主题
+          </button>
+        </div>
+        <div class="control-row">
+          <button class="btn btn-editor" id="editor-btn" onclick="toggleEditor()">
+            🛠️ 关卡编辑器
+          </button>
+        </div>
+      </div>
+      
+      <div class="controls solver-controls">
+        <h3 class="section-title">🤖 自动求解</h3>
+        <div class="control-row">
+          <button class="btn btn-solve-bfs" onclick="solveLevel('BFS')">
+            🔍 BFS 求解
+          </button>
+          <button class="btn btn-solve-dfs" onclick="solveLevel('DFS')">
+            🔍 DFS 求解
+          </button>
+        </div>
+        <div class="control-row">
+          <button class="btn btn-play" onclick="if(solverState.solution.length > 0) playSolution(solverState.solution, 300)">
+            ▶️ 播放最优解
+          </button>
+          <button class="btn btn-replay" onclick="replayMoves(300)">
+            🔁 回放走法
+          </button>
+          <button class="btn btn-stop" onclick="stopPlayback()">
+            ⏹️ 停止
+          </button>
+        </div>
+      </div>
+      
+      <div class="instructions">
+        <p>
+          使用 <span class="key">↑</span><span class="key">↓</span><span class="key">←</span><span class="key">→</span> 或 
+          <span class="key">W</span><span class="key">A</span><span class="key">S</span><span class="key">D</span> 移动
+        </p>
+        <p>
+          <span class="key">Ctrl</span>+<span class="key">Z</span> 撤销 | 
+          <span class="key">Ctrl</span>+<span class="key">Shift</span>+<span class="key">Z</span> 重做 |
+          <span class="key">Ctrl</span>+<span class="key">Y</span> 重做 |
+          <span class="key">R</span> 重置
+        </p>
+      </div>
+    </div>
+    
+    <div id="editor-view" class="hidden">
+      <div class="editor-header">
+        <h2>🛠️ 关卡编辑器</h2>
+        <p class="editor-hint">点击或拖动绘制地图元素</p>
+      </div>
+      
+      <div class="editor-tools" id="editor-tools"></div>
+      
+      <div class="editor-controls">
+        <div class="control-row">
+          <button class="btn btn-resize" onclick="resizeEditorMap(0, -1)">➖列</button>
+          <button class="btn btn-resize" onclick="resizeEditorMap(0, 1)">➕列</button>
+          <button class="btn btn-resize" onclick="resizeEditorMap(-1, 0)">➖行</button>
+          <button class="btn btn-resize" onclick="resizeEditorMap(1, 0)">➕行</button>
+          <button class="btn btn-clear" onclick="clearEditorMap()">🧹 清空</button>
+        </div>
+        <div class="control-row">
+          <button class="btn btn-import" onclick="importLevel()">📥 导入</button>
+          <button class="btn btn-export" onclick="exportLevel()">📤 导出</button>
+          <button class="btn btn-test" onclick="testEditorLevel()">▶️ 测试</button>
+        </div>
+      </div>
+      
+      <div id="game-board"></div>
+    </div>
+  </div>
+  
+  <div class="modal" id="win-modal">
+    <div class="modal-content win-content">
+      <h2>🎉 恭喜通关！</h2>
+      <p>你用了 <span id="final-moves">0</span> 步完成了本关</p>
+      <div class="modal-buttons">
+        <button class="btn btn-reset" onclick="resetLevel()">🔄 重玩</button>
+        <button class="btn btn-next" id="modal-next-btn">➡️ 下一关</button>
+      </div>
+    </div>
+  </div>
+  
+  <div class="modal" id="level-select-modal">
+    <div class="modal-content level-select-content">
+      <h2>📋 选择关卡</h2>
+      <div class="level-grid" id="level-grid"></div>
+      <div class="modal-buttons">
+        <button class="btn btn-cancel" onclick="hideLevelSelect()">✖️ 关闭</button>
+      </div>
+    </div>
+  </div>
+  
+  <div class="modal" id="theme-modal">
+    <div class="modal-content theme-content">
+      <h2>🎨 选择主题</h2>
+      <div class="theme-grid">
+        <button class="theme-card theme-default-card" onclick="selectTheme('default')">
+          <div class="theme-preview theme-default-preview"></div>
+          <span>🌙 默认</span>
+        </button>
+        <button class="theme-card" onclick="selectTheme('forest')">
+          <div class="theme-preview theme-forest-preview"></div>
+          <span>🌲 森林</span>
+        </button>
+        <button class="theme-card" onclick="selectTheme('warehouse')">
+          <div class="theme-preview theme-warehouse-preview"></div>
+          <span>🏭 仓库</span>
+        </button>
+        <button class="theme-card" onclick="selectTheme('space')">
+          <div class="theme-preview theme-space-preview"></div>
+          <span>🚀 太空</span>
+        </button>
+      </div>
+      <div class="modal-buttons">
+        <button class="btn btn-cancel" onclick="hideThemeSelect()">✖️ 关闭</button>
+      </div>
+    </div>
+  </div>
+  
+  <script src="js/levels.js"></script>
+  <script src="js/game.js"></script>
+</body>
+</html>

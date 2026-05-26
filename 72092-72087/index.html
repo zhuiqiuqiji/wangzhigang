@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>消消花园 - 三消养成游戏</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/game.css">
+  <link rel="stylesheet" href="css/garden.css">
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <h1>🌸 消消花园 🌸</h1>
+      <div class="header-buttons">
+        <button id="events-btn" class="icon-btn" title="活动">🎪</button>
+        <button id="friends-btn" class="icon-btn" title="好友">👥</button>
+        <button id="story-btn" class="icon-btn" title="剧情">📖</button>
+        <button id="settings-btn" class="icon-btn" title="设置">⚙️</button>
+      </div>
+    </header>
+
+    <div class="resources-bar">
+      <div class="resource-item">
+        <span class="resource-icon">💰</span>
+        <span id="coins-display">0</span>
+      </div>
+      <div class="resource-item">
+        <span class="resource-icon">⭐</span>
+        <span id="stars-display">0</span>
+      </div>
+      <div class="resource-item">
+        <span class="resource-icon">⚡</span>
+        <span id="energy-display">5/5</span>
+      </div>
+      <div id="event-banner" class="event-banner hidden">
+        <span id="event-emoji">🌸</span>
+        <span id="event-name">春日庆典</span>
+        <span class="event-bonus">奖励 +50%</span>
+      </div>
+    </div>
+
+    <nav class="nav-tabs">
+      <button class="tab-btn active" data-tab="game">🎮 消除游戏</button>
+      <button class="tab-btn" data-tab="garden">🏡 我的花园</button>
+      <button class="tab-btn" data-tab="shop">🛒 商店</button>
+      <button class="tab-btn" data-tab="levels">📋 关卡</button>
+    </nav>
+
+    <main>
+      <section id="game-section" class="game-section">
+        <div class="card">
+          <div class="game-header">
+            <div class="level-info">
+              <span>关卡 </span>
+              <span id="level-number">1</span>
+              <span> - </span>
+              <span id="level-name">初识花园</span>
+            </div>
+            <div class="moves-info">
+              <span id="moves-label">剩余步数: </span>
+              <span id="moves-left">25</span>
+            </div>
+            <div class="score-info">
+              <span>分数: </span>
+              <span id="score-display">0</span>
+            </div>
+          </div>
+
+          <div id="story-hint" class="story-hint"></div>
+
+          <div id="targets-container" class="targets-container">
+          </div>
+
+          <div id="obstacles-container" class="obstacles-container hidden">
+          </div>
+
+          <div class="board-container">
+            <div id="game-board" class="board">
+            </div>
+          </div>
+
+          <div id="items-toolbar" class="items-toolbar">
+            <span class="toolbar-label">道具:</span>
+            <div id="items-container" class="items-container"></div>
+          </div>
+
+          <div class="game-controls">
+            <button id="restart-btn" class="btn">🔄 重新开始</button>
+            <button id="use-hammer-btn" class="btn btn-secondary hidden">🔨 使用锤子</button>
+            <button id="use-bomb-btn" class="btn btn-secondary hidden">💣 使用炸弹</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="garden-section" class="garden-section hidden">
+        <div class="card">
+          <div class="garden-header">
+            <h2>🌻 我的花园</h2>
+            <p class="garden-progress">
+              已放置装饰: <span id="decoration-count">0</span> / 25
+            </p>
+          </div>
+
+          <div class="garden-container">
+            <div id="garden-grid" class="garden-grid">
+            </div>
+          </div>
+
+          <div class="inventory-section">
+            <h3>📦 我的物品</h3>
+            <div id="inventory-container" class="inventory-container">
+              <p style="color: var(--text-secondary);">暂无物品，去商店购买吧！</p>
+            </div>
+          </div>
+
+          <p class="instructions">💡 点击物品选中，然后点击花园空位放置装饰</p>
+
+          <div class="shop-section">
+            <h3>🛒 装饰商店</h3>
+            <div id="shop-container" class="shop-container">
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="shop-section" class="shop-section-page hidden">
+        <div class="card">
+          <div class="shop-page-header">
+            <h2>🛒 商店</h2>
+            <p>购买道具和装饰物，打造你的梦想花园！</p>
+          </div>
+
+          <div class="shop-tabs">
+            <button class="shop-tab-btn active" data-shop-tab="decorations">🏡 装饰</button>
+            <button class="shop-tab-btn" data-shop-tab="items">🎁 道具</button>
+            <button class="shop-tab-btn" data-shop-tab="buffs">✨ 开局Buff</button>
+          </div>
+
+          <div id="decorations-shop" class="shop-tab-content">
+            <div class="category-filter">
+              <button class="category-btn active" data-category="all">全部</button>
+              <button class="category-btn" data-category="flowers">🌸 花卉</button>
+              <button class="category-btn" data-category="trees">🌳 树木</button>
+              <button class="category-btn" data-category="plants">🌿 植物</button>
+              <button class="category-btn" data-category="animals">🐱 动物</button>
+              <button class="category-btn" data-category="buildings">🏡 建筑</button>
+              <button class="category-btn" data-category="decorations">⭐ 装饰</button>
+              <button class="category-btn" data-category="seasonal">🎄 季节限定</button>
+            </div>
+            <div id="shop-decorations-container" class="shop-container large"></div>
+          </div>
+
+          <div id="items-shop" class="shop-tab-content hidden">
+            <div id="shop-items-container" class="shop-container large"></div>
+          </div>
+
+          <div id="buffs-shop" class="shop-tab-content hidden">
+            <div id="shop-buffs-container" class="shop-container large"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="levels-section" class="levels-section hidden">
+        <div class="card">
+          <div class="levels-header">
+            <h2>📋 关卡选择</h2>
+            <p>选择你要挑战的关卡</p>
+          </div>
+          <div id="levels-container" class="levels-container"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div id="buff-modal" class="modal-overlay">
+    <div class="modal buff-modal">
+      <h2>✨ 选择开局Buff</h2>
+      <p>选择Buff来增强你的开局优势（可多选）</p>
+      <div id="buffs-selection" class="buffs-selection"></div>
+      <div class="modal-buttons">
+        <button id="buff-start-btn" class="btn">开始游戏</button>
+        <button id="buff-skip-btn" class="btn btn-secondary">跳过</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="friends-modal" class="modal-overlay">
+    <div class="modal friends-modal large-modal">
+      <h2>👥 好友</h2>
+      <div class="friends-tabs">
+        <button class="friend-tab-btn active" data-friend-tab="list">好友列表</button>
+        <button class="friend-tab-btn" data-friend-tab="leaderboard">排行榜</button>
+        <button class="friend-tab-btn" data-friend-tab="collab">协作任务</button>
+      </div>
+      <div id="friends-list" class="friends-content"></div>
+      <div id="friends-leaderboard" class="friends-content hidden"></div>
+      <div id="friends-collab" class="friends-content hidden"></div>
+      <div class="modal-buttons">
+        <button id="friends-close-btn" class="btn">关闭</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="events-modal" class="modal-overlay">
+    <div class="modal events-modal large-modal">
+      <h2>🎪 活动中心</h2>
+      <div class="events-tabs">
+        <button class="event-tab-btn active" data-event-tab="seasonal">季节活动</button>
+        <button class="event-tab-btn" data-event-tab="daily">每日挑战</button>
+        <button class="event-tab-btn" data-event-tab="limited">限时挑战</button>
+        <button class="event-tab-btn" data-event-tab="checkin">每日签到</button>
+      </div>
+      <div id="events-seasonal" class="events-content"></div>
+      <div id="events-daily" class="events-content hidden"></div>
+      <div id="events-limited" class="events-content hidden"></div>
+      <div id="events-checkin" class="events-content hidden"></div>
+      <div class="modal-buttons">
+        <button id="events-close-btn" class="btn">关闭</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="story-modal" class="modal-overlay">
+    <div class="modal story-modal large-modal">
+      <h2>📖 故事剧情</h2>
+      <div id="story-content" class="story-content"></div>
+      <div class="modal-buttons">
+        <button id="story-close-btn" class="btn">关闭</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="settings-modal" class="modal-overlay">
+    <div class="modal settings-modal">
+      <h2>⚙️ 设置</h2>
+      <div class="settings-list">
+        <div class="settings-item">
+          <span>🎵 音效</span>
+          <label class="switch">
+            <input type="checkbox" id="sound-toggle" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div class="settings-item">
+          <span>🔔 通知</span>
+          <label class="switch">
+            <input type="checkbox" id="notification-toggle" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div class="settings-buttons">
+          <button id="save-cloud-btn" class="btn">☁️ 保存到云端</button>
+          <button id="load-cloud-btn" class="btn btn-secondary">☁️ 从云端加载</button>
+          <button id="export-save-btn" class="btn">📤 导出存档</button>
+          <button id="import-save-btn" class="btn btn-secondary">📥 导入存档</button>
+          <button id="reset-game-btn" class="btn btn-danger">🔄 重置游戏</button>
+        </div>
+      </div>
+      <div class="modal-buttons">
+        <button id="settings-close-btn" class="btn">关闭</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="visit-modal" class="modal-overlay">
+    <div class="modal visit-modal large-modal">
+      <h2 id="visit-title">🏡 好友的花园</h2>
+      <div id="visit-garden" class="visit-garden"></div>
+      <div class="modal-buttons">
+        <button id="visit-gift-btn" class="btn">🎁 赠送礼物</button>
+        <button id="visit-close-btn" class="btn btn-secondary">离开</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="result-modal" class="modal-overlay">
+    <div class="modal result-modal">
+      <h2 id="result-title">🎉 关卡完成！</h2>
+      <p id="result-message">太棒了！你成功完成了关卡！</p>
+      <div class="reward-display">
+        <div class="reward-item">
+          <span class="reward-icon">💰</span>
+          <span class="reward-value" id="reward-coins">+100</span>
+        </div>
+        <div class="reward-item">
+          <span class="reward-icon">⭐</span>
+          <span class="reward-value" id="reward-stars">+1</span>
+        </div>
+      </div>
+      <div id="chapter-unlock" class="chapter-unlock hidden">
+        <p>📖 新章节解锁！</p>
+      </div>
+      <div class="modal-buttons">
+        <button id="modal-continue-btn" class="btn">继续</button>
+        <button id="modal-retry-btn" class="btn btn-secondary">重玩</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+  <div id="item-target-overlay" class="item-target-overlay hidden">
+    <div class="target-hint">点击要选择的目标</div>
+  </div>
+
+  <script src="js/utils/storage.js"></script>
+  <script src="js/utils/store.js"></script>
+  <script src="js/game/constants_extended.js"></script>
+  <script src="js/game/constants.js"></script>
+  <script src="js/game/board.js"></script>
+  <script src="js/game/level.js"></script>
+  <script src="js/game/items.js"></script>
+  <script src="js/garden/garden.js"></script>
+  <script src="js/garden/shop.js"></script>
+  <script src="js/story.js"></script>
+  <script src="js/social.js"></script>
+  <script src="js/events.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

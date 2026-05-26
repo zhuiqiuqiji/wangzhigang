@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>弹幕射击生存 - 豪华版</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Noto+Sans+SC:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="game-container">
+        <canvas id="gameCanvas"></canvas>
+        
+        <div class="hud">
+            <div class="hud-left">
+                <div class="score-display">
+                    <span class="label">分数</span>
+                    <span id="score" class="value">0</span>
+                </div>
+                <div class="graze-display">
+                    <span class="label">擦弹</span>
+                    <span id="graze" class="value">0</span>
+                </div>
+                <div class="coin-display">
+                    <span class="coin-icon">◆</span>
+                    <span id="coins" class="value">0</span>
+                </div>
+            </div>
+            <div class="hud-center">
+                <div id="spellCardDisplay" class="spell-card hidden">
+                    <div class="spell-name" id="spellName">符卡名</div>
+                    <div class="spell-timer" id="spellTimer">00:00</div>
+                </div>
+            </div>
+            <div class="hud-right">
+                <div class="lives-display">
+                    <span class="label">生命</span>
+                    <span id="lives" class="lives">❤❤❤</span>
+                </div>
+                <div class="power-display">
+                    <span class="label">火力</span>
+                    <span id="powerLevel" class="value">1.00</span>
+                </div>
+                <div id="bombIndicator" class="bomb-indicator">
+                    <span class="label">符卡</span>
+                    <span id="bombs" class="value">✦✦✦</span>
+                </div>
+                <div id="shieldIndicator" class="shield-indicator hidden">
+                    <span class="shield-icon">🛡</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="slowField" class="slow-field hidden"></div>
+
+        <div id="startScreen" class="overlay">
+            <div class="menu-panel large">
+                <h1 class="game-title">弹幕射击生存</h1>
+                <p class="subtitle">BULLET HELL SURVIVAL DELUXE</p>
+                <div class="main-menu-buttons">
+                    <button id="startBtn" class="neon-btn">开始游戏</button>
+                    <button id="characterBtn" class="neon-btn secondary">选择角色</button>
+                    <button id="editorBtn" class="neon-btn secondary">弹幕编辑器</button>
+                </div>
+                <div class="controls-info">
+                    <p>🎮 WASD / 方向键 - 移动</p>
+                    <p>🔫 空格键 - 射击</p>
+                    <p>💣 X键 - 释放符卡</p>
+                    <p>⏸ ESC - 暂停</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="characterScreen" class="overlay hidden">
+            <div class="menu-panel extra-large">
+                <h2 class="section-title">选择角色</h2>
+                <div class="character-grid" id="characterGrid">
+                </div>
+                <div class="menu-buttons">
+                    <button id="backToMenuBtn" class="neon-btn secondary">返回</button>
+                    <button id="confirmCharBtn" class="neon-btn">确认选择</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="editorScreen" class="overlay hidden">
+            <div class="menu-panel editor-panel">
+                <h2 class="section-title">弹幕编辑器</h2>
+                <div class="editor-layout">
+                    <div class="editor-controls">
+                        <div class="control-group">
+                            <label>弹幕模式</label>
+                            <select id="patternSelect">
+                                <option value="circle">圆形扩散</option>
+                                <option value="spread">扇形散射</option>
+                                <option value="spiral">螺旋弹幕</option>
+                                <option value="aimed">追踪弹</option>
+                                <option value="ring">环形弹幕</option>
+                                <option value="wave">波浪弹幕</option>
+                                <option value="random">随机散射</option>
+                                <option value="cross">十字弹幕</option>
+                                <option value="doubleCircle">双层圆环</option>
+                                <option value="flower">花瓣弹幕</option>
+                                <option value="laser">激光射线</option>
+                                <option value="zigzag">锯齿弹幕</option>
+                                <option value="heart">爱心弹幕</option>
+                            </select>
+                        </div>
+                        <div class="control-group">
+                            <label>子弹数量: <span id="bulletCountVal">12</span></label>
+                            <input type="range" id="bulletCount" min="3" max="60" value="12">
+                        </div>
+                        <div class="control-group">
+                            <label>子弹速度: <span id="bulletSpeedVal">4</span></label>
+                            <input type="range" id="bulletSpeed" min="1" max="15" value="4">
+                        </div>
+                        <div class="control-group">
+                            <label>散射角度: <span id="spreadAngleVal">180</span>°</label>
+                            <input type="range" id="spreadAngle" min="10" max="360" value="180">
+                        </div>
+                        <div class="control-group">
+                            <label>发射间隔: <span id="fireRateVal">500</span>ms</label>
+                            <input type="range" id="fireRate" min="100" max="2000" value="500">
+                        </div>
+                        <div class="control-group">
+                            <label>弹幕颜色</label>
+                            <input type="color" id="bulletColor" value="#ff4444">
+                        </div>
+                        <div class="control-group">
+                            <label>弹幕名称</label>
+                            <input type="text" id="patternName" placeholder="输入弹幕名称">
+                        </div>
+                        <div class="editor-buttons">
+                            <button id="previewPatternBtn" class="neon-btn">预览</button>
+                            <button id="savePatternBtn" class="neon-btn">保存</button>
+                            <button id="testPatternBtn" class="neon-btn secondary">测试</button>
+                            <button id="exportPatternBtn" class="neon-btn secondary">导出</button>
+                        </div>
+                        <div class="saved-patterns">
+                            <h3>已保存弹幕</h3>
+                            <div id="savedPatternsList" class="patterns-list"></div>
+                        </div>
+                    </div>
+                    <div class="editor-preview">
+                        <canvas id="editorCanvas" width="400" height="500"></canvas>
+                        <div class="preview-hint">点击画布发射弹幕</div>
+                    </div>
+                </div>
+                <div class="menu-buttons">
+                    <button id="backToMenuFromEditorBtn" class="neon-btn secondary">返回主菜单</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="pauseScreen" class="overlay hidden">
+            <div class="menu-panel">
+                <h2 class="pause-title">游戏暂停</h2>
+                <div class="final-stats">
+                    <div class="stat">
+                        <span class="stat-label">当前分数</span>
+                        <span id="pauseScore" class="stat-value">0</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">擦弹次数</span>
+                        <span id="pauseGraze" class="stat-value">0</span>
+                    </div>
+                </div>
+                <button id="resumeBtn" class="neon-btn">继续游戏</button>
+                <button id="restartBtnPause" class="neon-btn secondary">重新开始</button>
+                <button id="quitBtn" class="neon-btn secondary">返回主菜单</button>
+            </div>
+        </div>
+
+        <div id="gameOverScreen" class="overlay hidden">
+            <div class="menu-panel">
+                <h2 class="gameover-title">游戏结束</h2>
+                <div class="final-stats">
+                    <div class="stat">
+                        <span class="stat-label">最终分数</span>
+                        <span id="finalScore" class="stat-value">0</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">存活时间</span>
+                        <span id="survivalTime" class="stat-value">0秒</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">收集金币</span>
+                        <span id="finalCoins" class="stat-value">0</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">擦弹次数</span>
+                        <span id="finalGraze" class="stat-value">0</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">最大连击</span>
+                        <span id="finalCombo" class="stat-value">0</span>
+                    </div>
+                </div>
+                <button id="restartBtn" class="neon-btn">再来一局</button>
+                <button id="backToMenuBtn2" class="neon-btn secondary">返回主菜单</button>
+            </div>
+        </div>
+
+        <div id="spellCardBanner" class="spell-card-banner hidden">
+            <div class="banner-content">
+                <div class="banner-label">SPELL CARD</div>
+                <div class="banner-name" id="bannerSpellName"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/utils.js"></script>
+    <script src="js/bullet.js"></script>
+    <script src="js/item.js"></script>
+    <script src="js/player.js"></script>
+    <script src="js/characters.js"></script>
+    <script src="js/enemy.js"></script>
+    <script src="js/spellcard.js"></script>
+    <script src="js/editor.js"></script>
+    <script src="js/game.js"></script>
+</body>
+</html>
