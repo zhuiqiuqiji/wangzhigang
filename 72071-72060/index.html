@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>乒乓球对战 - 专业版</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="game-wrapper">
+        <div class="game-container">
+            <div class="top-bar">
+                <div class="scoreboard">
+                    <div class="score-block player-score">
+                        <div class="score-label">玩家</div>
+                        <div class="score-value" id="playerScore">0</div>
+                        <div class="stamina-bar">
+                            <div class="stamina-fill" id="playerStamina"></div>
+                        </div>
+                    </div>
+                    <div class="game-info">
+                        <div class="serve-indicator" id="serveIndicator">
+                            <span class="serve-icon">●</span>
+                            <span class="serve-text" id="serveText">玩家发球</span>
+                        </div>
+                        <div class="game-mode" id="gameMode">快速对战</div>
+                        <div class="round-info" id="roundInfo"></div>
+                    </div>
+                    <div class="score-block ai-score">
+                        <div class="score-label">电脑</div>
+                        <div class="score-value" id="aiScore">0</div>
+                        <div class="stamina-bar ai">
+                            <div class="stamina-fill" id="aiStamina"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="game-main">
+                <div class="side-panel left-panel">
+                    <div class="panel-title">击球方式</div>
+                    <div class="shot-buttons">
+                        <button class="shot-btn" data-shot="normal" title="普通击球 (Q)">
+                            <span class="shot-icon">🏓</span>
+                            <span class="shot-name">普通</span>
+                            <span class="shot-key">Q</span>
+                        </button>
+                        <button class="shot-btn" data-shot="smash" title="扣杀 (W)">
+                            <span class="shot-icon">⚡</span>
+                            <span class="shot-name">扣杀</span>
+                            <span class="shot-key">W</span>
+                        </button>
+                        <button class="shot-btn" data-shot="chop" title="削球 (E)">
+                            <span class="shot-icon">🌀</span>
+                            <span class="shot-name">削球</span>
+                            <span class="shot-key">E</span>
+                        </button>
+                        <button class="shot-btn" data-shot="lob" title="高吊球 (R)">
+                            <span class="shot-icon">⬆️</span>
+                            <span class="shot-name">高吊</span>
+                            <span class="shot-key">R</span>
+                        </button>
+                        <button class="shot-btn" data-shot="push" title="搓球 (T)">
+                            <span class="shot-icon">↩️</span>
+                            <span class="shot-name">搓球</span>
+                            <span class="shot-key">T</span>
+                        </button>
+                    </div>
+
+                    <div class="panel-title" style="margin-top: 16px;">球旋转</div>
+                    <div class="spin-indicator">
+                        <div class="spin-label">
+                            <span>上旋</span>
+                            <span>侧旋</span>
+                            <span>下旋</span>
+                        </div>
+                        <div class="spin-bars">
+                            <div class="spin-bar topspin">
+                                <div class="spin-fill" id="topspinBar"></div>
+                            </div>
+                            <div class="spin-bar sidespin">
+                                <div class="spin-fill" id="sidespinBar"></div>
+                            </div>
+                            <div class="spin-bar backspin">
+                                <div class="spin-fill" id="backspinBar"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="canvas-wrapper">
+                    <canvas id="gameCanvas" width="600" height="800"></canvas>
+                    <div class="replay-indicator" id="replayIndicator">
+                        <span class="replay-icon">⏪</span>
+                        <span class="replay-text">精彩回放</span>
+                    </div>
+                </div>
+
+                <div class="side-panel right-panel">
+                    <div class="panel-title">游戏模式</div>
+                    <div class="mode-buttons">
+                        <button class="mode-btn active" data-mode="quick">快速对战</button>
+                        <button class="mode-btn" data-mode="tournament">锦标赛</button>
+                        <button class="mode-btn" data-mode="local2p">本地双人</button>
+                        <button class="mode-btn" data-mode="online">在线对战</button>
+                    </div>
+
+                    <div class="panel-title" style="margin-top: 16px;">AI 风格</div>
+                    <div class="ai-style-buttons">
+                        <button class="ai-btn active" data-ai="attack">
+                            <span class="ai-icon">⚔️</span>
+                            <span>进攻型</span>
+                        </button>
+                        <button class="ai-btn" data-ai="defense">
+                            <span class="ai-icon">🛡️</span>
+                            <span>防守型</span>
+                        </button>
+                        <button class="ai-btn" data-ai="chop">
+                            <span class="ai-icon">🌀</span>
+                            <span>削球型</span>
+                        </button>
+                    </div>
+
+                    <div class="tournament-bracket" id="tournamentBracket" style="display: none;">
+                        <div class="panel-title">锦标赛进度</div>
+                        <div class="bracket-container" id="bracketContainer"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="controls-info">
+                <div class="control-row">
+                    <span class="key">↑</span><span class="key">↓</span><span class="key">←</span><span class="key">→</span>
+                    <span class="control-desc">移动</span>
+                </div>
+                <div class="control-row">
+                    <span class="key">W</span><span class="key">E</span><span class="key">R</span><span class="key">T</span>
+                    <span class="control-desc">击球方式</span>
+                </div>
+                <div class="control-row">
+                    <span class="key">A</span><span class="key">S</span><span class="key">D</span>
+                    <span class="control-desc">旋转控制</span>
+                </div>
+                <div class="control-row">
+                    <span class="key">空格</span>
+                    <span class="control-desc">发球</span>
+                </div>
+                <div class="control-row">
+                    <span class="key">P</span>
+                    <span class="control-desc">暂停</span>
+                </div>
+                <div class="control-row">
+                    <span class="key">C</span>
+                    <span class="control-desc">切换视角</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="overlay" id="overlay">
+            <div class="overlay-content">
+                <h1 id="overlayTitle">乒乓球对战 专业版</h1>
+                <p id="overlayMessage">选择游戏模式开始</p>
+                <div class="menu-buttons">
+                    <button class="menu-btn" id="startBtn">开始游戏</button>
+                    <button class="menu-btn" id="tutorialBtn">游戏教程</button>
+                    <button class="menu-btn" id="settingsBtn">设置</button>
+                </div>
+                <div class="rules" id="rulesSection">
+                    <h3>游戏规则</h3>
+                    <p>先到 11 分且领先 2 分获胜</p>
+                    <p>发球权每 2 分轮换</p>
+                    <p>连续扣杀消耗体力，体力不足时无法扣杀</p>
+                    <p>旋转球会改变飞行轨迹和反弹方向</p>
+                </div>
+                <div class="tutorial" id="tutorialSection" style="display: none;">
+                    <h3>操作教程</h3>
+                    <p><strong>Q/W/E/R/T</strong> - 切换击球方式</p>
+                    <p><strong>A/S/D</strong> - 增加上旋/侧旋/下旋</p>
+                    <p><strong>方向键</strong> - 移动球拍</p>
+                    <p><strong>空格</strong> - 发球</p>
+                    <h3 style="margin-top: 12px;">击球方式</h3>
+                    <p>🏓 <strong>普通</strong> - 平衡的速度和旋转</p>
+                    <p>⚡ <strong>扣杀</strong> - 高速度，消耗体力</p>
+                    <p>🌀 <strong>削球</strong> - 强下旋，低速度</p>
+                    <p>⬆️ <strong>高吊</strong> - 高弧线，低速度</p>
+                    <p>↩️ <strong>搓球</strong> - 短球，控制落点</p>
+                </div>
+                <div class="settings" id="settingsSection" style="display: none;">
+                    <h3>游戏设置</h3>
+                    <div class="setting-row">
+                        <label>难度：</label>
+                        <select id="difficultySelect">
+                            <option value="easy">简单</option>
+                            <option value="normal" selected>普通</option>
+                            <option value="hard">困难</option>
+                            <option value="expert">专家</option>
+                        </select>
+                    </div>
+                    <div class="setting-row">
+                        <label>视角：</label>
+                        <select id="viewSelect">
+                            <option value="top" selected>俯视</option>
+                            <option value="side">侧视</option>
+                            <option value="auto">自动切换</option>
+                        </select>
+                    </div>
+                    <div class="setting-row">
+                        <label>音效：</label>
+                        <input type="checkbox" id="soundToggle" checked>
+                    </div>
+                    <div class="setting-row">
+                        <label>慢动作回放：</label>
+                        <input type="checkbox" id="replayToggle" checked>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="pause-overlay" id="pauseOverlay">
+            <div class="pause-content">
+                <h2>游戏暂停</h2>
+                <button class="menu-btn" id="resumeBtn">继续游戏</button>
+                <button class="menu-btn" id="quitBtn">退出到菜单</button>
+            </div>
+        </div>
+
+        <div class="network-panel" id="networkPanel" style="display: none;">
+            <div class="network-content">
+                <h2>在线对战</h2>
+                <p class="network-notice">局域网对战功能：请确保双方在同一网络下</p>
+                <div class="network-buttons">
+                    <button class="menu-btn" id="hostBtn">创建房间</button>
+                    <button class="menu-btn" id="joinBtn">加入房间</button>
+                </div>
+                <div class="room-info" id="roomInfo" style="display: none;">
+                    <p>房间号：<span id="roomCode">----</span></p>
+                    <p>等待玩家加入...</p>
+                </div>
+                <div class="join-room" id="joinRoom" style="display: none;">
+                    <input type="text" id="roomInput" placeholder="输入房间号" maxlength="6">
+                    <button class="menu-btn" id="confirmJoinBtn">加入</button>
+                </div>
+                <button class="menu-btn secondary" id="closeNetworkBtn">返回</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/game.js"></script>
+</body>
+</html>

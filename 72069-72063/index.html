@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>弓箭射击模拟 - 专业版</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="game-container">
+        <div class="info-panel">
+            <div class="info-item">
+                <span class="label">箭数</span>
+                <span class="value" id="arrowCount">0 / 10</span>
+            </div>
+            <div class="info-item">
+                <span class="label">单箭得分</span>
+                <span class="value" id="currentScore">-</span>
+            </div>
+            <div class="info-item">
+                <span class="label">累计总分</span>
+                <span class="value" id="totalScore">0</span>
+            </div>
+            <div class="info-item wind">
+                <span class="label">风力</span>
+                <span class="value" id="windIndicator">
+                    <span id="windArrow">→</span>
+                    <span id="windSpeed">0</span>
+                </span>
+            </div>
+            <div class="info-item" id="timerItem" style="display: none;">
+                <span class="label">时间</span>
+                <span class="value" id="timer">60</span>
+            </div>
+            <div class="info-item season-info">
+                <span class="label">赛季</span>
+                <span class="value" id="seasonName">春季锦标赛</span>
+            </div>
+        </div>
+
+        <div class="selection-panel">
+            <div class="select-group">
+                <span class="select-label">场景:</span>
+                <button class="select-btn active" data-scene="range">🏹 射箭场</button>
+                <button class="select-btn" data-scene="forest">🌲 森林</button>
+                <button class="select-btn" data-scene="castle">🏰 城堡</button>
+            </div>
+            <div class="select-group">
+                <span class="select-label">武器:</span>
+                <button class="select-btn active" data-weapon="longbow">长弓</button>
+                <button class="select-btn" data-weapon="compound">复合弓</button>
+                <button class="select-btn" data-weapon="crossbow">弩</button>
+            </div>
+            <div class="select-group">
+                <span class="select-label">模式:</span>
+                <button class="select-btn active" data-mode="classic">经典</button>
+                <button class="select-btn" data-mode="moving">移动靶</button>
+                <button class="select-btn" data-mode="timed">限时</button>
+            </div>
+            <div class="select-group">
+                <button class="select-btn scope-btn" id="scopeBtn">🔭 瞄准镜</button>
+                <button class="select-btn fpv-btn" id="fpvBtn">👁 第一人称</button>
+                <button class="select-btn vr-btn" id="vrBtn">🥽 VR模式</button>
+                <button class="select-btn leaderboard-btn" id="leaderboardBtn">🏆 排行榜</button>
+            </div>
+        </div>
+
+        <canvas id="gameCanvas"></canvas>
+
+        <div class="power-bar">
+            <div class="power-fill" id="powerFill"></div>
+            <span class="power-label">力度</span>
+        </div>
+
+        <div class="weapon-stats">
+            <div class="stat-item">
+                <span class="stat-label">威力</span>
+                <div class="stat-bar"><div class="stat-fill power" id="powerStat"></div></div>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">精准</span>
+                <div class="stat-bar"><div class="stat-fill accuracy" id="accuracyStat"></div></div>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">速度</span>
+                <div class="stat-bar"><div class="stat-fill speed" id="speedStat"></div></div>
+            </div>
+        </div>
+
+        <div class="instruction">
+            按住鼠标拖动调整角度和力度，释放鼠标射箭 | 按 V 切换第一人称 | 按 R 切换瞄准镜
+        </div>
+
+        <div class="game-over" id="gameOver">
+            <div class="game-over-content">
+                <h2>游戏结束!</h2>
+                <p class="final-score">最终得分: <span id="finalScore">0</span></p>
+                <div class="share-section">
+                    <button class="share-btn" id="shareBtn">📤 分享成绩</button>
+                </div>
+                <button class="restart-btn" id="restartBtn">重新开始</button>
+            </div>
+        </div>
+
+        <div class="leaderboard-panel" id="leaderboardPanel">
+            <div class="leaderboard-content">
+                <h2>🏆 全球排行榜</h2>
+                <div class="season-banner">
+                    <span>春季锦标赛</span>
+                    <span class="season-countdown">剩余: 35天</span>
+                </div>
+                <div class="leaderboard-list" id="leaderboardList">
+                </div>
+                <button class="close-btn" id="closeLeaderboard">关闭</button>
+            </div>
+        </div>
+
+        <div class="vr-panel" id="vrPanel">
+            <div class="vr-content">
+                <h2>🥽 VR 体感模式</h2>
+                <p class="vr-instruction">请将设备对准目标，使用陀螺仪控制瞄准</p>
+                <div class="vr-status">
+                    <span class="vr-indicator" id="vrIndicator">● 未连接</span>
+                </div>
+                <div class="vr-controls">
+                    <button class="select-btn" id="calibrateBtn">校准设备</button>
+                </div>
+                <button class="close-btn" id="closeVR">返回游戏</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/game.js"></script>
+</body>
+</html>

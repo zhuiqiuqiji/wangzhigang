@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>贪吃蛇大作战</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <div id="gameContainer">
+        <canvas id="gameCanvas"></canvas>
+
+        <div id="mainMenu" class="panel show">
+            <div class="menu-container">
+                <h1 class="game-title">贪吃蛇大作战</h1>
+                <p class="game-subtitle">多人竞技版 · 团队战 · 限时挑战</p>
+
+                <div class="menu-buttons">
+                    <button class="menu-btn primary" onclick="startGame('classic')">
+                        <span class="btn-icon">🎮</span>
+                        <span class="btn-text">经典模式</span>
+                        <span class="btn-desc">单人挑战最高分</span>
+                    </button>
+                    <button class="menu-btn secondary" onclick="startGame('battle')">
+                        <span class="btn-icon">⚔️</span>
+                        <span class="btn-text">竞技模式</span>
+                        <span class="btn-desc">与AI蛇群对战</span>
+                    </button>
+                    <button class="menu-btn team" onclick="startGame('team')">
+                        <span class="btn-icon">🛡️</span>
+                        <span class="btn-text">团队竞技</span>
+                        <span class="btn-desc">4队混战夺取胜利</span>
+                    </button>
+                    <button class="menu-btn timed" onclick="startGame('timed')">
+                        <span class="btn-icon">⏱️</span>
+                        <span class="btn-text">限时挑战</span>
+                        <span class="btn-desc">3分钟内冲击最高分</span>
+                    </button>
+                </div>
+
+                <div class="menu-bottom">
+                    <button class="small-btn" onclick="showSkinSelector()">🎨 皮肤</button>
+                    <button class="small-btn" onclick="showLeaderboard()">🏆 排行榜</button>
+                </div>
+
+                <div class="season-info">
+                    <span>第 <span id="seasonNumber">1</span> 赛季</span>
+                    <span id="seasonRank">白银</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="gameHUD" class="hud-container">
+            <div class="hud-left">
+                <div class="hud-item">
+                    <span class="hud-icon">📏</span>
+                    <span class="hud-label">长度</span>
+                    <span class="hud-value" id="lengthDisplay">5</span>
+                </div>
+                <div class="hud-item">
+                    <span class="hud-icon">⭐</span>
+                    <span class="hud-label">得分</span>
+                    <span class="hud-value" id="scoreDisplay">0</span>
+                </div>
+                <div class="hud-item" id="killsContainer">
+                    <span class="hud-icon">💀</span>
+                    <span class="hud-label">击杀</span>
+                    <span class="hud-value" id="killsDisplay">0</span>
+                </div>
+            </div>
+
+            <div class="hud-right">
+                <div class="hud-item battle-only">
+                    <span class="hud-label">排名</span>
+                    <span class="hud-value rank" id="rankDisplay">#1</span>
+                </div>
+                <div class="hud-item battle-only">
+                    <span class="hud-label">存活</span>
+                    <span class="hud-value" id="aliveDisplay">9</span>
+                </div>
+                <div class="hud-item team-only" style="display: none;">
+                    <span class="hud-label">队伍</span>
+                    <span class="hud-value" id="teamDisplay">-</span>
+                </div>
+            </div>
+
+            <div class="boost-bar-container">
+                <div class="boost-bar" id="boostBar">
+                    <div class="boost-icon">⚡</div>
+                    <span class="boost-text">按住空格加速</span>
+                </div>
+            </div>
+
+            <div class="minimap-container">
+                <canvas id="minimapCanvas"></canvas>
+            </div>
+        </div>
+
+        <div id="gameOverPanel" class="panel">
+            <div class="panel-content game-over-card">
+                <h2 class="panel-title">游戏结束</h2>
+
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-label">最终长度</span>
+                        <span class="stat-value" id="finalLength">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">最终得分</span>
+                        <span class="stat-value" id="finalScore">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">击杀数</span>
+                        <span class="stat-value" id="finalKills">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">排名</span>
+                        <span class="stat-value rank" id="finalRank">-</span>
+                    </div>
+                </div>
+
+                <div class="high-score">
+                    <span>历史最高: </span>
+                    <span id="highScore">0</span>
+                </div>
+
+                <div id="seasonInfo" class="season-rank-info" style="display: none;"></div>
+
+                <div class="panel-buttons">
+                    <button class="panel-btn primary" onclick="restartGame()">再来一局</button>
+                    <button class="panel-btn" onclick="showMenu()">返回菜单</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="leaderboardPanel" class="panel">
+            <div class="panel-content">
+                <h2 class="panel-title">🏆 排行榜</h2>
+                <div class="leaderboard-list" id="leaderboardList"></div>
+                <button class="panel-btn" onclick="hideLeaderboard()">关闭</button>
+            </div>
+        </div>
+
+        <div id="skinPanel" class="panel">
+            <div class="panel-content">
+                <h2 class="panel-title">🎨 皮肤选择</h2>
+                <div class="skin-list" id="skinList"></div>
+                <button class="panel-btn" onclick="hideSkinSelector()">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/snake.js"></script>
+    <script src="../js/ai-snake.js"></script>
+    <script src="../js/food.js"></script>
+    <script src="../js/particles.js"></script>
+    <script src="../js/camera.js"></script>
+    <script src="../js/minimap.js"></script>
+    <script src="../js/skins.js"></script>
+    <script src="../js/leaderboard.js"></script>
+    <script src="../js/input.js"></script>
+    <script src="../js/game.js"></script>
+</body>
+</html>

@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>投篮机篮球游戏</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="game-container">
+        <div class="game-header">
+            <div class="score-panel">
+                <div class="panel-item">
+                    <span class="label">得分</span>
+                    <span class="value" id="score">0</span>
+                </div>
+                <div class="panel-item">
+                    <span class="label">时间</span>
+                    <span class="value" id="timer">60</span>
+                </div>
+                <div class="panel-item">
+                    <span class="label">连击</span>
+                    <span class="value" id="combo">0</span>
+                </div>
+                <div class="panel-item" id="streakPanel" style="display:none;">
+                    <span class="label">连中</span>
+                    <span class="value" id="streak">0</span>
+                </div>
+                <div class="panel-item" id="threePointPanel" style="display:none;">
+                    <span class="label">三分</span>
+                    <span class="value" id="threeMade">0</span>
+                </div>
+                <div class="panel-item" id="p2ScorePanel" style="display:none;">
+                    <span class="label">P2得分</span>
+                    <span class="value" id="p2Score">0</span>
+                </div>
+            </div>
+            <div class="header-buttons">
+                <button class="icon-btn" id="shopBtn" title="升级商店">🛒</button>
+                <button class="icon-btn" id="rankBtn" title="排行榜">🏆</button>
+                <button class="icon-btn" id="challengeBtn" title="每日挑战">🎯</button>
+                <button class="icon-btn" id="pauseBtn" title="暂停">⏸</button>
+            </div>
+        </div>
+
+        <div class="player-indicator" id="playerIndicator" style="display:none;">
+            <div class="player-turn" id="playerTurn">玩家 1 回合</div>
+            <div class="player-shots" id="playerShots">剩余: 5 球</div>
+        </div>
+
+        <canvas id="gameCanvas"></canvas>
+
+        <div class="shot-selector" id="shotSelector">
+            <div class="shot-title">投篮方式</div>
+            <div class="shot-options">
+                <button class="shot-btn active" data-shot="high">🏀 高弧度</button>
+                <button class="shot-btn" data-shot="low">⚡ 低平快</button>
+                <button class="shot-btn" data-shot="bank">🔄 打板</button>
+            </div>
+        </div>
+
+        <div class="hoop-info" id="hoopInfo">
+            <span id="hoopTypeLabel">标准篮筐</span>
+        </div>
+
+        <div class="overlay" id="startScreen">
+            <div class="modal large">
+                <h1 class="game-title">🏀 投篮机篮球</h1>
+                <p class="game-desc">拖拽篮球控制角度和力度，选择投篮方式<br>挑战各种模式，成为投篮大师！</p>
+                
+                <div class="mode-selector">
+                    <h3>选择游戏模式</h3>
+                    <div class="mode-grid">
+                        <div class="mode-card active" data-mode="timed">
+                            <div class="mode-icon">⏱</div>
+                            <div class="mode-name">限时模式</div>
+                            <div class="mode-desc">60秒内尽可能多得分</div>
+                        </div>
+                        <div class="mode-card" data-mode="streak">
+                            <div class="mode-icon">🔥</div>
+                            <div class="mode-name">连中模式</div>
+                            <div class="mode-desc">连续命中得分翻倍</div>
+                        </div>
+                        <div class="mode-card" data-mode="threePoint">
+                            <div class="mode-icon">🌟</div>
+                            <div class="mode-name">三分大赛</div>
+                            <div class="mode-desc">25球投三分，最高分者胜</div>
+                        </div>
+                        <div class="mode-card" data-mode="versus">
+                            <div class="mode-icon">👥</div>
+                            <div class="mode-name">双人对战</div>
+                            <div class="mode-desc">轮流投篮比拼得分</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hoop-selector">
+                    <h3>选择篮筐</h3>
+                    <div class="hoop-grid">
+                        <div class="hoop-card active" data-hoop="standard">
+                            <div class="hoop-icon">🎯</div>
+                            <div class="hoop-name">标准篮筐</div>
+                        </div>
+                        <div class="hoop-card" data-hoop="moving">
+                            <div class="hoop-icon">↔️</div>
+                            <div class="hoop-name">移动篮筐</div>
+                        </div>
+                        <div class="hoop-card" data-hoop="small">
+                            <div class="hoop-icon">🔍</div>
+                            <div class="hoop-name">缩小篮筐</div>
+                        </div>
+                        <div class="hoop-card" data-hoop="double">
+                            <div class="hoop-icon">🎯🎯</div>
+                            <div class="hoop-name">双篮筐</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="rules">
+                    <p>🎯 2分线内命中得2分</p>
+                    <p>🌟 3分线外命中得3分</p>
+                    <p>🔥 连续命中触发COMBO加分</p>
+                    <p>🛒 使用金币升级球员能力</p>
+                </div>
+                <button class="start-btn" id="startBtn">开始游戏</button>
+            </div>
+        </div>
+
+        <div class="overlay hidden" id="endScreen">
+            <div class="modal">
+                <h1 class="game-title" id="endTitle">游戏结束!</h1>
+                <p class="final-score-label">最终得分</p>
+                <p class="final-score" id="finalScore">0</p>
+                <p class="stats" id="stats1">
+                    命中: <span id="shotsMade">0</span> | 
+                    出手: <span id="shotsTotal">0</span> | 
+                    最高连击: <span id="maxCombo">0</span>
+                </p>
+                <p class="stats" id="stats2" style="display:none;">
+                    命中率: <span id="accuracy">0%</span> | 
+                    获得金币: <span id="coinsEarned">0</span>
+                </p>
+                <p class="stats" id="stats3" style="display:none;">
+                    P2得分: <span id="p2FinalScore">0</span> | 
+                    胜者: <span id="winner">无</span>
+                </p>
+                <button class="start-btn" id="restartBtn">再来一局</button>
+                <button class="secondary-btn" id="backToMenuBtn">返回菜单</button>
+            </div>
+        </div>
+
+        <div class="overlay hidden" id="shopScreen">
+            <div class="modal large">
+                <h1 class="game-title">🛒 升级商店</h1>
+                <div class="coins-display">
+                    <span>💰 金币: <span id="shopCoins">0</span></span>
+                </div>
+                <div class="upgrade-grid">
+                    <div class="upgrade-card" data-upgrade="strength">
+                        <div class="upgrade-icon">💪</div>
+                        <div class="upgrade-name">力量</div>
+                        <div class="upgrade-desc">增加投篮力度</div>
+                        <div class="upgrade-level">等级: <span id="strengthLevel">1</span></div>
+                        <div class="upgrade-cost">💰 <span id="strengthCost">100</span></div>
+                        <button class="upgrade-btn" data-upgrade="strength">升级</button>
+                    </div>
+                    <div class="upgrade-card" data-upgrade="accuracy">
+                        <div class="upgrade-icon">🎯</div>
+                        <div class="upgrade-name">准确度</div>
+                        <div class="upgrade-desc">提升命中精度</div>
+                        <div class="upgrade-level">等级: <span id="accuracyLevel">1</span></div>
+                        <div class="upgrade-cost">💰 <span id="accuracyCost">100</span></div>
+                        <button class="upgrade-btn" data-upgrade="accuracy">升级</button>
+                    </div>
+                    <div class="upgrade-card" data-upgrade="spin">
+                        <div class="upgrade-icon">🔄</div>
+                        <div class="upgrade-name">旋转球</div>
+                        <div class="upgrade-desc">增强篮球旋转效果</div>
+                        <div class="upgrade-level">等级: <span id="spinLevel">1</span></div>
+                        <div class="upgrade-cost">💰 <span id="spinCost">150</span></div>
+                        <button class="upgrade-btn" data-upgrade="spin">升级</button>
+                    </div>
+                    <div class="upgrade-card" data-upgrade="comboBoost">
+                        <div class="upgrade-icon">🔥</div>
+                        <div class="upgrade-name">连击加成</div>
+                        <div class="upgrade-desc">提升连击额外得分</div>
+                        <div class="upgrade-level">等级: <span id="comboBoostLevel">1</span></div>
+                        <div class="upgrade-cost">💰 <span id="comboBoostCost">200</span></div>
+                        <button class="upgrade-btn" data-upgrade="comboBoost">升级</button>
+                    </div>
+                    <div class="upgrade-card" data-upgrade="slowMotion">
+                        <div class="upgrade-icon">⏳</div>
+                        <div class="upgrade-name">时间延长</div>
+                        <div class="upgrade-desc">增加游戏时间</div>
+                        <div class="upgrade-level">等级: <span id="slowMotionLevel">1</span></div>
+                        <div class="upgrade-cost">💰 <span id="slowMotionCost">250</span></div>
+                        <button class="upgrade-btn" data-upgrade="slowMotion">升级</button>
+                    </div>
+                    <div class="upgrade-card" data-upgrade="luckyShot">
+                        <div class="upgrade-icon">🍀</div>
+                        <div class="upgrade-name">幸运投篮</div>
+                        <div class="upgrade-desc">随机获得额外金币</div>
+                        <div class="upgrade-level">等级: <span id="luckyShotLevel">1</span></div>
+                        <div class="upgrade-cost">💰 <span id="luckyShotCost">300</span></div>
+                        <button class="upgrade-btn" data-upgrade="luckyShot">升级</button>
+                    </div>
+                </div>
+                <button class="secondary-btn" id="closeShopBtn">关闭</button>
+            </div>
+        </div>
+
+        <div class="overlay hidden" id="rankScreen">
+            <div class="modal large">
+                <h1 class="game-title">🏆 排行榜</h1>
+                <div class="rank-tabs">
+                    <button class="rank-tab active" data-rank="timed">限时模式</button>
+                    <button class="rank-tab" data-rank="streak">连中模式</button>
+                    <button class="rank-tab" data-rank="threePoint">三分大赛</button>
+                    <button class="rank-tab" data-rank="versus">双人对战</button>
+                </div>
+                <div class="rank-list" id="rankList">
+                </div>
+                <button class="secondary-btn" id="closeRankBtn">关闭</button>
+            </div>
+        </div>
+
+        <div class="overlay hidden" id="challengeScreen">
+            <div class="modal">
+                <h1 class="game-title">🎯 每日挑战</h1>
+                <div class="challenge-content" id="challengeContent">
+                </div>
+                <div class="challenge-reward" id="challengeReward">
+                    完成奖励: 💰 <span id="challengeCoins">100</span>
+                </div>
+                <div class="challenge-progress" id="challengeProgress">
+                    进度: <span id="challengeProgressText">0/0</span>
+                </div>
+                <button class="secondary-btn" id="closeChallengeBtn">关闭</button>
+            </div>
+        </div>
+
+        <div class="overlay hidden" id="pauseScreen">
+            <div class="modal">
+                <h1 class="game-title">⏸ 游戏暂停</h1>
+                <button class="start-btn" id="resumeBtn">继续游戏</button>
+                <button class="secondary-btn" id="quitBtn">退出游戏</button>
+            </div>
+        </div>
+
+        <div class="score-popup hidden" id="scorePopup">+2</div>
+        <div class="combo-popup hidden" id="comboPopup">COMBO!</div>
+        <div class="coin-popup hidden" id="coinPopup">+10 💰</div>
+    </div>
+
+    <script src="js/game.js"></script>
+</body>
+</html>

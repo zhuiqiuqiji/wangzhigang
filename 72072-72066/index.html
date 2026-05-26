@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>切披萨烹饪大师</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="game-container">
+        <header class="game-header">
+            <h1 class="game-title">🍕 烹饪大师</h1>
+            <div class="status-bar">
+                <div class="status-item time">
+                    <span class="status-icon">⏱️</span>
+                    <span class="status-label">时间</span>
+                    <span class="status-value" id="timeLeft">60</span>
+                    <div class="time-progress">
+                        <div class="time-progress-bar" id="timeProgressBar"></div>
+                    </div>
+                </div>
+                <div class="status-item coins">
+                    <span class="status-icon">🪙</span>
+                    <span class="status-label">金币</span>
+                    <span class="status-value" id="coins">100</span>
+                </div>
+                <div class="status-item score">
+                    <span class="status-icon">⭐</span>
+                    <span class="status-label">声望</span>
+                    <span class="status-value" id="score">0</span>
+                </div>
+                <div class="status-item rank">
+                    <span class="status-icon">👨‍🍳</span>
+                    <span class="status-label">段位</span>
+                    <span class="status-value" id="rankTitle">新手厨师</span>
+                </div>
+            </div>
+        </header>
+
+        <nav class="game-nav">
+            <button class="nav-btn active" data-tab="game">🎮 游戏</button>
+            <button class="nav-btn" data-tab="restaurant">🏪 餐厅</button>
+            <button class="nav-btn" data-tab="inventory">📦 仓库</button>
+            <button class="nav-btn" data-tab="ranking">🏆 排行</button>
+        </nav>
+
+        <main class="game-main">
+            <div class="tab-content active" id="tab-game">
+                <aside class="order-panel">
+                    <div class="customer-card" id="customerCard">
+                        <div class="customer-avatar" id="customerAvatar">😊</div>
+                        <div class="customer-info">
+                            <span class="customer-name" id="customerName">顾客</span>
+                            <span class="customer-type" id="customerType">普通顾客</span>
+                            <div class="satisfaction-bar">
+                                <span class="satisfaction-label">满意度</span>
+                                <div class="satisfaction-progress">
+                                    <div class="satisfaction-fill" id="satisfactionFill" style="width: 100%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dish-selector">
+                        <span class="selector-label">选择料理:</span>
+                        <div class="dish-buttons">
+                            <button class="dish-btn active" data-dish="pizza">🍕 披萨</button>
+                            <button class="dish-btn" data-dish="cake">🎂 蛋糕</button>
+                            <button class="dish-btn" data-dish="sushi">🍣 寿司</button>
+                        </div>
+                    </div>
+
+                    <div class="order-card" id="orderCard">
+                        <div class="order-header">
+                            <span class="order-title">📋 当前订单</span>
+                            <span class="order-number" id="orderNumber">#1</span>
+                        </div>
+                        <div class="order-content">
+                            <div class="dish-name" id="dishName">玛格丽特披萨</div>
+                            <div class="order-requirement">
+                                <span class="requirement-label">需要切成</span>
+                                <span class="requirement-slices" id="requiredSlices">4</span>
+                                <span class="requirement-unit">等分</span>
+                            </div>
+                            <div class="order-diagram" id="orderDiagram"></div>
+                            <div class="order-reward">
+                                <span class="reward-label">奖励</span>
+                                <span class="reward-coins">🪙 <span id="rewardCoins">10</span></span>
+                                <span class="reward-score">⭐ <span id="rewardScore">50</span></span>
+                            </div>
+                            <div class="stars-display" id="starsDisplay">
+                                <span class="star empty">★</span>
+                                <span class="star empty">★</span>
+                                <span class="star empty">★</span>
+                            </div>
+                        </div>
+                        <div class="order-progress">
+                            <span class="progress-label">切割进度</span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="cutProgress"></div>
+                            </div>
+                            <span class="progress-text"><span id="cutsMade">0</span>/<span id="cutsNeeded">4</span> 刀</span>
+                        </div>
+                    </div>
+                    <div class="completed-count">
+                        已完成订单: <span id="completedOrders">0</span>
+                    </div>
+                </aside>
+
+                <section class="game-area">
+                    <div class="canvas-container">
+                        <canvas id="gameCanvas" width="500" height="500"></canvas>
+                        <div class="hint-text" id="hintText">从圆心附近划线切向边缘</div>
+                    </div>
+                    <div class="plates-area" id="platesArea"></div>
+                </section>
+
+                <aside class="control-panel">
+                    <button class="btn btn-primary" id="startBtn">🎮 开始营业</button>
+                    <button class="btn btn-secondary" id="resetBtn">🔄 重做</button>
+                    <div class="game-mode-selector">
+                        <span class="mode-label">游戏模式:</span>
+                        <select id="gameMode">
+                            <option value="timed">⏱️ 限时挑战</option>
+                            <option value="endless">♾️ 无尽模式</option>
+                            <option value="challenge">🎯 关卡挑战</option>
+                        </select>
+                        <div class="target-display" id="targetDisplay" style="display:none;margin-top:8px;padding:8px;background:#FFF3E0;border-radius:8px;text-align:center;font-weight:600;color:#FF6B00;"></div>
+                    </div>
+                    <div class="daily-challenge">
+                        <h3>📅 每日挑战</h3>
+                        <div class="challenge-item">
+                            <span>完成10个完美切割</span>
+                            <span class="challenge-reward">+50🪙</span>
+                        </div>
+                    </div>
+                    <div class="instructions">
+                        <h3>📖 操作说明</h3>
+                        <ul>
+                            <li>从圆心附近划线切向边缘</li>
+                            <li>按照要求切成指定等分数</li>
+                            <li>N块需要切N刀</li>
+                            <li>越精准，星级越高</li>
+                        </ul>
+                    </div>
+                </aside>
+            </div>
+
+            <div class="tab-content" id="tab-restaurant">
+                <div class="restaurant-panel">
+                    <h2>🏪 我的餐厅</h2>
+                    <div class="restaurant-info">
+                        <div class="info-card">
+                            <span class="info-label">餐厅等级</span>
+                            <span class="info-value" id="restaurantLevel">Lv.1</span>
+                        </div>
+                        <div class="info-card">
+                            <span class="info-label">总营业额</span>
+                            <span class="info-value" id="totalRevenue">0</span>
+                        </div>
+                        <div class="info-card">
+                            <span class="info-label">完成订单</span>
+                            <span class="info-value" id="totalOrders">0</span>
+                        </div>
+                    </div>
+
+                    <h3>🔧 厨房设备</h3>
+                    <div class="equipment-grid" id="equipmentGrid"></div>
+
+                    <h3>📜 菜谱收藏</h3>
+                    <div class="recipe-grid" id="recipeGrid"></div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="tab-inventory">
+                <div class="inventory-panel">
+                    <h2>📦 食材仓库</h2>
+                    <div class="inventory-stats">
+                        <div class="stat-card">
+                            <span class="stat-label">仓库容量</span>
+                            <span class="stat-value"><span id="usedCapacity">0</span>/<span id="maxCapacity">100</span></span>
+                        </div>
+                    </div>
+
+                    <h3>🥫 食材库存</h3>
+                    <div class="ingredient-grid" id="ingredientGrid"></div>
+
+                    <h3>🛒 进货市场</h3>
+                    <div class="market-grid" id="marketGrid"></div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="tab-ranking">
+                <div class="ranking-panel">
+                    <h2>🏆 排行榜</h2>
+                    <div class="rank-display">
+                        <div class="current-rank">
+                            <span class="rank-badge" id="rankBadge">🥉</span>
+                            <div class="rank-info">
+                                <span class="rank-title" id="rankTitleDisplay">新手厨师</span>
+                                <span class="rank-progress-label">下一等级进度</span>
+                                <div class="rank-progress-bar">
+                                    <div class="rank-progress-fill" id="rankProgressFill" style="width: 0%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3>🌍 全球排行榜</h3>
+                    <div class="leaderboard" id="leaderboard"></div>
+
+                    <h3>📊 我的成就</h3>
+                    <div class="achievements-grid" id="achievementsGrid"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div class="modal-overlay" id="gameOverModal">
+        <div class="modal-content">
+            <h2 class="modal-title">🎉 今日营业结束</h2>
+            <div class="modal-stats">
+                <div class="stat-item">
+                    <span class="stat-label">营业收入</span>
+                    <span class="stat-value coins" id="finalCoins">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">获得声望</span>
+                    <span class="stat-value score" id="finalScore">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">完成订单</span>
+                    <span class="stat-value orders" id="finalOrders">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">顾客满意度</span>
+                    <span class="stat-value accuracy" id="finalSatisfaction">0%</span>
+                </div>
+            </div>
+            <div class="stars-earned">
+                <span class="star-label">今日表现评级:</span>
+                <div class="stars-display large" id="finalStars">
+                    <span class="star empty">★</span>
+                    <span class="star empty">★</span>
+                    <span class="star empty">★</span>
+                </div>
+            </div>
+            <button class="btn btn-primary btn-large" id="restartBtn">🔄 继续营业</button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="upgradeModal">
+        <div class="modal-content small">
+            <h3 class="modal-title">升级确认</h3>
+            <p id="upgradeText">确定要升级此设备吗？</p>
+            <div class="modal-buttons">
+                <button class="btn btn-secondary" id="cancelUpgrade">取消</button>
+                <button class="btn btn-primary" id="confirmUpgrade">确认升级</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="floating-text" id="floatingText"></div>
+
+    <script src="js/game.js"></script>
+</body>
+</html>
