@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>接水管管道工</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="game-container">
+        <header class="game-header">
+            <h1 class="game-title">🔧 接水管管道工</h1>
+            <div class="status-panel">
+                <div class="status-item" id="timerContainer">
+                    <span class="status-label">⏱️ 用时</span>
+                    <span class="status-value" id="timer">00:00</span>
+                </div>
+                <div class="status-item" id="movesContainer">
+                    <span class="status-label">🔢 步数</span>
+                    <span class="status-value" id="movesDisplay">0</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">🔗 未连接</span>
+                    <span class="status-value" id="unconnected">0</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">🎯 关卡</span>
+                    <span class="status-value" id="level">1</span>
+                </div>
+                <div class="status-item" id="liquidTypeDisplay">
+                    <span class="status-label">💧 液体</span>
+                    <span class="status-value" id="liquidInfo">💧 清水</span>
+                </div>
+            </div>
+        </header>
+
+        <main class="game-main">
+            <div class="grid-container">
+                <div class="pipe-grid" id="pipeGrid"></div>
+                <div class="particles-container" id="particlesContainer"></div>
+            </div>
+        </main>
+
+        <footer class="game-footer">
+            <div class="control-panel">
+                <div class="selector-group">
+                    <div class="difficulty-selector">
+                        <label>难度：</label>
+                        <select id="difficulty">
+                            <option value="easy">简单</option>
+                            <option value="medium" selected>中等</option>
+                            <option value="hard">困难</option>
+                        </select>
+                    </div>
+                    <div class="mode-selector">
+                        <label>模式：</label>
+                        <select id="gameMode">
+                            <option value="classic">经典模式</option>
+                            <option value="timed">限时挑战</option>
+                            <option value="moves">步数限制</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="tool-panel" id="toolPanel">
+                    <button class="tool-btn" id="toolWrench" title="疏通堵塞">
+                        🔧 疏通
+                    </button>
+                    <button class="tool-btn" id="toolPatch" title="修补漏水">
+                        🔨 修补
+                    </button>
+                </div>
+                <div class="buttons">
+                    <button class="btn btn-primary" id="startBtn">开始游戏</button>
+                    <button class="btn btn-secondary" id="resetBtn">重置关卡</button>
+                    <button class="btn btn-secondary" id="levelSelectBtn">选择关卡</button>
+                    <button class="btn btn-secondary" id="customLevelsBtn">我的关卡</button>
+                    <button class="btn btn-secondary" id="editorBtn">🛠️ 编辑器</button>
+                </div>
+            </div>
+        </footer>
+
+        <div class="modal-overlay" id="winModal">
+            <div class="modal-content">
+                <h2 class="modal-title">🎉 恭喜通关！</h2>
+                <div class="modal-body">
+                    <div class="result-item">
+                        <span>完成时间：</span>
+                        <span class="result-value" id="finalTime">00:00</span>
+                    </div>
+                    <div class="result-item">
+                        <span>评分：</span>
+                        <span class="stars" id="stars">⭐⭐⭐</span>
+                    </div>
+                    <div class="best-score">
+                        <span>最佳记录：</span>
+                        <span id="bestScore">--</span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" id="nextLevelBtn">下一关</button>
+                    <button class="btn btn-secondary" id="replayBtn">重玩本关</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-overlay" id="gameOverModal">
+            <div class="modal-content">
+                <h2 class="modal-title game-over-title">😢 挑战失败</h2>
+                <div class="modal-body">
+                    <div class="result-item">
+                        <span class="game-over-reason" id="gameOverReason">--</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="game-over-stats" id="gameOverStats">--</span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" id="gameOverReplay">重新挑战</button>
+                    <button class="btn btn-secondary" id="gameOverSelectLevel">选择关卡</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-overlay" id="levelSelectModal">
+            <div class="modal-content level-select-content">
+                <div class="modal-header">
+                    <h2 class="modal-title">🗺️ 选择关卡</h2>
+                    <button class="btn-close" id="closeLevelSelect">✕</button>
+                </div>
+                <div class="modal-body">
+                    <div class="level-grid" id="levelGrid"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-overlay" id="customLevelsModal">
+            <div class="modal-content level-select-content">
+                <div class="modal-header">
+                    <h2 class="modal-title">📚 我的关卡</h2>
+                    <button class="btn-close" id="closeCustomLevels">✕</button>
+                </div>
+                <div class="modal-body">
+                    <div class="custom-levels-list" id="customLevelsList"></div>
+                    <div class="custom-levels-actions">
+                        <button class="btn btn-secondary" id="importLevelBtn">📥 导入关卡</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-overlay" id="importModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title">📥 导入关卡</h2>
+                    <button class="btn-close" id="closeImport">✕</button>
+                </div>
+                <div class="modal-body">
+                    <p class="import-hint">请粘贴关卡 JSON 数据：</p>
+                    <textarea id="importTextarea" class="import-textarea" placeholder='{"name":"关卡名称","rows":6,"cols":6,...}'></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" id="importConfirm">导入</button>
+                    <button class="btn btn-secondary" id="closeImportBtn">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/pipe.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/particles.js"></script>
+    <script src="js/audio.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/editor.js"></script>
+</body>
+</html>

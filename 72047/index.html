@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>塔楼堆叠平衡 - 3D版</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="game-container">
+    <canvas id="game-canvas"></canvas>
+
+    <div id="top-panel">
+      <div id="score-panel">
+        <div class="score-item">
+          <span class="score-label">分数</span>
+          <span class="score-value" id="score-value">0</span>
+        </div>
+        <div class="score-item">
+          <span class="score-label">完美对齐</span>
+          <span class="score-value" id="perfect-count">0</span>
+        </div>
+        <div class="score-item">
+          <span class="score-label">高度</span>
+          <span class="score-value" id="stack-height">0</span>
+        </div>
+        <div class="score-item" id="timer-item" style="display:none;">
+          <span class="score-label">时间</span>
+          <span class="score-value" id="timer-value">60</span>
+        </div>
+      </div>
+
+      <div id="top-buttons">
+        <button class="icon-btn" id="leaderboard-btn" title="排行榜">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 21h8M12 17v4M17 4h4v4a4 4 0 0 1-4 4M7 4H3v4a4 4 0 0 0 4 4M7 4h10v5a5 5 0 0 1-5 5 5 5 0 0 1-5-5V4z"/></svg>
+        </button>
+        <button class="icon-btn" id="ar-btn" title="AR模式">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v18M3 12h18M5 5l14 14M19 5L5 19"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div id="theme-selector">
+      <div class="theme-label">主题</div>
+      <div class="theme-list">
+        <button class="theme-btn active" data-theme="fruit" title="水果">
+          <span class="theme-emoji">🍉</span>
+        </button>
+        <button class="theme-btn" data-theme="pizza" title="披萨">
+          <span class="theme-emoji">🍕</span>
+        </button>
+        <button class="theme-btn" data-theme="book" title="书籍">
+          <span class="theme-emoji">📚</span>
+        </button>
+        <button class="theme-btn" data-theme="container" title="集装箱">
+          <span class="theme-emoji">📦</span>
+        </button>
+      </div>
+    </div>
+
+    <div id="mode-selector">
+      <div class="mode-label">模式</div>
+      <div class="mode-list">
+        <button class="mode-btn active" data-mode="endless">无尽</button>
+        <button class="mode-btn" data-mode="timed">限时</button>
+        <button class="mode-btn" data-mode="target">目标</button>
+      </div>
+    </div>
+
+    <div id="powerup-bar">
+      <button class="powerup-btn" data-powerup="wide" id="powerup-wide">
+        <div class="powerup-icon">↔</div>
+        <div class="powerup-count" id="wide-count">0</div>
+        <div class="powerup-name">加宽</div>
+      </button>
+      <button class="powerup-btn" data-powerup="magnet" id="powerup-magnet">
+        <div class="powerup-icon">🧲</div>
+        <div class="powerup-count" id="magnet-count">0</div>
+        <div class="powerup-name">磁吸</div>
+      </button>
+      <button class="powerup-btn" data-powerup="slowmo" id="powerup-slowmo">
+        <div class="powerup-icon">⏱</div>
+        <div class="powerup-count" id="slowmo-count">0</div>
+        <div class="powerup-name">慢动作</div>
+      </button>
+    </div>
+
+    <button id="start-btn" class="btn btn-primary">开始游戏</button>
+
+    <div id="start-hint" class="start-hint">点击屏幕任意位置放下方块</div>
+
+    <div id="game-over-modal" class="modal hidden">
+      <div class="modal-content">
+        <h2>游戏结束</h2>
+        <p class="final-score">最终得分: <span id="final-score">0</span></p>
+        <p class="final-info">完美对齐: <span id="final-perfect">0</span> 次 | 高度: <span id="final-height">0</span></p>
+        <p class="new-record" id="new-record" style="display:none;">🎉 新纪录!</p>
+        <div class="modal-buttons">
+          <button id="restart-btn" class="btn btn-primary">再来一局</button>
+          <button id="view-leaderboard-btn" class="btn btn-secondary">排行榜</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="leaderboard-modal" class="modal hidden">
+      <div class="modal-content">
+        <h2>本地排行榜</h2>
+        <div class="daily-challenge">
+          <span class="daily-label">今日最高高度:</span>
+          <span class="daily-value" id="daily-height">0</span>
+        </div>
+        <div class="leaderboard-list" id="leaderboard-list">
+          <div class="empty-leaderboard">暂无记录</div>
+        </div>
+        <div class="modal-buttons">
+          <button id="close-leaderboard-btn" class="btn btn-secondary">关闭</button>
+          <button id="clear-leaderboard-btn" class="btn btn-danger">清空记录</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="ar-modal" class="modal hidden">
+      <div class="modal-content">
+        <h2>AR模式</h2>
+        <p class="ar-info">AR模式需要支持WebXR的设备和浏览器。</p>
+        <p class="ar-detail">请在移动设备上使用Chrome/Edge浏览器访问。</p>
+        <button id="close-ar-btn" class="btn btn-secondary">关闭</button>
+      </div>
+    </div>
+
+    <div id="perfect-toast" class="perfect-toast hidden">完美对齐! +20</div>
+
+    <div id="camera-hint" class="camera-hint hidden">🖱️ 拖拽旋转视角 | 滚轮缩放</div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+  <script src="js/themes.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/physics.js"></script>
+  <script src="js/game.js"></script>
+</body>
+</html>

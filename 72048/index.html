@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>空中跳伞 v2.0 - 3D Sky Diving</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r160/three.min.js"></script>
+</head>
+<body>
+    <div id="gameContainer">
+        <canvas id="gameCanvas"></canvas>
+        
+        <div id="hud" class="hidden">
+            <div class="hud-top-left">
+                <div class="hud-item">
+                    <span class="hud-label">高度</span>
+                    <span id="altitude" class="hud-value">3000m</span>
+                </div>
+            </div>
+            <div class="hud-top-right">
+                <div class="hud-item">
+                    <span class="hud-label">金币</span>
+                    <span id="coins" class="hud-value">🪙 0</span>
+                </div>
+            </div>
+            <div class="hud-bottom-left">
+                <div id="parachuteHint" class="parachute-hint">
+                    按 空格键 打开降落伞
+                </div>
+            </div>
+        </div>
+
+        <div id="startMenu" class="menu">
+            <div class="menu-content">
+                <h1 class="game-title">🪂 空中跳伞</h1>
+                <p class="game-subtitle">SKY DIVING</p>
+                
+                <div class="instructions-card">
+                    <h3>🎮 操作说明</h3>
+                    <ul>
+                        <li>⬅️ ➡️ 方向键 / A D 键：左右移动</li>
+                        <li>⬆️ ⬇️ 方向键 / W S 键：前后移动</li>
+                        <li>空格键 / 点击屏幕：打开降落伞</li>
+                        <li>🪙 穿越金币环收集分数</li>
+                        <li>⚠️ 躲避飞鸟、气球、无人机</li>
+                        <li>🎯 降落在目标区域获得高分</li>
+                    </ul>
+                </div>
+
+                <div class="high-score">
+                    <span>🏆 最高分：</span>
+                    <span id="highScore">0</span>
+                </div>
+
+                <button id="startBtn" class="start-btn">开始游戏</button>
+            </div>
+        </div>
+
+        <div id="gameOverMenu" class="menu hidden">
+            <div class="menu-content">
+                <h2 class="result-title">游戏结束</h2>
+                
+                <div class="score-breakdown">
+                    <div class="score-item">
+                        <span>🪙 金币收集</span>
+                        <span id="coinScore">0</span>
+                    </div>
+                    <div class="score-item">
+                        <span>🎯 落地精度</span>
+                        <span id="landingScore">0</span>
+                    </div>
+                    <div class="score-total">
+                        <span>总分</span>
+                        <span id="totalScore">0</span>
+                    </div>
+                </div>
+
+                <div id="newHighScore" class="new-high-score hidden">
+                    🎉 新纪录！
+                </div>
+
+                <button id="restartBtn" class="start-btn">再来一局</button>
+            </div>
+        </div>
+
+        <div id="mobileControls" class="mobile-controls hidden">
+            <div class="dpad">
+                <button class="dpad-btn up" data-key="up">⬆️</button>
+                <button class="dpad-btn left" data-key="left">⬅️</button>
+                <button class="dpad-btn right" data-key="right">➡️</button>
+                <button class="dpad-btn down" data-key="down">⬇️</button>
+            </div>
+            <button id="parachuteBtn" class="parachute-btn">🪂 开伞</button>
+        </div>
+    </div>
+
+    <script src="js/utils.js"></script>
+    <script src="js/scene-manager.js"></script>
+    <script src="js/weather-system.js"></script>
+    <script src="js/tricks-system.js"></script>
+    <script src="js/skins.js"></script>
+    <script src="js/multiplayer.js"></script>
+    <script src="js/player-3d.js"></script>
+    <script src="js/game-3d.js"></script>
+</body>
+</html>

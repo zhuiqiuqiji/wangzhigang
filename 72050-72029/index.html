@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>弹珠迷宫平衡 - 豪华版</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="game-container">
+        <h1 class="game-title">🎱 弹珠迷宫平衡</h1>
+
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="game">🎮 游戏</button>
+            <button class="tab-btn" data-tab="editor">✏️ 编辑器</button>
+            <button class="tab-btn" data-tab="leaderboard">🏆 排行榜</button>
+        </div>
+
+        <div class="tab-content active" id="tab-game">
+            <div class="info-panel">
+                <div class="info-item">
+                    <span class="info-label">⏱️ 用时</span>
+                    <span class="info-value" id="currentTime">0.00s</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🏅 最佳</span>
+                    <span class="info-value" id="bestTime">--</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">👣 步数</span>
+                    <span class="info-value" id="stepCount">0</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🎯 关卡</span>
+                    <span class="info-value" id="levelName">初级迷宫</span>
+                </div>
+            </div>
+
+            <div class="canvas-wrapper">
+                <canvas id="gameCanvas" width="800" height="600"></canvas>
+                <div class="tilt-indicator" id="tiltIndicator">
+                    <div class="tilt-arrow tilt-up" id="tiltUp">▲</div>
+                    <div class="tilt-arrow tilt-down" id="tiltDown">▼</div>
+                    <div class="tilt-arrow tilt-left" id="tiltLeft">◀</div>
+                    <div class="tilt-arrow tilt-right" id="tiltRight">▶</div>
+                </div>
+            </div>
+
+            <div class="view-controls">
+                <button class="btn-view" id="view2d">2D</button>
+                <button class="btn-view active" id="viewIso">3D</button>
+            </div>
+
+            <div class="controls">
+                <button class="btn btn-start" id="startBtn">开始游戏</button>
+                <button class="btn btn-reset" id="resetBtn">重新开始</button>
+                <button class="btn btn-level" id="levelBtn">上一关</button>
+                <button class="btn btn-level" id="levelNextBtn">下一关</button>
+            </div>
+
+            <div class="instructions">
+                <p>🎮 <strong>方向键/WASD</strong> 或 <strong>游戏手柄</strong> 控制倾斜</p>
+                <p>📱 触屏启用 <strong>陀螺仪</strong> 控制</p>
+                <p>⚠️ 避开 <strong>黑色孔洞</strong>，注意 <strong>移动障碍</strong> 和 <strong>旋转门</strong></p>
+                <p>🎯 到达 <strong>金色终点</strong> 完成挑战</p>
+            </div>
+        </div>
+
+        <div class="tab-content" id="tab-editor">
+            <div class="editor-panel">
+                <div class="editor-tools">
+                    <h3>🎨 关卡编辑器</h3>
+                    <div class="tool-buttons">
+                        <button class="btn-tool active" data-tool="wall">🧱 墙壁</button>
+                        <button class="btn-tool" data-tool="hole">🕳️ 孔洞</button>
+                        <button class="btn-tool" data-tool="start">🟢 起点</button>
+                        <button class="btn-tool" data-tool="end">🏁 终点</button>
+                        <button class="btn-tool" data-tool="moving">🔄 移动障碍</button>
+                        <button class="btn-tool" data-tool="door">🚪 旋转门</button>
+                        <button class="btn-tool" data-tool="eraser">🧹 擦除</button>
+                    </div>
+                    <div class="editor-actions">
+                        <button class="btn btn-level" id="clearBtn">清空画布</button>
+                        <button class="btn btn-start" id="testBtn">测试关卡</button>
+                        <button class="btn btn-reset" id="exportBtn">导出</button>
+                        <button class="btn btn-level" id="importBtn">导入</button>
+                    </div>
+                    <textarea class="import-area" id="importArea" placeholder="粘贴关卡代码..."></textarea>
+                </div>
+                <div class="canvas-wrapper editor-canvas">
+                    <canvas id="editorCanvas" width="800" height="600"></canvas>
+                    <div class="editor-hint">点击并拖动绘制</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-content" id="tab-leaderboard">
+            <div class="leaderboard-panel">
+                <h3>🏆 本地排行榜</h3>
+                <div class="level-selector">
+                    <button class="btn-level-select active" data-level="0">初级迷宫</button>
+                    <button class="btn-level-select" data-level="1">中级迷宫</button>
+                    <button class="btn-level-select" data-level="2">高级迷宫</button>
+                    <button class="btn-level-select" data-level="3">机关迷宫</button>
+                    <button class="btn-level-select" data-level="4">移动障碍</button>
+                    <button class="btn-level-select" data-level="5">终极挑战</button>
+                </div>
+                <div class="leaderboard-list" id="leaderboardList">
+                </div>
+                <div class="challenge-mode">
+                    <h4>🎯 最少步数挑战</h4>
+                    <p>使用最少的按键次数完成关卡！每次方向键按下计为一步</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal" id="resultModal">
+            <div class="modal-content">
+                <h2 id="resultTitle">🎉 恭喜通关！</h2>
+                <p id="resultTime">用时：0.00 秒</p>
+                <p id="resultSteps">步数：0 步</p>
+                <p id="resultBest">最佳：0.00 秒</p>
+                <p id="resultRank" style="color: #FFD700; font-weight: bold;"></p>
+                <div class="modal-buttons">
+                    <button class="btn btn-modal" id="modalBtn">再来一局</button>
+                    <button class="btn btn-level" id="modalNextBtn">下一关</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/game.js"></script>
+</body>
+</html>

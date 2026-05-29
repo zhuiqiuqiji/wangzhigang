@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="description" content="赛车换道躲避游戏 - 霓虹高速公路">
+    <title>霓虹高速公路 - 赛车换道躲避</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="gameContainer">
+        <canvas id="gameCanvas"></canvas>
+
+        <div id="hud">
+            <div class="hud-top">
+                <div class="hud-left">
+                    <div class="hud-lives">
+                        <span class="hud-label">生命</span>
+                        <div class="lives-container" id="livesContainer"></div>
+                    </div>
+                    <div class="hud-wanted" id="wantedDisplay" style="display:none;">
+                        <span class="hud-label">通缉</span>
+                        <div class="wanted-stars" id="wantedStars"></div>
+                    </div>
+                </div>
+                <div class="hud-center">
+                    <div class="hud-score">
+                        <span class="hud-label">分数</span>
+                        <span class="hud-value" id="scoreValue">0</span>
+                    </div>
+                    <div class="hud-distance">
+                        <span class="hud-label">距离</span>
+                        <span class="hud-value" id="distanceValue">0m</span>
+                    </div>
+                </div>
+                <div class="hud-right">
+                    <div class="hud-coins">
+                        <span class="hud-label">金币</span>
+                        <span class="hud-value" id="coinValue">0</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hud-powerups" id="powerupDisplay"></div>
+        </div>
+
+        <div id="mainMenuScreen" class="overlay">
+            <div class="screen-content">
+                <h1 class="game-title">
+                    <span class="title-line1">霓虹</span>
+                    <span class="title-line2">高速公路</span>
+                </h1>
+                <p class="game-subtitle">NEON HIGHWAY</p>
+
+                <div class="main-menu-buttons">
+                    <button id="playBtn" class="neon-btn">开始游戏</button>
+                    <button id="garageBtn" class="neon-btn secondary">车库改装</button>
+                    <button id="leaderboardBtn" class="neon-btn secondary">排行榜</button>
+                    <button id="dailyBtn" class="neon-btn secondary">每日挑战</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="vehicleSelectScreen" class="overlay hidden">
+            <div class="screen-content wide">
+                <h2 class="screen-title">选择车辆</h2>
+                <div class="vehicle-grid" id="vehicleGrid"></div>
+                <div class="vehicle-stats" id="vehicleStats"></div>
+                <div class="button-row">
+                    <button id="vehicleBackBtn" class="neon-btn secondary">返回</button>
+                    <button id="vehicleConfirmBtn" class="neon-btn">确认选择</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="sceneSelectScreen" class="overlay hidden">
+            <div class="screen-content wide">
+                <h2 class="screen-title">选择场景</h2>
+                <div class="scene-grid" id="sceneGrid"></div>
+                <div class="button-row">
+                    <button id="sceneBackBtn" class="neon-btn secondary">返回</button>
+                    <button id="sceneConfirmBtn" class="neon-btn">确认选择</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="garageScreen" class="overlay hidden">
+            <div class="screen-content wide">
+                <h2 class="screen-title">车库改装</h2>
+                <div class="garage-content">
+                    <div class="garage-vehicle-display" id="garageVehicleDisplay"></div>
+                    <div class="upgrade-panel" id="upgradePanel"></div>
+                </div>
+                <div class="garage-coins">拥有金币: <span id="garageCoinsValue">0</span></div>
+                <div class="button-row">
+                    <button id="garageBackBtn" class="neon-btn secondary">返回</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="leaderboardScreen" class="overlay hidden">
+            <div class="screen-content">
+                <h2 class="screen-title">排行榜</h2>
+                <div class="leaderboard-tabs">
+                    <button class="tab-btn active" data-tab="score">最高分</button>
+                    <button class="tab-btn" data-tab="distance">最远距离</button>
+                    <button class="tab-btn" data-tab="coins">金币收集</button>
+                </div>
+                <div class="leaderboard-list" id="leaderboardList"></div>
+                <div class="button-row">
+                    <button id="leaderboardBackBtn" class="neon-btn secondary">返回</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="dailyChallengeScreen" class="overlay hidden">
+            <div class="screen-content">
+                <h2 class="screen-title">每日挑战</h2>
+                <div class="daily-challenge-list" id="dailyChallengeList"></div>
+                <div class="daily-reset-time" id="dailyResetTime"></div>
+                <div class="button-row">
+                    <button id="dailyBackBtn" class="neon-btn secondary">返回</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="startScreen" class="overlay hidden">
+            <div class="screen-content">
+                <h1 class="game-title">
+                    <span class="title-line1">霓虹</span>
+                    <span class="title-line2">高速公路</span>
+                </h1>
+                <p class="game-subtitle">NEON HIGHWAY</p>
+
+                <div class="instructions-card">
+                    <h3 class="instructions-title">操作说明</h3>
+                    <div class="instructions-grid">
+                        <div class="instruction-item">
+                            <div class="key-icon desktop">
+                                <span class="key">←</span>
+                                <span class="key">→</span>
+                            </div>
+                            <span class="instruction-text">切换车道</span>
+                        </div>
+                        <div class="instruction-item">
+                            <div class="key-icon desktop">
+                                <span class="key">A</span>
+                                <span class="key">D</span>
+                            </div>
+                            <span class="instruction-text">切换车道</span>
+                        </div>
+                        <div class="instruction-item">
+                            <div class="key-icon mobile">
+                                <span class="swipe-icon">⟷</span>
+                            </div>
+                            <span class="instruction-text">滑动切换</span>
+                        </div>
+                    </div>
+                    <div class="tips">
+                        <p>躲避前方障碍物，收集金币获取高分！</p>
+                        <p>碰撞会扣命，生命值归零游戏结束。</p>
+                        <p>收集道具获得特殊能力！</p>
+                    </div>
+                </div>
+
+                <button id="startBtn" class="neon-btn">开始游戏</button>
+            </div>
+        </div>
+
+        <div id="gameOverScreen" class="overlay hidden">
+            <div class="screen-content">
+                <h2 class="gameover-title">游戏结束</h2>
+
+                <div class="stats-card">
+                    <div class="stat-row">
+                        <span class="stat-label">最终得分</span>
+                        <span class="stat-value" id="finalScore">0</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">行驶距离</span>
+                        <span class="stat-value" id="finalDistance">0m</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">收集金币</span>
+                        <span class="stat-value" id="finalCoins">0</span>
+                    </div>
+                    <div class="stat-row" id="newRecordRow" style="display:none;">
+                        <span class="stat-label new-record">新纪录！</span>
+                    </div>
+                </div>
+
+                <div class="button-row">
+                    <button id="restartBtn" class="neon-btn">再来一次</button>
+                    <button id="mainMenuBtn" class="neon-btn secondary">主菜单</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="pauseScreen" class="overlay hidden">
+            <div class="screen-content">
+                <h2 class="screen-title">游戏暂停</h2>
+                <div class="button-row">
+                    <button id="resumeBtn" class="neon-btn">继续游戏</button>
+                    <button id="quitBtn" class="neon-btn secondary">退出游戏</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/game.js"></script>
+</body>
+</html>
