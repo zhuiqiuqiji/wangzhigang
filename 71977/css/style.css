@@ -1,0 +1,421 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --bg-deep: #0a0e1a;
+  --bg-panel: rgba(12, 18, 36, 0.85);
+  --bg-glass: rgba(20, 30, 60, 0.6);
+  --border-glow: rgba(80, 140, 255, 0.25);
+  --accent: #f0c040;
+  --accent-blue: #4488ff;
+  --text-primary: #e8eaf0;
+  --text-secondary: #8899bb;
+  --text-muted: #556688;
+  --font-display: 'Orbitron', sans-serif;
+  --font-body: 'Noto Sans SC', sans-serif;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg-deep);
+  font-family: var(--font-body);
+  color: var(--text-primary);
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+#solar-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: default;
+}
+
+/* ========== 时间控制栏 ========== */
+.time-controls {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: var(--bg-glass);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border-glow);
+  border-radius: 50px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05);
+  z-index: 100;
+}
+
+.time-controls .ctrl-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border: 1px solid rgba(80,140,255,0.2);
+  border-radius: 50%;
+  background: rgba(30,50,90,0.5);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  outline: none;
+}
+
+.time-controls .ctrl-btn:hover {
+  background: rgba(50,80,140,0.6);
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 12px rgba(68,136,255,0.3);
+  transform: scale(1.08);
+}
+
+.time-controls .ctrl-btn:active {
+  transform: scale(0.95);
+}
+
+.time-controls .ctrl-btn.active {
+  background: rgba(240,192,64,0.2);
+  border-color: var(--accent);
+  color: var(--accent);
+  box-shadow: 0 0 12px rgba(240,192,64,0.3);
+}
+
+.speed-display {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--accent);
+  min-width: 56px;
+  text-align: center;
+  padding: 0 8px;
+  letter-spacing: 1px;
+}
+
+.ctrl-divider {
+  width: 1px;
+  height: 24px;
+  background: rgba(80,140,255,0.2);
+  margin: 0 4px;
+}
+
+.elapsed-info {
+  font-family: var(--font-display);
+  font-size: 11px;
+  color: var(--text-secondary);
+  padding: 0 8px;
+  white-space: nowrap;
+}
+
+/* ========== 行星信息面板 ========== */
+.planet-info-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 360px;
+  height: 100%;
+  background: var(--bg-panel);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border-left: 1px solid var(--border-glow);
+  box-shadow: -8px 0 40px rgba(0,0,0,0.5);
+  transform: translateX(100%);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 200;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.planet-info-panel.open {
+  transform: translateX(0);
+}
+
+.planet-info-panel::-webkit-scrollbar {
+  width: 4px;
+}
+
+.planet-info-panel::-webkit-scrollbar-thumb {
+  background: rgba(80,140,255,0.3);
+  border-radius: 2px;
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid rgba(80,140,255,0.1);
+}
+
+.panel-title {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-muted);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+.panel-close-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid rgba(80,140,255,0.2);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  outline: none;
+}
+
+.panel-close-btn:hover {
+  background: rgba(255,80,80,0.15);
+  border-color: rgba(255,80,80,0.4);
+  color: #ff6666;
+}
+
+.panel-body {
+  padding: 24px;
+}
+
+.planet-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.planet-name {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 900;
+  color: var(--text-primary);
+  margin: 0;
+  line-height: 1.2;
+}
+
+.planet-name-en {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--text-muted);
+  letter-spacing: 2px;
+}
+
+.planet-type-badge {
+  display: inline-block;
+  padding: 4px 14px;
+  background: rgba(68,136,255,0.12);
+  border: 1px solid rgba(68,136,255,0.25);
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--accent-blue);
+  margin-bottom: 20px;
+}
+
+.planet-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.stat-item {
+  background: rgba(20,30,60,0.5);
+  border: 1px solid rgba(80,140,255,0.1);
+  border-radius: 10px;
+  padding: 12px;
+}
+
+.stat-label {
+  display: block;
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+  letter-spacing: 0.5px;
+}
+
+.stat-value {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.planet-desc {
+  font-size: 14px;
+  line-height: 1.8;
+  color: var(--text-secondary);
+  padding-top: 16px;
+  border-top: 1px solid rgba(80,140,255,0.1);
+}
+
+/* ========== 标题 ========== */
+.app-title {
+  position: fixed;
+  top: 24px;
+  left: 28px;
+  z-index: 100;
+}
+
+.app-title h1 {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: 3px;
+  text-shadow: 0 0 20px rgba(68,136,255,0.3);
+}
+
+.app-title .subtitle {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 4px;
+  letter-spacing: 1px;
+}
+
+/* ========== 提示 ========== */
+.hint-bar {
+  position: fixed;
+  bottom: 84px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 11px;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+  z-index: 50;
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+/* ========== 行星快捷列表 ========== */
+.planet-quick-list {
+  position: fixed;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  z-index: 100;
+}
+
+.planet-dot {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid rgba(80,140,255,0.2);
+  background: var(--bg-glass);
+  backdrop-filter: blur(10px);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  outline: none;
+}
+
+.planet-dot:hover {
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 12px rgba(68,136,255,0.3);
+  transform: scale(1.15);
+}
+
+.planet-dot .dot-inner {
+  border-radius: 50%;
+}
+
+.planet-dot .dot-tooltip {
+  position: absolute;
+  left: 44px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--bg-panel);
+  border: 1px solid var(--border-glow);
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 12px;
+  color: var(--text-primary);
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.planet-dot:hover .dot-tooltip {
+  opacity: 1;
+}
+
+/* ========== 响应式 ========== */
+@media (max-width: 768px) {
+  .planet-info-panel {
+    width: 100%;
+  }
+
+  .time-controls {
+    bottom: 16px;
+    padding: 8px 14px;
+    gap: 5px;
+  }
+
+  .time-controls .ctrl-btn {
+    width: 32px;
+    height: 32px;
+  }
+
+  .speed-display {
+    font-size: 12px;
+    min-width: 44px;
+  }
+
+  .elapsed-info {
+    display: none;
+  }
+
+  .planet-quick-list {
+    left: 10px;
+  }
+
+  .planet-dot {
+    width: 28px;
+    height: 28px;
+  }
+
+  .hint-bar {
+    display: none;
+  }
+
+  .app-title h1 {
+    font-size: 14px;
+  }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.app-title, .planet-quick-list, .time-controls, .hint-bar {
+  animation: fadeInUp 0.6s ease-out both;
+}
+
+.planet-quick-list { animation-delay: 0.1s; }
+.time-controls { animation-delay: 0.2s; }
+.hint-bar { animation-delay: 0.3s; }

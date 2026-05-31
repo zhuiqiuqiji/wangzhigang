@@ -1,0 +1,375 @@
+@keyframes pulse-glow {
+    0%, 100% {
+        box-shadow: 0 4px 20px rgba(59, 130, 246, 0.5),
+                    0 0 30px rgba(59, 130, 246, 0.3);
+    }
+    50% {
+        box-shadow: 0 4px 30px rgba(59, 130, 246, 0.8),
+                    0 0 50px rgba(59, 130, 246, 0.5),
+                    0 0 80px rgba(139, 92, 246, 0.3);
+    }
+}
+
+@keyframes bounce-title {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+@keyframes rainbow {
+    0% {
+        filter: hue-rotate(0deg) drop-shadow(0 0 20px rgba(251, 191, 36, 0.5));
+    }
+    100% {
+        filter: hue-rotate(360deg) drop-shadow(0 0 20px rgba(251, 191, 36, 0.5));
+    }
+}
+
+@keyframes dashReady {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.6;
+    }
+}
+
+@keyframes shake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    10%, 30%, 50%, 70%, 90% {
+        transform: translateX(-5px);
+    }
+    20%, 40%, 60%, 80% {
+        transform: translateX(5px);
+    }
+}
+
+@keyframes flash-red {
+    0%, 100% {
+        background-color: transparent;
+    }
+    50% {
+        background-color: rgba(239, 68, 68, 0.3);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-5px);
+    }
+}
+
+@keyframes spin-slow {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes pulse-scale {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+@keyframes glow {
+    0%, 100% {
+        filter: drop-shadow(0 0 5px currentColor);
+    }
+    50% {
+        filter: drop-shadow(0 0 15px currentColor) drop-shadow(0 0 25px currentColor);
+    }
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes scorePopup {
+    0% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-50px) scale(1.5);
+    }
+}
+
+.title-bounce {
+    animation: bounce-title 2s ease-in-out infinite;
+}
+
+.pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.shake {
+    animation: shake 0.5s ease-in-out;
+}
+
+.flash-red {
+    animation: flash-red 0.3s ease-in-out;
+}
+
+.fade-in-up {
+    animation: fadeInUp 0.5s ease-out;
+}
+
+.fade-in {
+    animation: fadeIn 0.3s ease-out;
+}
+
+.scale-in {
+    animation: scaleIn 0.4s ease-out;
+}
+
+.float {
+    animation: float 3s ease-in-out infinite;
+}
+
+.spin-slow {
+    animation: spin-slow 10s linear infinite;
+}
+
+.pulse-scale {
+    animation: pulse-scale 2s ease-in-out infinite;
+}
+
+.glow {
+    animation: glow 2s ease-in-out infinite;
+}
+
+.slide-down {
+    animation: slideDown 0.5s ease-out;
+}
+
+.menu-content {
+    animation: scaleIn 0.5s ease-out;
+}
+
+.btn {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn:active {
+    transform: translateY(0) scale(0.98);
+}
+
+.hud {
+    animation: slideDown 0.5s ease-out;
+}
+
+.instruction-item {
+    animation: fadeInUp 0.5s ease-out;
+    animation-fill-mode: both;
+}
+
+.instruction-item:nth-child(1) { animation-delay: 0.1s; }
+.instruction-item:nth-child(2) { animation-delay: 0.2s; }
+.instruction-item:nth-child(3) { animation-delay: 0.3s; }
+.instruction-item:nth-child(4) { animation-delay: 0.4s; }
+.instruction-item:nth-child(5) { animation-delay: 0.5s; }
+
+.overlay:not(.hidden) .menu-content {
+    animation: scaleIn 0.4s ease-out;
+}
+
+.stat-item {
+    animation: fadeInUp 0.5s ease-out;
+    animation-fill-mode: both;
+}
+
+.stat-item:nth-child(1) { animation-delay: 0.1s; }
+.stat-item:nth-child(2) { animation-delay: 0.2s; }
+.stat-item:nth-child(3) { animation-delay: 0.3s; }
+
+@keyframes starPop {
+    0% {
+        transform: scale(0) rotate(-180deg);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.3) rotate(10deg);
+    }
+    100% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+@keyframes bounceIn {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    70% {
+        transform: scale(0.9);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.level-btn {
+    animation: fadeInUp 0.4s ease-out;
+    animation-fill-mode: both;
+}
+
+.level-btn:nth-child(1) { animation-delay: 0.05s; }
+.level-btn:nth-child(2) { animation-delay: 0.1s; }
+.level-btn:nth-child(3) { animation-delay: 0.15s; }
+.level-btn:nth-child(4) { animation-delay: 0.2s; }
+.level-btn:nth-child(5) { animation-delay: 0.25s; }
+.level-btn:nth-child(6) { animation-delay: 0.3s; }
+.level-btn:nth-child(7) { animation-delay: 0.35s; }
+
+.skin-btn {
+    animation: fadeInUp 0.4s ease-out;
+    animation-fill-mode: both;
+}
+
+.skin-btn:nth-child(1) { animation-delay: 0.05s; }
+.skin-btn:nth-child(2) { animation-delay: 0.1s; }
+.skin-btn:nth-child(3) { animation-delay: 0.15s; }
+.skin-btn:nth-child(4) { animation-delay: 0.2s; }
+.skin-btn:nth-child(5) { animation-delay: 0.25s; }
+.skin-btn:nth-child(6) { animation-delay: 0.3s; }
+
+.leaderboard-item {
+    animation: slideInLeft 0.4s ease-out;
+    animation-fill-mode: both;
+}
+
+.leaderboard-item:nth-child(1) { animation-delay: 0.05s; }
+.leaderboard-item:nth-child(2) { animation-delay: 0.1s; }
+.leaderboard-item:nth-child(3) { animation-delay: 0.15s; }
+.leaderboard-item:nth-child(4) { animation-delay: 0.2s; }
+.leaderboard-item:nth-child(5) { animation-delay: 0.25s; }
+.leaderboard-item:nth-child(6) { animation-delay: 0.3s; }
+.leaderboard-item:nth-child(7) { animation-delay: 0.35s; }
+.leaderboard-item:nth-child(8) { animation-delay: 0.4s; }
+.leaderboard-item:nth-child(9) { animation-delay: 0.45s; }
+.leaderboard-item:nth-child(10) { animation-delay: 0.5s; }
+
+.criteria-item {
+    animation: fadeInUp 0.4s ease-out;
+    animation-fill-mode: both;
+}
+
+.criteria-item:nth-child(1) { animation-delay: 0.8s; }
+.criteria-item:nth-child(2) { animation-delay: 0.9s; }
+.criteria-item:nth-child(3) { animation-delay: 1s; }
+
+.stat-badge {
+    animation: bounceIn 0.5s ease-out;
+    animation-fill-mode: both;
+}
+
+.stat-badge:nth-child(1) { animation-delay: 0.1s; }
+.stat-badge:nth-child(2) { animation-delay: 0.2s; }
+.stat-badge:nth-child(3) { animation-delay: 0.3s; }
+
+.skin-preview {
+    animation: pulse-scale 2s ease-in-out infinite;
+}
+
+.level-btn.daily-challenge {
+    animation: pulse-scale 2s ease-in-out infinite, fadeInUp 0.4s ease-out;
+}
+
+.editor-panel,
+.community-panel {
+    animation: fadeInUp 0.5s ease-out;
+    animation-fill-mode: both;
+}
+
+.community-panel {
+    animation-delay: 0.1s;
+}

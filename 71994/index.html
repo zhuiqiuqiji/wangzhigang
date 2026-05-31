@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>火炮瞄准射击 V3</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Noto+Sans+SC:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="game-container">
+        <header class="game-header">
+            <div class="header-left">
+                <h1 class="game-title">🎯 火炮瞄准射击</h1>
+                <span class="version-badge">V3</span>
+            </div>
+            <div class="game-info">
+                <div class="info-item">
+                    <span class="info-label">章节</span>
+                    <span class="info-value" id="chapter">丛林战</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">关卡</span>
+                    <span class="info-value" id="level">1</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">得分</span>
+                    <span class="info-value" id="score">0</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">金币</span>
+                    <span class="info-value" id="coins">💰 0</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">风力</span>
+                    <span class="info-value wind-value" id="wind">→ 0</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">天气</span>
+                    <span class="info-value" id="weather">☀️ 晴</span>
+                </div>
+                <div class="info-item ammo-info">
+                    <span class="info-label">炮弹</span>
+                    <span class="ammo-display" id="ammo"></span>
+                </div>
+            </div>
+        </header>
+
+        <main class="game-main">
+            <canvas id="gameCanvas" width="900" height="500"></canvas>
+            <div class="trajectory-hint" id="trajectoryHint" style="display:none;">
+                <span class="hint-icon">🎯</span>
+                <span class="hint-text">移动鼠标瞄准，空格键发射</span>
+            </div>
+        </main>
+
+        <footer class="game-controls">
+            <div class="controls-row">
+                <div class="control-group">
+                    <label for="angleSlider">
+                        <span class="control-icon">📐</span>
+                        <span class="control-label">角度</span>
+                        <span class="control-value" id="angleValue">45°</span>
+                    </label>
+                    <input type="range" id="angleSlider" min="0" max="90" value="45" class="slider angle-slider">
+                </div>
+
+                <div class="control-group">
+                    <label for="powerSlider">
+                        <span class="control-icon">💪</span>
+                        <span class="control-label">力度</span>
+                        <span class="control-value" id="powerValue">50%</span>
+                    </label>
+                    <input type="range" id="powerSlider" min="10" max="100" value="50" class="slider power-slider">
+                </div>
+
+                <div class="control-group shell-select-group">
+                    <label>
+                        <span class="control-icon">💣</span>
+                        <span class="control-label">弹种</span>
+                    </label>
+                    <div class="shell-buttons" id="shellButtons">
+                        <button class="shell-btn selected" data-shell="normal" title="普通弹">
+                            <span class="shell-icon">💣</span>
+                            <span class="shell-name">普通</span>
+                            <span class="shell-count" id="count-normal">∞</span>
+                        </button>
+                        <button class="shell-btn" data-shell="split" title="分裂弹 - 爆炸后分裂成3枚小弹">
+                            <span class="shell-icon">💥</span>
+                            <span class="shell-name">分裂</span>
+                            <span class="shell-count" id="count-split">3</span>
+                        </button>
+                        <button class="shell-btn" data-shell="incendiary" title="燃烧弹 - 持续燃烧伤害">
+                            <span class="shell-icon">🔥</span>
+                            <span class="shell-name">燃烧</span>
+                            <span class="shell-count" id="count-incendiary">3</span>
+                        </button>
+                        <button class="shell-btn" data-shell="freeze" title="冰冻弹 - 冻结敌人行动">
+                            <span class="shell-icon">❄️</span>
+                            <span class="shell-name">冰冻</span>
+                            <span class="shell-count" id="count-freeze">3</span>
+                        </button>
+                        <button class="shell-btn" data-shell="buster" title="钻地弹 - 穿透地形深层爆炸">
+                            <span class="shell-icon">⛏️</span>
+                            <span class="shell-name">钻地</span>
+                            <span class="shell-count" id="count-buster">2</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button id="fireBtn" class="btn btn-fire">
+                        <span class="btn-icon">🔥</span>
+                        <span class="btn-text">发射</span>
+                    </button>
+                    <button id="resetBtn" class="btn btn-reset">
+                        <span class="btn-icon">🔄</span>
+                        <span class="btn-text">重置</span>
+                    </button>
+                    <button id="upgradeBtn" class="btn btn-upgrade">
+                        <span class="btn-icon">⬆️</span>
+                        <span class="btn-text">升级</span>
+                    </button>
+                    <button id="chapterBtn" class="btn btn-primary">
+                        <span class="btn-icon">📖</span>
+                        <span class="btn-text">章节</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="pvp-indicator" id="pvpIndicator" style="display:none;">
+                <span class="pvp-player active" id="pvpP1">🎮 玩家1</span>
+                <span class="pvp-vs">VS</span>
+                <span class="pvp-player" id="pvpP2">🎮 玩家2</span>
+            </div>
+        </footer>
+
+        <div class="modal-overlay" id="modalOverlay">
+            <div class="modal" id="gameModal">
+                <div class="modal-content" id="modalContent"></div>
+            </div>
+        </div>
+
+        <div class="modal-overlay" id="startModalOverlay">
+            <div class="modal">
+                <div class="modal-content">
+                    <h2 class="modal-title">🎯 火炮瞄准射击 V3</h2>
+                    <p class="modal-message">选择游戏模式开始战斗！</p>
+                    <div class="mode-select">
+                        <button class="mode-btn" data-mode="campaign">
+                            <span class="mode-icon">⚔️</span>
+                            <span class="mode-name">战役模式</span>
+                            <span class="mode-desc">4大章节 20个关卡</span>
+                        </button>
+                        <button class="mode-btn" data-mode="pvp">
+                            <span class="mode-icon">🎮</span>
+                            <span class="mode-name">双人对战</span>
+                            <span class="mode-desc">好友互相对决</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-overlay" id="chapterModalOverlay" style="display:none;">
+            <div class="modal">
+                <div class="modal-content">
+                    <h2 class="modal-title">📖 选择章节</h2>
+                    <p class="modal-message">选择你想挑战的战场环境</p>
+                    <div class="chapter-select" id="chapterSelect"></div>
+                    <button class="btn btn-secondary" id="closeChapterBtn" style="margin-top:20px;">
+                        <span class="btn-icon">✖️</span>
+                        <span class="btn-text">关闭</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-overlay" id="upgradeModalOverlay" style="display:none;">
+            <div class="modal">
+                <div class="modal-content">
+                    <h2 class="modal-title">⬆️ 火炮升级</h2>
+                    <p class="modal-message">使用金币升级你的火炮属性</p>
+                    <p class="modal-score">💰 金币: <span id="upgradeCoins">0</span></p>
+                    <div class="upgrade-shop" id="upgradeShop"></div>
+                    <button class="btn btn-secondary" id="closeUpgradeBtn" style="margin-top:20px;">
+                        <span class="btn-icon">✖️</span>
+                        <span class="btn-text">关闭</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/game.js"></script>
+</body>
+</html>

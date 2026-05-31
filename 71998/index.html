@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>弹跳球闯关 - Bounce Ball Adventure</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+    <div class="game-container">
+        <canvas id="gameCanvas"></canvas>
+        
+        <div class="hud">
+            <div class="hud-item">
+                <span class="hud-icon">⭐</span>
+                <span id="starCount">0</span>
+            </div>
+            <div class="hud-item">
+                <span class="hud-icon">💎</span>
+                <span id="gemCount">0</span>
+            </div>
+            <div class="hud-item">
+                <span class="hud-icon">🏆</span>
+                <span id="score">0</span>
+            </div>
+            <div class="hud-item">
+                <span class="hud-icon">🎯</span>
+                <span id="levelDisplay">关卡 1</span>
+            </div>
+        </div>
+
+        <div id="menuScreen" class="overlay menu">
+            <div class="menu-content">
+                <h1 class="game-title">
+                    <span class="title-bounce">弹</span>
+                    <span class="title-bounce" style="animation-delay: 0.1s">跳</span>
+                    <span class="title-bounce" style="animation-delay: 0.2s">球</span>
+                    <span class="title-bounce" style="animation-delay: 0.3s">闯</span>
+                    <span class="title-bounce" style="animation-delay: 0.4s">关</span>
+                </h1>
+                <p class="game-subtitle">BOUNCE BALL ADVENTURE</p>
+                
+                <div class="main-menu-buttons">
+                    <button id="startBtn" class="btn btn-primary pulse-glow">
+                        🎮 开始游戏
+                    </button>
+                    <button id="levelSelectBtn" class="btn btn-secondary">
+                        📋 关卡选择
+                    </button>
+                    <button id="skinSelectBtn" class="btn btn-secondary">
+                        🎨 皮肤商店
+                    </button>
+                    <button id="leaderboardBtn" class="btn btn-secondary">
+                        🏆 排行榜
+                    </button>
+                    <button id="editorBtn" class="btn btn-secondary">
+                        ✏️ 关卡编辑器
+                    </button>
+                    <button id="dailyChallengeBtn" class="btn btn-warning pulse-glow">
+                        📅 每日挑战
+                    </button>
+                </div>
+
+                <div class="instructions">
+                    <h3>操作说明</h3>
+                    <div class="instruction-item">
+                        <span class="key">🖱️</span>
+                        <span>点击屏幕 / 空格键 = 向下冲刺</span>
+                    </div>
+                    <div class="instruction-item">
+                        <span class="key">⭐</span>
+                        <span>收集星星获得 100 分</span>
+                    </div>
+                    <div class="instruction-item">
+                        <span class="key">💎</span>
+                        <span>收集宝石获得 500 分</span>
+                    </div>
+                    <div class="instruction-item">
+                        <span class="key">⚠️</span>
+                        <span>避开红色尖刺和危险区域</span>
+                    </div>
+                    <div class="instruction-item">
+                        <span class="key">🏁</span>
+                        <span>到达底部终点即可通关</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="levelSelectScreen" class="overlay hidden">
+            <div class="menu-content level-select-content">
+                <h2 class="screen-title">📋 选择关卡</h2>
+                <div id="levelGrid" class="level-grid"></div>
+                <button id="backToMenuBtn" class="btn btn-secondary">
+                    ← 返回主菜单
+                </button>
+            </div>
+        </div>
+
+        <div id="skinSelectScreen" class="overlay hidden">
+            <div class="menu-content skin-select-content">
+                <h2 class="screen-title">🎨 皮肤商店</h2>
+                
+                <div class="skin-stats">
+                    <div class="stat-badge">
+                        <span class="stat-icon">⭐</span>
+                        <span class="stat-label">收集星星</span>
+                        <span id="totalStarsCollected" class="stat-value">0</span>
+                    </div>
+                    <div class="stat-badge">
+                        <span class="stat-icon">🎯</span>
+                        <span class="stat-label">通关关卡</span>
+                        <span id="levelsCompleted" class="stat-value">0</span>
+                    </div>
+                    <div class="stat-badge">
+                        <span class="stat-icon">🛡️</span>
+                        <span class="stat-label">无伤通关</span>
+                        <span id="noDamageRuns" class="stat-value">0</span>
+                    </div>
+                </div>
+
+                <div id="skinGrid" class="skin-grid"></div>
+                <button id="backToMenuBtn2" class="btn btn-secondary">
+                    ← 返回主菜单
+                </button>
+            </div>
+        </div>
+
+        <div id="leaderboardScreen" class="overlay hidden">
+            <div class="menu-content leaderboard-content">
+                <h2 class="screen-title">🏆 排行榜</h2>
+                <div id="leaderboardList" class="leaderboard-list"></div>
+                <button id="backToMenuBtn3" class="btn btn-secondary">
+                    ← 返回主菜单
+                </button>
+            </div>
+        </div>
+
+        <div id="levelEditorScreen" class="overlay hidden">
+            <div class="menu-content editor-content">
+                <h2 class="screen-title">✏️ 关卡编辑器</h2>
+                
+                <div class="editor-layout">
+                    <div class="editor-panel">
+                        <h3>关卡 JSON 数据</h3>
+                        <textarea id="levelJsonInput" class="json-editor" spellcheck="false"></textarea>
+                        
+                        <div class="editor-buttons">
+                            <button id="testLevelBtn" class="btn btn-primary">
+                                ▶️ 测试关卡
+                            </button>
+                            <button id="saveLevelBtn" class="btn btn-success">
+                                💾 保存关卡
+                            </button>
+                            <button id="clearLevelBtn" class="btn btn-secondary">
+                                🗑️ 重置模板
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="community-panel">
+                        <h3>社区关卡</h3>
+                        <select id="communityLevelsList" class="community-list" size="10"></select>
+                        <button id="loadCommunityBtn" class="btn btn-secondary">
+                            📂 加载选中关卡
+                        </button>
+                    </div>
+                </div>
+                
+                <button id="backToMenuBtn4" class="btn btn-secondary">
+                    ← 返回主菜单
+                </button>
+            </div>
+        </div>
+
+        <div id="winScreen" class="overlay hidden">
+            <div class="menu-content win-content">
+                <h2 class="win-title">🎉 通关成功！</h2>
+                
+                <div id="winStars" class="win-stars"></div>
+                
+                <div class="stats">
+                    <div class="stat-item">
+                        <span class="stat-label">最终得分</span>
+                        <span id="finalScore" class="stat-value">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">收集星星</span>
+                        <span id="finalStars" class="stat-value">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">收集宝石</span>
+                        <span id="finalGems" class="stat-value">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">通关用时</span>
+                        <span id="finalTime" class="stat-value">00:00.00</span>
+                    </div>
+                </div>
+
+                <div id="ratingCriteria" class="rating-criteria"></div>
+                
+                <div class="win-buttons">
+                    <button id="nextLevelBtn" class="btn btn-success pulse-glow">
+                        下一关
+                    </button>
+                    <button id="restartFromWinBtn" class="btn btn-secondary">
+                        重新挑战
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="failScreen" class="overlay hidden">
+            <div class="menu-content fail-content">
+                <h2 class="fail-title">💥 游戏结束</h2>
+                <p class="fail-message">碰到了危险区域！</p>
+                <div class="stats">
+                    <div class="stat-item">
+                        <span class="stat-label">当前得分</span>
+                        <span id="failScore" class="stat-value">0</span>
+                    </div>
+                </div>
+                <button id="retryBtn" class="btn btn-danger pulse-glow">
+                    重新挑战
+                </button>
+                <button id="menuBtn" class="btn btn-secondary">
+                    返回主菜单
+                </button>
+            </div>
+        </div>
+
+        <div id="dashIndicator" class="dash-indicator hidden">
+            <div class="dash-bar">
+                <div id="dashFill" class="dash-fill"></div>
+            </div>
+            <span class="dash-label">冲刺</span>
+        </div>
+    </div>
+
+    <script src="js/entities.js?v=1.0.1"></script>
+    <script src="js/levels.js?v=1.0.1"></script>
+    <script src="js/physics.js?v=1.0.1"></script>
+    <script src="js/renderer.js?v=1.0.1"></script>
+    <script src="js/input.js?v=1.0.1"></script>
+    <script src="js/game.js?v=1.0.1"></script>
+</body>
+</html>

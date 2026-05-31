@@ -1,0 +1,153 @@
+#control-panel {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+}
+
+.panel-header {
+  position: relative;
+}
+
+.panel-header::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 20px;
+  right: 20px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border-glass), transparent);
+}
+
+.slider-group {
+  position: relative;
+}
+
+.slider-group::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  border-radius: 2px;
+  background: var(--slider-color);
+  opacity: 0.3;
+  transition: opacity var(--transition);
+}
+
+.slider-group:hover::before {
+  opacity: 0.6;
+}
+
+input[type="range"] {
+  position: relative;
+}
+
+input[type="range"]:focus-visible {
+  outline: 2px solid var(--slider-color);
+  outline-offset: 4px;
+  border-radius: 3px;
+}
+
+.slider-track {
+  position: relative;
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.slider-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: var(--slider-color);
+  border-radius: 3px;
+  transition: width 0.1s ease;
+}
+
+.scene-btn {
+  position: relative;
+  overflow: hidden;
+}
+
+.scene-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--slider-color);
+  opacity: 0;
+  transition: opacity var(--transition);
+}
+
+.scene-btn.active::before {
+  opacity: 1;
+}
+
+.preset-btn {
+  position: relative;
+  overflow: hidden;
+}
+
+.preset-btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, var(--slider-color), transparent 70%);
+  opacity: 0;
+  transition: opacity var(--transition);
+}
+
+.preset-btn:hover::after {
+  opacity: 0.05;
+}
+
+.preset-btn.active {
+  position: relative;
+}
+
+.preset-btn.active::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--slider-color);
+}
+
+.stat-card .stat-indicator {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 4px;
+  vertical-align: middle;
+  animation: pulse 2s ease infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+#weather-display {
+  position: relative;
+}
+
+#weather-display::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--slider-color), transparent 70%);
+  opacity: 0.06;
+  animation: pulse 3s ease infinite;
+}

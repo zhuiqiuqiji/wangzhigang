@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>色彩大师 - RGB调色游戏</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="nav-bar">
+        <div class="nav-brand">
+            <span class="nav-brand-icon">🎨</span>
+            <span class="nav-brand-text">色彩大师</span>
+        </div>
+        <div class="nav-tabs">
+            <button class="nav-tab active" data-tab="classic">经典匹配</button>
+            <button class="nav-tab" data-tab="challenge">挑战模式</button>
+            <button class="nav-tab" data-tab="picker">取色器</button>
+            <button class="nav-tab" data-tab="leaderboard">排行榜</button>
+            <button class="nav-tab" data-tab="learn">色彩学堂</button>
+        </div>
+        <div class="nav-actions">
+            <button class="action-btn" id="colorBlindBtn" title="色盲模式">
+                <span>👁️</span>
+            </button>
+            <button class="action-btn" id="historyBtn" title="历史记录">
+                <span>📋</span>
+            </button>
+        </div>
+    </nav>
+
+    <div class="color-blind-bar hidden" id="colorBlindBar">
+        <span>色盲模式：</span>
+        <button class="cb-option active" data-cb="none">正常</button>
+        <button class="cb-option" data-cb="protanopia">红色盲</button>
+        <button class="cb-option" data-cb="deuteranopia">绿色盲</button>
+        <button class="cb-option" data-cb="tritanopia">蓝色盲</button>
+    </div>
+
+    <div class="main-content">
+        <section class="tab-content active" id="classicTab">
+            <div class="game-area">
+                <div class="game-stats">
+                    <div class="stat-card">
+                        <span class="stat-label">当前轮次</span>
+                        <span class="stat-value" id="currentRound">1</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">总得分</span>
+                        <span class="stat-value" id="totalScore">0</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">平均匹配度</span>
+                        <span class="stat-value" id="avgMatch">0%</span>
+                    </div>
+                </div>
+
+                <div class="timer-section">
+                    <div class="timer-bar">
+                        <div class="timer-progress" id="timerProgress"></div>
+                    </div>
+                    <div class="timer-text">
+                        <span class="timer-label">剩余时间</span>
+                        <span class="timer-value" id="timerValue">30</span>
+                        <span class="timer-unit">秒</span>
+                    </div>
+                </div>
+
+                <div class="color-display-section">
+                    <div class="color-panel">
+                        <div class="panel-header">
+                            <span class="panel-icon">🎯</span>
+                            <span class="panel-title">目标颜色</span>
+                        </div>
+                        <div class="color-box target-color" id="targetColorBox">
+                            <div class="color-rgb" id="targetColorRGB">RGB(?, ?, ?)</div>
+                        </div>
+                        <div class="color-formats" id="targetFormats"></div>
+                    </div>
+
+                    <div class="vs-divider">
+                        <span class="vs-text">VS</span>
+                    </div>
+
+                    <div class="color-panel">
+                        <div class="panel-header">
+                            <span class="panel-icon">✨</span>
+                            <span class="panel-title">你的颜色</span>
+                        </div>
+                        <div class="color-box preview-color" id="previewColorBox">
+                            <div class="color-rgb" id="previewColorRGB">RGB(128, 128, 128)</div>
+                        </div>
+                        <div class="color-formats" id="previewFormats"></div>
+                    </div>
+                </div>
+
+                <div class="hint-section hidden" id="hintSection">
+                    <div class="hint-title">💡 配色提示</div>
+                    <div class="hint-content" id="hintContent"></div>
+                </div>
+
+                <div class="slider-section">
+                    <div class="slider-group">
+                        <div class="slider-label red-label">
+                            <span class="slider-letter">R</span>
+                            <span class="slider-value" id="redValue">128</span>
+                        </div>
+                        <input type="range" class="slider red-slider" id="redSlider" min="0" max="255" value="128">
+                    </div>
+                    <div class="slider-group">
+                        <div class="slider-label green-label">
+                            <span class="slider-letter">G</span>
+                            <span class="slider-value" id="greenValue">128</span>
+                        </div>
+                        <input type="range" class="slider green-slider" id="greenSlider" min="0" max="255" value="128">
+                    </div>
+                    <div class="slider-group">
+                        <div class="slider-label blue-label">
+                            <span class="slider-letter">B</span>
+                            <span class="slider-value" id="blueValue">128</span>
+                        </div>
+                        <input type="range" class="slider blue-slider" id="blueSlider" min="0" max="255" value="128">
+                    </div>
+                </div>
+
+                <div class="control-section">
+                    <button class="btn btn-primary" id="startBtn">
+                        <span class="btn-icon">🚀</span>
+                        <span>开始游戏</span>
+                    </button>
+                    <button class="btn btn-secondary" id="hintBtn" disabled>
+                        <span class="btn-icon">💡</span>
+                        <span>提示</span>
+                    </button>
+                    <button class="btn btn-secondary" id="submitBtn" disabled>
+                        <span class="btn-icon">✓</span>
+                        <span>提交颜色</span>
+                    </button>
+                    <button class="btn btn-outline" id="resetBtn">
+                        <span class="btn-icon">🔄</span>
+                        <span>重新开始</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section class="tab-content" id="challengeTab">
+            <div class="challenge-selector">
+                <button class="challenge-btn active" data-mode="timed">⏱️ 限时匹配</button>
+                <button class="challenge-btn" data-mode="sort">🎨 色阶排序</button>
+                <button class="challenge-btn" data-mode="complement">🔄 补色配对</button>
+            </div>
+
+            <div class="challenge-area" id="challengeArea">
+                <div class="challenge-mode active" id="timedMode">
+                    <div class="challenge-desc">在限定时间内匹配尽可能多的颜色，时间越短分数越高！</div>
+                    <div class="challenge-stats">
+                        <div class="stat-card">
+                            <span class="stat-label">已匹配</span>
+                            <span class="stat-value" id="timedMatched">0</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-label">剩余时间</span>
+                            <span class="stat-value" id="timedTimeLeft">60</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-label">当前得分</span>
+                            <span class="stat-value" id="timedScore">0</span>
+                        </div>
+                    </div>
+                    <div class="timed-display">
+                        <div class="color-panel">
+                            <div class="panel-header"><span class="panel-icon">🎯</span><span class="panel-title">目标</span></div>
+                            <div class="color-box target-color" id="timedTargetBox">
+                                <div class="color-rgb" id="timedTargetRGB">等待开始</div>
+                            </div>
+                        </div>
+                        <div class="vs-divider"><span class="vs-text">VS</span></div>
+                        <div class="color-panel">
+                            <div class="panel-header"><span class="panel-icon">✨</span><span class="panel-title">你的</span></div>
+                            <div class="color-box preview-color" id="timedPreviewBox">
+                                <div class="color-rgb" id="timedPreviewRGB">RGB(128, 128, 128)</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slider-section">
+                        <div class="slider-group">
+                            <div class="slider-label red-label"><span class="slider-letter">R</span><span class="slider-value" id="timedRedValue">128</span></div>
+                            <input type="range" class="slider red-slider" id="timedRedSlider" min="0" max="255" value="128">
+                        </div>
+                        <div class="slider-group">
+                            <div class="slider-label green-label"><span class="slider-letter">G</span><span class="slider-value" id="timedGreenValue">128</span></div>
+                            <input type="range" class="slider green-slider" id="timedGreenSlider" min="0" max="255" value="128">
+                        </div>
+                        <div class="slider-group">
+                            <div class="slider-label blue-label"><span class="slider-letter">B</span><span class="slider-value" id="timedBlueValue">128</span></div>
+                            <input type="range" class="slider blue-slider" id="timedBlueSlider" min="0" max="255" value="128">
+                        </div>
+                    </div>
+                    <div class="control-section">
+                        <button class="btn btn-primary" id="timedStartBtn"><span class="btn-icon">🚀</span><span>开始挑战</span></button>
+                        <button class="btn btn-secondary" id="timedSubmitBtn" disabled><span class="btn-icon">✓</span><span>提交</span></button>
+                    </div>
+                </div>
+
+                <div class="challenge-mode" id="sortMode">
+                    <div class="challenge-desc">将打乱的色块按色相从暖到冷正确排列！</div>
+                    <div class="sort-area" id="sortArea"></div>
+                    <div class="control-section">
+                        <button class="btn btn-primary" id="sortStartBtn"><span class="btn-icon">🚀</span><span>开始排序</span></button>
+                        <button class="btn btn-secondary" id="sortCheckBtn" disabled><span class="btn-icon">✓</span><span>检查排列</span></button>
+                    </div>
+                    <div class="sort-result hidden" id="sortResult"></div>
+                </div>
+
+                <div class="challenge-mode" id="complementMode">
+                    <div class="challenge-desc">从选项中找出给定颜色的补色（对比色）！</div>
+                    <div class="complement-area">
+                        <div class="complement-question">
+                            <div class="complement-label">找出这个颜色的补色：</div>
+                            <div class="complement-color-box" id="complementTarget"></div>
+                        </div>
+                        <div class="complement-options" id="complementOptions"></div>
+                    </div>
+                    <div class="complement-stats">
+                        <div class="stat-card">
+                            <span class="stat-label">当前题号</span>
+                            <span class="stat-value" id="compRound">1/10</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-label">正确数</span>
+                            <span class="stat-value" id="compCorrect">0</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-label">得分</span>
+                            <span class="stat-value" id="compScore">0</span>
+                        </div>
+                    </div>
+                    <div class="control-section">
+                        <button class="btn btn-primary" id="compStartBtn"><span class="btn-icon">🚀</span><span>开始配对</span></button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="tab-content" id="pickerTab">
+            <div class="picker-area">
+                <div class="picker-upload">
+                    <div class="upload-zone" id="uploadZone">
+                        <div class="upload-icon">📷</div>
+                        <div class="upload-text">点击上传图片或拖拽到此处</div>
+                        <div class="upload-hint">支持 JPG、PNG、WebP 格式</div>
+                        <input type="file" id="imageInput" accept="image/*" hidden>
+                    </div>
+                </div>
+                <div class="picker-workspace hidden" id="pickerWorkspace">
+                    <div class="picker-canvas-wrap">
+                        <canvas id="pickerCanvas"></canvas>
+                        <div class="picker-cursor" id="pickerCursor"></div>
+                        <div class="picker-zoom" id="pickerZoom"></div>
+                    </div>
+                    <div class="picker-info">
+                        <div class="picked-color-display">
+                            <div class="picked-color-box" id="pickedColorBox"></div>
+                            <div class="picked-color-values" id="pickedColorValues"></div>
+                        </div>
+                        <div class="palette-section">
+                            <div class="palette-title">提取的配色方案</div>
+                            <div class="palette-grid" id="paletteGrid"></div>
+                        </div>
+                        <div class="harmony-section">
+                            <div class="harmony-title">色彩和谐方案</div>
+                            <div class="harmony-grid" id="harmonyGrid"></div>
+                        </div>
+                        <div class="control-section">
+                            <button class="btn btn-primary" id="savePaletteBtn"><span class="btn-icon">💾</span><span>保存配色</span></button>
+                            <button class="btn btn-outline" id="newImageBtn"><span class="btn-icon">📷</span><span>换张图片</span></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="tab-content" id="leaderboardTab">
+            <div class="leaderboard-area">
+                <div class="lb-section">
+                    <h2 class="lb-title">🏆 排行榜</h2>
+                    <div class="lb-tabs">
+                        <button class="lb-tab active" data-lb="classic">经典匹配</button>
+                        <button class="lb-tab" data-lb="timed">限时匹配</button>
+                        <button class="lb-tab" data-lb="sort">色阶排序</button>
+                        <button class="lb-tab" data-lb="complement">补色配对</button>
+                    </div>
+                    <div class="lb-table-wrap">
+                        <table class="lb-table" id="lbTable">
+                            <thead>
+                                <tr><th>排名</th><th>玩家</th><th>得分</th><th>日期</th></tr>
+                            </thead>
+                            <tbody id="lbBody"></tbody>
+                        </table>
+                        <div class="lb-empty" id="lbEmpty">暂无记录，快来挑战吧！</div>
+                    </div>
+                </div>
+                <div class="lb-section">
+                    <h2 class="lb-title">📅 每日配色挑战</h2>
+                    <div class="daily-area">
+                        <div class="daily-color" id="dailyColorBox">
+                            <div class="color-rgb" id="dailyColorRGB">今日目标</div>
+                        </div>
+                        <div class="daily-info">
+                            <div class="daily-date" id="dailyDate"></div>
+                            <div class="daily-best" id="dailyBest">今日最佳：暂无</div>
+                        </div>
+                        <button class="btn btn-primary" id="dailyPlayBtn"><span class="btn-icon">🎮</span><span>挑战今日颜色</span></button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="tab-content" id="learnTab">
+            <div class="learn-area">
+                <div class="learn-card">
+                    <div class="learn-card-header">
+                        <span class="learn-card-icon">🔄</span>
+                        <h3>互补色</h3>
+                    </div>
+                    <div class="learn-card-body">
+                        <p>互补色是色轮上相对的两种颜色（相距180°），搭配使用能产生强烈的视觉对比效果。</p>
+                        <div class="learn-demo" id="demoComplementary">
+                            <div class="demo-color" style="background:#ff4444"></div>
+                            <div class="demo-arrow">↔</div>
+                            <div class="demo-color" style="background:#44ffff"></div>
+                        </div>
+                        <div class="learn-tags"><span class="tag">对比强烈</span><span class="tag">视觉冲击</span></div>
+                    </div>
+                </div>
+                <div class="learn-card">
+                    <div class="learn-card-header">
+                        <span class="learn-card-icon">🎵</span>
+                        <h3>类似色</h3>
+                    </div>
+                    <div class="learn-card-body">
+                        <p>类似色是色轮上相邻的颜色（相距30°），搭配使用能营造和谐、舒适的视觉效果。</p>
+                        <div class="learn-demo" id="demoAnalogous">
+                            <div class="demo-color" style="background:#ff4444"></div>
+                            <div class="demo-color" style="background:#ff8844"></div>
+                            <div class="demo-color" style="background:#ffcc44"></div>
+                        </div>
+                        <div class="learn-tags"><span class="tag">和谐统一</span><span class="tag">自然过渡</span></div>
+                    </div>
+                </div>
+                <div class="learn-card">
+                    <div class="learn-card-header">
+                        <span class="learn-card-icon">🔺</span>
+                        <h3>三角色</h3>
+                    </div>
+                    <div class="learn-card-body">
+                        <p>三角色是色轮上等距的三种颜色（相距120°），搭配使用能产生丰富而平衡的视觉效果。</p>
+                        <div class="learn-demo" id="demoTriadic">
+                            <div class="demo-color" style="background:#ff4444"></div>
+                            <div class="demo-color" style="background:#44ff44"></div>
+                            <div class="demo-color" style="background:#4444ff"></div>
+                        </div>
+                        <div class="learn-tags"><span class="tag">丰富多样</span><span class="tag">动态平衡</span></div>
+                    </div>
+                </div>
+                <div class="learn-card">
+                    <div class="learn-card-header">
+                        <span class="learn-card-icon">🔥</span>
+                        <h3>冷暖色</h3>
+                    </div>
+                    <div class="learn-card-body">
+                        <p>暖色（红、橙、黄）给人温暖、活跃的感觉；冷色（蓝、青、紫）给人清凉、安静的感觉。</p>
+                        <div class="learn-demo" id="demoTemp">
+                            <div class="demo-group"><span class="demo-label">暖色</span><div class="demo-color" style="background:#ff4444"></div><div class="demo-color" style="background:#ff8844"></div><div class="demo-color" style="background:#ffcc44"></div></div>
+                            <div class="demo-group"><span class="demo-label">冷色</span><div class="demo-color" style="background:#4488ff"></div><div class="demo-color" style="background:#44ccff"></div><div class="demo-color" style="background:#8844ff"></div></div>
+                        </div>
+                        <div class="learn-tags"><span class="tag">情感表达</span><span class="tag">氛围营造</span></div>
+                    </div>
+                </div>
+                <div class="learn-card">
+                    <div class="learn-card-header">
+                        <span class="learn-card-icon">📐</span>
+                        <h3>分裂互补色</h3>
+                    </div>
+                    <div class="learn-card-body">
+                        <p>分裂互补色是互补色两侧相邻的两种颜色（相距150°和210°），比互补色更柔和但依然有对比。</p>
+                        <div class="learn-demo" id="demoSplit">
+                            <div class="demo-color" style="background:#ff4444"></div>
+                            <div class="demo-color" style="background:#44ff88"></div>
+                            <div class="demo-color" style="background:#4488ff"></div>
+                        </div>
+                        <div class="learn-tags"><span class="tag">柔和对比</span><span class="tag">丰富层次</span></div>
+                    </div>
+                </div>
+                <div class="learn-card interactive-card">
+                    <div class="learn-card-header">
+                        <span class="learn-card-icon">🎮</span>
+                        <h3>互动色轮</h3>
+                    </div>
+                    <div class="learn-card-body">
+                        <p>点击色轮上的任意位置查看对应的色彩和谐方案！</p>
+                        <div class="color-wheel-wrap">
+                            <canvas id="colorWheelCanvas" width="280" height="280"></canvas>
+                            <div class="wheel-dot" id="wheelDot"></div>
+                        </div>
+                        <div class="wheel-harmony" id="wheelHarmony"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <aside class="history-panel" id="historyPanel">
+        <div class="history-header">
+            <h3>📋 调色历史</h3>
+            <button class="close-btn" id="closeHistoryBtn">✕</button>
+        </div>
+        <div class="history-list" id="historyList">
+            <div class="history-empty">暂无调色记录</div>
+        </div>
+        <div class="history-actions">
+            <button class="btn btn-primary btn-sm" id="exportHistoryBtn"><span class="btn-icon">📥</span><span>导出记录</span></button>
+            <button class="btn btn-outline btn-sm" id="clearHistoryBtn"><span class="btn-icon">🗑️</span><span>清空</span></button>
+        </div>
+    </aside>
+
+    <div class="modal" id="resultModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-icon" id="modalIcon">🎉</span>
+                <h2 class="modal-title" id="modalTitle">本轮结果</h2>
+            </div>
+            <div class="result-content" id="roundResult">
+                <div class="match-ring">
+                    <svg class="ring-svg" viewBox="0 0 100 100">
+                        <circle class="ring-bg" cx="50" cy="50" r="40"></circle>
+                        <circle class="ring-progress" id="matchRing" cx="50" cy="50" r="40"></circle>
+                    </svg>
+                    <div class="match-value">
+                        <span class="match-percent" id="matchPercent">0%</span>
+                        <span class="match-label">匹配度</span>
+                    </div>
+                </div>
+                <div class="score-display">
+                    <span class="score-label">本轮得分</span>
+                    <span class="score-value" id="roundScore">0</span>
+                </div>
+                <div class="color-compare">
+                    <div class="compare-item">
+                        <div class="compare-color" id="resultTargetColor"></div>
+                        <span class="compare-label">目标</span>
+                    </div>
+                    <div class="compare-item">
+                        <div class="compare-color" id="resultYourColor"></div>
+                        <span class="compare-label">你的</span>
+                    </div>
+                </div>
+            </div>
+            <div class="result-content hidden" id="finalResult">
+                <div class="final-stats">
+                    <div class="final-stat"><span class="final-stat-label">总轮次</span><span class="final-stat-value" id="finalRounds">0</span></div>
+                    <div class="final-stat"><span class="final-stat-label">总得分</span><span class="final-stat-value" id="finalScore">0</span></div>
+                    <div class="final-stat"><span class="final-stat-label">平均匹配度</span><span class="final-stat-value" id="finalAvgMatch">0%</span></div>
+                </div>
+                <div class="rank-display" id="rankDisplay">
+                    <span class="rank-icon" id="rankIcon">🏆</span>
+                    <span class="rank-text" id="rankText">色彩新手</span>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-primary" id="nextRoundBtn"><span class="btn-icon">➡️</span><span>下一轮</span></button>
+                <button class="btn btn-outline" id="finishBtn"><span class="btn-icon">🏁</span><span>结束游戏</span></button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="nameModal">
+        <div class="modal-content modal-sm">
+            <div class="modal-header">
+                <span class="modal-icon">✏️</span>
+                <h2 class="modal-title">输入玩家名称</h2>
+            </div>
+            <div class="name-input-wrap">
+                <input type="text" class="name-input" id="playerNameInput" placeholder="请输入你的名称" maxlength="12">
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-primary" id="confirmNameBtn"><span class="btn-icon">✓</span><span>确认</span></button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script src="js/color-utils.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

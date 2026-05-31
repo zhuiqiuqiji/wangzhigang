@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>地牢迷宫冒险</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="game-container">
+        <div id="start-screen" class="screen active">
+            <h1 class="game-title">地牢迷宫冒险</h1>
+            <div class="subtitle">DUNGEON MAZE ADVENTURE</div>
+            <div class="seed-input-area">
+                <label for="seed-input" class="seed-label">种子码(可选)</label>
+                <input type="text" id="seed-input" class="seed-input" placeholder="留空随机生成" maxlength="8">
+            </div>
+            <div class="menu-options">
+                <button id="start-btn" class="pixel-btn">开始游戏</button>
+                <button id="help-btn" class="pixel-btn">操作说明</button>
+            </div>
+            <div id="help-panel" class="help-panel hidden">
+                <h3>操作说明</h3>
+                <p>🎮 方向键 / WASD - 移动角色</p>
+                <p>⚔️ 空格键 / J键 - 近战攻击</p>
+                <p>🔑 1-4数字键 - 使用技能</p>
+                <p>📦 I/B键 - 打开背包</p>
+                <p>🛡️ E键 - 打开装备栏</p>
+                <p>✨ K键 - 打开技能面板</p>
+                <p>🔄 T键 - 切换战斗模式</p>
+                <p>🚪 找到楼梯下楼或击败BOSS通关</p>
+                <button id="close-help" class="pixel-btn small">关闭</button>
+            </div>
+        </div>
+
+        <div id="class-screen" class="screen">
+            <h2 class="screen-title">选择职业</h2>
+            <div class="class-cards">
+                <div class="class-card" id="class-warrior" data-class="warrior">
+                    <div class="class-icon">⚔️</div>
+                    <div class="class-name">战士</div>
+                    <div class="class-desc">高生命高防御，近战伤害加成</div>
+                    <div class="class-stats">
+                        <span>❤️120</span><span>💧30</span><span>⚔14</span><span>🛡8</span>
+                    </div>
+                    <div class="class-skills">强力打击 / 盾击 / 战吼 / 旋风斩</div>
+                </div>
+                <div class="class-card" id="class-mage" data-class="mage">
+                    <div class="class-icon">🔮</div>
+                    <div class="class-name">法师</div>
+                    <div class="class-desc">高魔法远程法术，魔法伤害</div>
+                    <div class="class-stats">
+                        <span>❤️70</span><span>💧80</span><span>⚔8</span><span>🛡3</span>
+                    </div>
+                    <div class="class-skills">火球术 / 冰盾 / 雷电术 / 奥术冲击</div>
+                </div>
+                <div class="class-card" id="class-thief" data-class="thief">
+                    <div class="class-icon">🗡️</div>
+                    <div class="class-name">盗贼</div>
+                    <div class="class-desc">高速度高暴击，闪避与暗杀</div>
+                    <div class="class-stats">
+                        <span>❤️85</span><span>💧50</span><span>⚔12</span><span>🛡4</span>
+                    </div>
+                    <div class="class-skills">背刺 / 闪避 / 毒刃 / 暗影步</div>
+                </div>
+            </div>
+            <button id="confirm-class-btn" class="pixel-btn" disabled>确认选择</button>
+        </div>
+
+        <div id="game-screen" class="screen">
+            <div class="hud-top">
+                <div class="hud-left-info">
+                    <span id="class-display" class="class-badge">战士</span>
+                    <span id="floor-display" class="floor-badge">B1F</span>
+                    <span id="combat-mode-display" class="mode-badge">即时制</span>
+                </div>
+                <div class="stat-bar">
+                    <span class="stat-label">❤️</span>
+                    <div class="bar-container">
+                        <div id="hp-bar" class="bar hp-bar"></div>
+                    </div>
+                    <span id="hp-text" class="stat-value">100/100</span>
+                </div>
+                <div class="stat-bar">
+                    <span class="stat-label">💧</span>
+                    <div class="bar-container">
+                        <div id="mp-bar" class="bar mp-bar"></div>
+                    </div>
+                    <span id="mp-text" class="stat-value">50/50</span>
+                </div>
+                <div class="stat-level">
+                    <span class="level-label">Lv</span>
+                    <span id="level-value" class="level-value">1</span>
+                </div>
+            </div>
+
+            <div class="canvas-container">
+                <canvas id="game-canvas" width="640" height="480"></canvas>
+                <div id="message-box" class="message-box hidden"></div>
+                <div id="inventory-panel" class="overlay-panel hidden">
+                    <div class="panel-header">📦 背包 <span class="panel-hint">(点击使用物品)</span></div>
+                    <div id="inventory-list" class="panel-content inv-list"></div>
+                </div>
+                <div id="equipment-panel" class="overlay-panel hidden">
+                    <div class="panel-header">🛡️ 装备 <span class="panel-hint">(点击装备/卸下)</span></div>
+                    <div class="panel-content">
+                        <div id="eq-weapon" class="eq-slot empty">武器: 空</div>
+                        <div id="eq-armor" class="eq-slot empty">防具: 空</div>
+                        <div id="eq-accessory" class="eq-slot empty">饰品: 空</div>
+                    </div>
+                </div>
+                <div id="skills-panel" class="overlay-panel hidden">
+                    <div class="panel-header">✨ 技能</div>
+                    <div id="skills-list" class="panel-content skills-list"></div>
+                </div>
+            </div>
+
+            <div class="hud-bottom">
+                <div class="stat-row">
+                    <div class="stat-item">
+                        <span class="item-icon">💰</span>
+                        <span id="gold-value" class="item-value">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="item-icon">🔑</span>
+                        <span id="keys-value" class="item-value">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="item-icon">⚔️</span>
+                        <span id="attack-value" class="item-value">10</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="item-icon">🛡️</span>
+                        <span id="defense-value" class="item-value">5</span>
+                    </div>
+                    <div class="stat-item seed-item">
+                        <span class="item-icon">🏷️</span>
+                        <span id="seed-display" class="item-value seed-val">---</span>
+                    </div>
+                </div>
+                <div class="exp-bar-container">
+                    <span class="exp-label">EXP</span>
+                    <div class="bar-container exp-container">
+                        <div id="exp-bar" class="bar exp-bar"></div>
+                    </div>
+                    <span id="exp-text" class="exp-value">0/100</span>
+                </div>
+                <div class="skill-bar">
+                    <button id="skill-btn-1" class="skill-btn" disabled>-</button>
+                    <button id="skill-btn-2" class="skill-btn" disabled>-</button>
+                    <button id="skill-btn-3" class="skill-btn" disabled>-</button>
+                    <button id="skill-btn-4" class="skill-btn" disabled>-</button>
+                </div>
+            </div>
+
+            <div class="mobile-controls">
+                <div class="d-pad">
+                    <button class="d-btn up" data-dir="up">▲</button>
+                    <button class="d-btn left" data-dir="left">◀</button>
+                    <button class="d-btn right" data-dir="right">▶</button>
+                    <button class="d-btn down" data-dir="down">▼</button>
+                </div>
+                <button id="attack-btn" class="attack-btn">⚔️</button>
+            </div>
+        </div>
+
+        <div id="gameover-screen" class="screen">
+            <h2 id="gameover-title" class="gameover-title">游戏结束</h2>
+            <div class="gameover-stats">
+                <p>职业: <span id="final-class">-</span></p>
+                <p>最终等级: <span id="final-level">1</span></p>
+                <p>到达楼层: <span id="final-floor">-</span></p>
+                <p>获得金币: <span id="final-gold">0</span></p>
+                <p>击败敌人: <span id="final-kills">0</span></p>
+                <p>种子码: <span id="final-seed">-</span></p>
+            </div>
+            <div class="gameover-buttons">
+                <button id="restart-btn" class="pixel-btn">重新开始</button>
+                <button id="menu-btn" class="pixel-btn">返回主菜单</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/rng.js"></script>
+    <script src="js/classes.js"></script>
+    <script src="js/equipment.js"></script>
+    <script src="js/inventory.js"></script>
+    <script src="js/map.js"></script>
+    <script src="js/entities.js"></script>
+    <script src="js/combat.js"></script>
+    <script src="js/input.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/game.js"></script>
+</body>
+</html>

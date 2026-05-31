@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>气象模拟实验室</title>
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/scene.css">
+  <link rel="stylesheet" href="css/controls.css">
+</head>
+<body>
+  <div id="app">
+    <div id="scene-container">
+      <canvas id="scene-canvas"></canvas>
+      <div id="scene-label">
+        气象模拟实验室
+        <span>调节参数，探索天气奥秘</span>
+      </div>
+      <div class="weather-vignette"></div>
+    </div>
+
+    <div id="control-panel">
+      <div class="panel-header" id="panel-header">
+        <h2>控制台</h2>
+        <p>调节气象参数，观察天气变化</p>
+      </div>
+
+      <div class="panel-section">
+        <div class="panel-section-title">当前天气</div>
+        <div id="weather-display">
+          <span class="weather-icon" id="weather-icon-display">☀️</span>
+          <div id="weather-label">☀️ 晴天</div>
+        </div>
+      </div>
+
+      <div class="panel-section">
+        <div class="panel-section-title">场景选择</div>
+        <div class="scene-selector">
+          <button class="scene-btn active" data-scene="grassland">
+            <span class="scene-icon">🌿</span>
+            草地
+          </button>
+          <button class="scene-btn" data-scene="ocean">
+            <span class="scene-icon">🌊</span>
+            海洋
+          </button>
+          <button class="scene-btn" data-scene="city">
+            <span class="scene-icon">🏙️</span>
+            城市
+          </button>
+        </div>
+      </div>
+
+      <div class="panel-section">
+        <div class="panel-section-title">气象参数</div>
+
+        <div class="slider-group">
+          <div class="slider-header">
+            <span class="slider-label">🌡️ 温度</span>
+            <span class="slider-value" id="temperature-value">25°C</span>
+          </div>
+          <input type="range" id="temperature-slider" min="-20" max="45" value="25">
+        </div>
+
+        <div class="slider-group">
+          <div class="slider-header">
+            <span class="slider-label">💧 湿度</span>
+            <span class="slider-value" id="humidity-value">50%</span>
+          </div>
+          <input type="range" id="humidity-slider" min="0" max="100" value="50">
+        </div>
+
+        <div class="slider-group">
+          <div class="slider-header">
+            <span class="slider-label">🧭 气压</span>
+            <span class="slider-value" id="pressure-value">1013 hPa</span>
+          </div>
+          <input type="range" id="pressure-slider" min="950" max="1050" value="1013">
+        </div>
+      </div>
+
+      <div class="panel-section">
+        <div class="panel-section-title">实时数据</div>
+        <div class="stat-grid">
+          <div class="stat-card">
+            <div class="stat-label">🌬️ 风速</div>
+            <div class="stat-value" id="wind-value">10<span class="stat-unit">km/h</span></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">👁️ 能见度</div>
+            <div class="stat-value" id="visibility-value">100<span class="stat-unit">%</span></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">🌡️ 温度</div>
+            <div class="stat-value" id="stat-temp">25<span class="stat-unit">°C</span></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">💧 湿度</div>
+            <div class="stat-value" id="stat-hum">50<span class="stat-unit">%</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel-section">
+        <div class="panel-section-title">预设场景</div>
+        <div class="preset-grid">
+          <button class="preset-btn active" data-preset="sunny">
+            <span class="preset-icon">☀️</span>
+            晴空万里
+          </button>
+          <button class="preset-btn" data-preset="storm">
+            <span class="preset-icon">⛈️</span>
+            暴风骤雨
+          </button>
+          <button class="preset-btn" data-preset="snow">
+            <span class="preset-icon">❄️</span>
+            银装素裹
+          </button>
+          <button class="preset-btn" data-preset="spring">
+            <span class="preset-icon">🌸</span>
+            春暖花开
+          </button>
+          <button class="preset-btn" data-preset="seaStorm">
+            <span class="preset-icon">🌊</span>
+            海上风暴
+          </button>
+          <button class="preset-btn" data-preset="fog">
+            <span class="preset-icon">🌫️</span>
+            雾都迷城
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <button id="toggle-panel" aria-label="切换控制面板">◀</button>
+  </div>
+
+  <script src="js/presets.js"></script>
+  <script src="js/weather-engine.js"></script>
+  <script src="js/particle-engine.js"></script>
+  <script src="js/scene-renderer.js"></script>
+  <script src="js/scene-elements.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

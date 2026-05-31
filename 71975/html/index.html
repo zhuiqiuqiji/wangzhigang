@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>足球射门模拟游戏</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <div class="game-container">
+        <div class="header">
+            <h1>⚽ 足球射门挑战赛</h1>
+            <div class="stats-panel">
+                <div class="stat-item">
+                    <span class="stat-label">剩余射门</span>
+                    <span class="stat-value" id="shotsRemaining">10</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">进球数</span>
+                    <span class="stat-value" id="goalsScored">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">总得分</span>
+                    <span class="stat-value" id="totalScore">0</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="game-area">
+            <canvas id="gameCanvas" width="800" height="600"></canvas>
+            <div class="power-bar-container">
+                <div class="power-bar">
+                    <div class="power-fill" id="powerFill"></div>
+                </div>
+                <span class="power-label">力度</span>
+            </div>
+            <div class="message" id="message"></div>
+        </div>
+
+        <div class="instructions">
+            <p>🎮 操作说明：按住足球拖动来调整射门角度和力度，释放鼠标射门！</p>
+            <p>🎯 得分规则：死角100分 | 侧边50分 | 中心20分</p>
+        </div>
+
+        <div class="game-over-modal" id="gameOverModal">
+            <div class="modal-content">
+                <h2>🏆 游戏结束！</h2>
+                <div class="final-stats">
+                    <p>进球数：<span id="finalGoals">0</span> / 10</p>
+                    <p>总得分：<span id="finalScore">0</span> 分</p>
+                </div>
+                <button class="restart-btn" id="restartBtn">再来一局</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/game.js"></script>
+</body>
+</html>

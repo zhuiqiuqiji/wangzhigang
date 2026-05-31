@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎹 沉浸式钢琴模拟器 v2.0</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="title">
+                <span class="music-note">♪</span>
+                沉浸式钢琴模拟器
+                <span class="version-badge">v2.0</span>
+                <span class="music-note">♫</span>
+            </h1>
+            <p class="subtitle">创造音乐，分享快乐 | 支持多种乐器、录音、MIDI、跟弹教学</p>
+        </header>
+
+        <nav class="control-panel">
+            <div class="control-group">
+                <label>🎵 乐器音色</label>
+                <select id="instrumentSelect" class="control-select">
+                    <option value="piano">🎹 钢琴</option>
+                    <option value="organ">🎺 风琴</option>
+                    <option value="guitar">🎸 吉他</option>
+                    <option value="violin">🎻 小提琴</option>
+                    <option value="synth">🎛️ 电子合成器</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label>🎤 录音控制</label>
+                <div class="btn-group">
+                    <button id="recordBtn" class="control-btn record-btn">⏺ 开始录音</button>
+                    <button id="stopRecordBtn" class="control-btn stop-record-btn" disabled>⏹ 停止</button>
+                    <button id="playbackBtn" class="control-btn playback-btn" disabled>▶ 回放</button>
+                    <button id="exportMidiBtn" class="control-btn export-btn" disabled>💾 导出MIDI</button>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label>🎮 游戏模式</label>
+                <div class="btn-group">
+                    <button id="gameModeBtn" class="control-btn game-btn">🎯 跟弹教学</button>
+                    <button id="chordModeBtn" class="control-btn chord-btn">🎵 自动伴奏</button>
+                    <button id="sheetEditorBtn" class="control-btn sheet-btn">📖 乐谱编辑</button>
+                    <button id="midiInputBtn" class="control-btn midi-btn">🎹 MIDI键盘</button>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label>👥 社区分享</label>
+                <div class="btn-group">
+                    <button id="onlineBtn" class="control-btn online-btn">🌐 在线合奏</button>
+                    <button id="shareBtn" class="control-btn share-btn">📤 分享作品</button>
+                </div>
+            </div>
+        </nav>
+
+        <div id="recordingStatus" class="recording-status" style="display: none;">
+            <span class="recording-dot"></span>
+            录音中... <span id="recordingTime">0:00</span>
+        </div>
+
+        <div class="note-display">
+            <div class="current-notes" id="currentNotes">
+                <span class="placeholder">准备弹奏...</span>
+            </div>
+            <div class="chord-display" id="chordDisplay" style="display: none;">
+                <span class="chord-name" id="chordName">-</span>
+            </div>
+        </div>
+
+        <div id="gameModeContainer" class="game-mode-container" style="display: none;">
+            <div class="game-canvas" id="gameCanvas">
+                <div class="falling-notes-container" id="fallingNotesContainer"></div>
+                <div class="hit-line"></div>
+            </div>
+            <div class="game-score">
+                <span>得分: <strong id="gameScore">0</strong></span>
+                <span>连击: <strong id="gameCombo">0</strong></span>
+                <span>准确率: <strong id="gameAccuracy">100%</strong></span>
+            </div>
+        </div>
+
+        <div id="sheetEditorContainer" class="sheet-editor-container" style="display: none;">
+            <div class="sheet-toolbar">
+                <button id="addNoteBtn" class="sheet-tool-btn">➕ 添加音符</button>
+                <button id="clearSheetBtn" class="sheet-tool-btn">🗑️ 清空</button>
+                <button id="playSheetBtn" class="sheet-tool-btn">▶ 播放</button>
+                <button id="importMidiBtn" class="sheet-tool-btn">📥 导入MIDI</button>
+            </div>
+            <div class="sheet-canvas" id="sheetCanvas">
+                <svg id="vexflowCanvas"></svg>
+            </div>
+            <input type="file" id="midiFileInput" accept=".mid,.midi" style="display: none;">
+        </div>
+
+        <div id="midiInputPanel" class="midi-input-panel" style="display: none;">
+            <h3>🎹 MIDI 键盘设备</h3>
+            <div id="midiDeviceList" class="midi-device-list">
+                <p class="midi-status">正在检测MIDI设备...</p>
+            </div>
+            <div class="midi-map-info">
+                <p>MIDI音符范围: C4 (60) - B5 (83)</p>
+                <p>支持力度感应和延音踏板</p>
+            </div>
+        </div>
+
+        <div id="chordPanel" class="chord-panel" style="display: none;">
+            <h3>🎵 自动伴奏</h3>
+            <div class="chord-options">
+                <label>
+                    <input type="checkbox" id="autoAccompany" checked>
+                    启用自动伴奏
+                </label>
+                <label>伴奏风格:
+                    <select id="accompanyStyle">
+                        <option value="pop">流行</option>
+                        <option value="rock">摇滚</option>
+                        <option value="jazz">爵士</option>
+                        <option value="classic">古典</option>
+                    </select>
+                </label>
+                <label>速度 (BPM):
+                    <input type="range" id="tempoSlider" min="60" max="180" value="100">
+                    <span id="tempoValue">100</span>
+                </label>
+            </div>
+        </div>
+
+        <div id="onlinePanel" class="online-panel" style="display: none;">
+            <div class="online-notice">
+                <h3>🌐 多人在线合奏</h3>
+                <p class="notice-info">此功能需要后端服务器支持。当前为前端演示模式。</p>
+                <div class="feature-list">
+                    <h4>计划功能:</h4>
+                    <ul>
+                        <li>🔗 WebSocket实时通信</li>
+                        <li>👥 多人房间管理</li>
+                        <li>🎵 音符同步传输</li>
+                        <li>💬 实时聊天</li>
+                        <li>📤 作品社区分享</li>
+                        <li>❤️ 点赞收藏功能</li>
+                    </ul>
+                </div>
+                <p class="tech-stack">技术栈: Node.js + Socket.io + Redis</p>
+            </div>
+        </div>
+
+        <div class="song-section">
+            <div class="song-selector">
+                <h3>🎼 选择曲谱跟弹</h3>
+                <div class="song-list" id="songList"></div>
+            </div>
+            <div class="song-progress" id="songProgress" style="display: none;">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="next-note-hint" id="nextNoteHint">
+                    下一个音符: <span id="nextNote">-</span>
+                </div>
+                <button class="stop-btn" id="stopSong">停止跟弹</button>
+            </div>
+        </div>
+
+        <div class="piano-wrapper">
+            <div class="piano" id="piano"></div>
+        </div>
+
+        <div class="keyboard-hint">
+            <div class="hint-row">
+                <span class="hint-label">黑键:</span>
+                <div class="hint-keys">
+                    <span class="key-hint">1</span>
+                    <span class="key-hint">2</span>
+                    <span class="key-hint">3</span>
+                    <span class="key-hint">4</span>
+                    <span class="key-hint">5</span>
+                    <span class="key-hint">6</span>
+                    <span class="key-hint">7</span>
+                    <span class="key-hint">8</span>
+                    <span class="key-hint">9</span>
+                    <span class="key-hint">0</span>
+                </div>
+            </div>
+            <div class="hint-row">
+                <span class="hint-label">白键:</span>
+                <div class="hint-keys">
+                    <span class="key-hint">A</span>
+                    <span class="key-hint">S</span>
+                    <span class="key-hint">D</span>
+                    <span class="key-hint">F</span>
+                    <span class="key-hint">G</span>
+                    <span class="key-hint">H</span>
+                    <span class="key-hint">J</span>
+                    <span class="key-hint">K</span>
+                    <span class="key-hint">L</span>
+                    <span class="key-hint">;</span>
+                    <span class="key-hint">'</span>
+                    <span class="key-hint">\</span>
+                    <span class="key-hint">Z</span>
+                    <span class="key-hint">X</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/audio.js"></script>
+    <script src="js/keyboard.js"></script>
+    <script src="js/songs.js"></script>
+    <script src="js/chord.js"></script>
+    <script src="js/midi.js"></script>
+    <script src="js/recorder.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

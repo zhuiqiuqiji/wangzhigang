@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>思维大考验 - 创意纸牌接龙</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="noise-overlay"></div>
+    <div class="vignette"></div>
+    
+    <div class="game-container">
+        <div class="corner-decoration corner-tl">
+            <svg viewBox="0 0 100 100" class="corner-svg">
+                <path d="M10,90 Q10,10 90,10" stroke="currentColor" fill="none" stroke-width="2"/>
+                <path d="M10,70 Q10,30 70,10" stroke="currentColor" fill="none" stroke-width="1"/>
+                <circle cx="15" cy="85" r="3" fill="currentColor"/>
+                <circle cx="85" cy="15" r="3" fill="currentColor"/>
+            </svg>
+        </div>
+        <div class="corner-decoration corner-tr">
+            <svg viewBox="0 0 100 100" class="corner-svg">
+                <path d="M90,90 Q90,10 10,10" stroke="currentColor" fill="none" stroke-width="2"/>
+                <path d="M90,70 Q90,30 30,10" stroke="currentColor" fill="none" stroke-width="1"/>
+                <circle cx="85" cy="85" r="3" fill="currentColor"/>
+                <circle cx="15" cy="15" r="3" fill="currentColor"/>
+            </svg>
+        </div>
+        <div class="corner-decoration corner-bl">
+            <svg viewBox="0 0 100 100" class="corner-svg">
+                <path d="M10,10 Q10,90 90,90" stroke="currentColor" fill="none" stroke-width="2"/>
+                <path d="M10,30 Q10,70 70,90" stroke="currentColor" fill="none" stroke-width="1"/>
+                <circle cx="15" cy="15" r="3" fill="currentColor"/>
+                <circle cx="85" cy="85" r="3" fill="currentColor"/>
+            </svg>
+        </div>
+        <div class="corner-decoration corner-br">
+            <svg viewBox="0 0 100 100" class="corner-svg">
+                <path d="M90,10 Q90,90 10,90" stroke="currentColor" fill="none" stroke-width="2"/>
+                <path d="M90,30 Q90,70 30,90" stroke="currentColor" fill="none" stroke-width="1"/>
+                <circle cx="85" cy="15" r="3" fill="currentColor"/>
+                <circle cx="15" cy="85" r="3" fill="currentColor"/>
+            </svg>
+        </div>
+
+        <header class="game-header">
+            <div class="stats-left">
+                <div class="stat-item">
+                    <span class="stat-label">用时</span>
+                    <span class="stat-value" id="timer">00:00</span>
+                </div>
+            </div>
+            <div class="game-title">
+                <h1>
+                    <span class="title-ornament">♠</span>
+                    纸牌接龙
+                    <span class="title-ornament">♥</span>
+                </h1>
+                <p class="subtitle">思维大考验</p>
+            </div>
+            <div class="stats-right">
+                <div class="stat-item">
+                    <span class="stat-label">步数</span>
+                    <span class="stat-value" id="moves">0</span>
+                </div>
+                <button class="btn-restart" id="restartBtn" title="重新开始">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+                        <path d="M3 3v5h5"/>
+                    </svg>
+                    重新开始
+                </button>
+            </div>
+        </header>
+
+        <div class="top-section">
+            <div class="stock-area">
+                <div class="pile stock-pile" id="stockPile">
+                    <div class="pile-placeholder">
+                        <div class="placeholder-inner">
+                            <span class="pile-icon">↻</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="pile waste-pile" id="wastePile">
+                    <div class="pile-placeholder">
+                        <div class="placeholder-inner">
+                            <span class="pile-icon">⇢</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="foundations" id="foundations">
+                <div class="pile foundation-pile" data-foundation="0" data-suit="hearts">
+                    <div class="pile-placeholder">
+                        <div class="placeholder-inner">
+                            <span class="pile-suit">♥</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="pile foundation-pile" data-foundation="1" data-suit="diamonds">
+                    <div class="pile-placeholder">
+                        <div class="placeholder-inner">
+                            <span class="pile-suit">♦</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="pile foundation-pile" data-foundation="2" data-suit="clubs">
+                    <div class="pile-placeholder">
+                        <div class="placeholder-inner">
+                            <span class="pile-suit">♣</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="pile foundation-pile" data-foundation="3" data-suit="spades">
+                    <div class="pile-placeholder">
+                        <div class="placeholder-inner">
+                            <span class="pile-suit">♠</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="columns" id="columns">
+            <div class="column" data-column="0"></div>
+            <div class="column" data-column="1"></div>
+            <div class="column" data-column="2"></div>
+            <div class="column" data-column="3"></div>
+            <div class="column" data-column="4"></div>
+            <div class="column" data-column="5"></div>
+            <div class="column" data-column="6"></div>
+        </div>
+
+        <div class="drag-layer" id="dragLayer"></div>
+
+        <div class="win-modal" id="winModal">
+            <div class="win-modal-content">
+                <div class="win-decoration top">
+                    <span>✦</span><span>✧</span><span>✦</span>
+                </div>
+                <h2 class="win-title">恭喜获胜！</h2>
+                <div class="win-stats">
+                    <div class="win-stat">
+                        <span class="win-stat-label">完成用时</span>
+                        <span class="win-stat-value" id="finalTime">00:00</span>
+                    </div>
+                    <div class="win-stat">
+                        <span class="win-stat-label">总步数</span>
+                        <span class="win-stat-value" id="finalMoves">0</span>
+                    </div>
+                </div>
+                <button class="btn-play-again" id="playAgainBtn">
+                    <span class="btn-text">再来一局</span>
+                    <span class="btn-icon">♠</span>
+                </button>
+                <div class="win-decoration bottom">
+                    <span>✧</span><span>✦</span><span>✧</span>
+                </div>
+            </div>
+            <div class="confetti-container" id="confettiContainer"></div>
+        </div>
+    </div>
+
+    <script src="js/game.js"></script>
+</body>
+</html>

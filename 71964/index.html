@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>微积分可视化 - 欢乐闯关拼组合</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+    <div class="app-container">
+        <header class="header">
+            <div class="header-content">
+                <h1 class="header-title">
+                    <span class="emoji">🎮</span>
+                    微积分可视化 · 欢乐闯关
+                </h1>
+                <div style="display: flex; gap: 10px;">
+                    <button id="reset-view-btn" class="btn-icon" title="重置视图">🔄</button>
+                </div>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <aside class="sidebar-left">
+                <h2 class="panel-title">📊 函数输入</h2>
+                
+                <div class="input-group">
+                    <label class="input-label">输入函数表达式 y = f(x)</label>
+                    <div class="function-input-wrapper">
+                        <input type="text" id="function-input" placeholder="例如: x^2, sin(x), 2*x+1">
+                    </div>
+                    <div id="error-message"></div>
+                    <button id="add-function-btn" class="btn-primary">✨ 添加函数</button>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="example-functions">
+                    <p class="example-title">快速示例 (点击添加):</p>
+                    <div class="example-list">
+                        <span class="example-tag" onclick="document.getElementById('function-input').value='x^2'">x²</span>
+                        <span class="example-tag" onclick="document.getElementById('function-input').value='sin(x)'">sin(x)</span>
+                        <span class="example-tag" onclick="document.getElementById('function-input').value='cos(x)'">cos(x)</span>
+                        <span class="example-tag" onclick="document.getElementById('function-input').value='tan(x)'">tan(x)</span>
+                        <span class="example-tag" onclick="document.getElementById('function-input').value='sqrt(x)'">√x</span>
+                        <span class="example-tag" onclick="document.getElementById('function-input').value='1/x'">1/x</span>
+                        <span class="example-tag" onclick="document.getElementById('function-input').value='exp(x)'">e^x</span>
+                        <span class="example-tag" onclick="document.getElementById('function-input').value='ln(x)'">ln(x)</span>
+                    </div>
+                </div>
+
+                <div class="divider"></div>
+
+                <h2 class="panel-title">📋 函数列表</h2>
+                <div id="function-list" class="function-list"></div>
+            </aside>
+
+            <main class="canvas-container">
+                <canvas id="graph-canvas"></canvas>
+                
+                <div class="canvas-overlay">
+                    <div class="zoom-controls">
+                        <button id="zoom-in-btn" class="zoom-btn" title="放大">➕</button>
+                        <button id="zoom-out-btn" class="zoom-btn" title="缩小">➖</button>
+                    </div>
+                </div>
+            </main>
+
+            <aside class="sidebar-right">
+                <h2 class="panel-title">⚙️ 视图设置</h2>
+                
+                <div class="setting-item">
+                    <span class="setting-label">显示网格</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="show-grid" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div class="setting-item">
+                    <span class="setting-label">显示坐标轴</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="show-axis" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div class="setting-item">
+                    <span class="setting-label">显示交点</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="show-intersections" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div class="divider"></div>
+
+                <h2 class="panel-title">📖 操作指南</h2>
+                <div style="font-size: 12px; color: var(--text-secondary); line-height: 2;">
+                    <p>🖱️ <strong>滚轮:</strong> 缩放视图</p>
+                    <p>🖱️ <strong>拖拽:</strong> 平移视图</p>
+                    <p>⌨️ <strong>+/-:</strong> 放大/缩小</p>
+                    <p>⌨️ <strong>方向键:</strong> 平移视图</p>
+                    <p>⌨️ <strong>R:</strong> 重置视图</p>
+                </div>
+
+                <div class="divider"></div>
+
+                <h2 class="panel-title">💡 支持的函数</h2>
+                <div style="font-size: 11px; color: var(--text-secondary); line-height: 1.8;">
+                    <p><strong>三角函数:</strong> sin, cos, tan</p>
+                    <p><strong>反三角:</strong> asin, acos, atan</p>
+                    <p><strong>对数:</strong> log(常用), ln(自然)</p>
+                    <p><strong>其他:</strong> sqrt, abs, exp</p>
+                    <p><strong>取整:</strong> floor, ceil, round</p>
+                    <p><strong>常数:</strong> pi, e</p>
+                </div>
+            </aside>
+        </div>
+
+        <footer class="footer">
+            <div id="coordinate-display" class="coordinate-display">
+                <span>屏幕: (0, 0)</span>
+                <span style="margin-left: 20px;">坐标: (0.000, 0.000)</span>
+            </div>
+            <div class="help-hint">
+                快捷键: <kbd>R</kbd> 重置视图 | <kbd>滚轮</kbd> 缩放 | <kbd>拖拽</kbd> 平移
+            </div>
+        </footer>
+    </div>
+
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>

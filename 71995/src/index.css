@@ -1,0 +1,63 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap');
+
+:root {
+    font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+    line-height: 1.5;
+    font-weight: 400;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+    @apply bg-dark-900 text-white;
+    min-height: 100vh;
+}
+
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    @apply bg-dark-900;
+}
+
+::-webkit-scrollbar-thumb {
+    @apply bg-dark-600 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    @apply bg-dark-700;
+}
+
+@layer components {
+    .neon-border {
+        @apply border border-neon-purple/30;
+        box-shadow: 0 0 10px rgba(168, 85, 247, 0.1);
+    }
+
+    .neon-glow {
+        box-shadow: 0 0 15px rgba(168, 85, 247, 0.3), 0 0 30px rgba(168, 85, 247, 0.1);
+    }
+
+    .glass {
+        @apply bg-dark-800/60 backdrop-blur-xl border border-white/10;
+    }
+
+    .btn-primary {
+        @apply px-6 py-3 bg-neon-purple hover:bg-neon-purple/80 text-white font-semibold rounded-xl transition-all duration-300 hover:shadow-lg hover:shadow-neon-purple/25 active:scale-95;
+    }
+
+    .btn-secondary {
+        @apply px-6 py-3 bg-dark-700 hover:bg-dark-600 text-white font-semibold rounded-xl transition-all duration-300 border border-white/10 active:scale-95;
+    }
+
+    .card {
+        @apply glass rounded-2xl p-6 transition-all duration-300 hover:border-neon-purple/30;
+    }
+}

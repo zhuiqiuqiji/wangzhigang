@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>物理摆锤实验</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="app">
+        <header class="app-header">
+            <div class="logo">
+                <span class="logo-icon">◎</span>
+                <h1>物理摆锤实验</h1>
+            </div>
+            <p class="subtitle">拖动摆球设置初始角度，释放观察摆动</p>
+        </header>
+
+        <div class="main-content">
+            <div class="canvas-container">
+                <canvas id="pendulumCanvas"></canvas>
+                <div class="canvas-overlay-hint" id="canvasHint">拖拽摆球开始实验</div>
+            </div>
+
+            <aside class="side-panel">
+                <section class="panel-section controls-section">
+                    <h2 class="section-title">
+                        <span class="section-icon">⚙</span> 参数控制
+                    </h2>
+                    <div class="control-group">
+                        <div class="control-label">
+                            <span>绳长</span>
+                            <span class="control-value" id="lengthValue">1.5 m</span>
+                        </div>
+                        <input type="range" id="lengthSlider" class="custom-slider" min="0.5" max="3.0" step="0.1" value="1.5">
+                    </div>
+                    <div class="control-group">
+                        <div class="control-label">
+                            <span>质量</span>
+                            <span class="control-value" id="massValue">1.0 kg</span>
+                        </div>
+                        <input type="range" id="massSlider" class="custom-slider" min="0.5" max="5.0" step="0.1" value="1.0">
+                    </div>
+                    <div class="control-group">
+                        <div class="control-label">
+                            <span>阻尼</span>
+                            <span class="control-value" id="dampingValue">0.05</span>
+                        </div>
+                        <input type="range" id="dampingSlider" class="custom-slider" min="0.01" max="0.50" step="0.01" value="0.05">
+                    </div>
+                    <button id="resetBtn" class="reset-btn">重置实验</button>
+                </section>
+
+                <section class="panel-section data-section">
+                    <h2 class="section-title">
+                        <span class="section-icon">📊</span> 实时数据
+                    </h2>
+
+                    <div class="data-group">
+                        <h3 class="data-group-title">运动参数</h3>
+                        <div class="data-row">
+                            <span class="data-label">角度 θ</span>
+                            <span class="data-value" id="dataAngle">0.00°</span>
+                        </div>
+                        <div class="data-row">
+                            <span class="data-label">角速度 ω</span>
+                            <span class="data-value" id="dataAngularVelocity">0.000 rad/s</span>
+                        </div>
+                        <div class="data-row">
+                            <span class="data-label">线速度 v</span>
+                            <span class="data-value" id="dataLinearVelocity">0.000 m/s</span>
+                        </div>
+                        <div class="data-row">
+                            <span class="data-label">角加速度 α</span>
+                            <span class="data-value" id="dataAcceleration">0.000 rad/s²</span>
+                        </div>
+                    </div>
+
+                    <div class="data-group">
+                        <h3 class="data-group-title">能量</h3>
+                        <div class="data-row">
+                            <span class="data-label">动能 Eₖ</span>
+                            <div class="data-value-with-bar">
+                                <span class="data-value energy-kinetic" id="dataKineticEnergy">0.0000 J</span>
+                                <div class="energy-bar-container"><div class="energy-bar ek" id="ekBar"></div></div>
+                            </div>
+                        </div>
+                        <div class="data-row">
+                            <span class="data-label">势能 Eₚ</span>
+                            <div class="data-value-with-bar">
+                                <span class="data-value energy-potential" id="dataPotentialEnergy">0.0000 J</span>
+                                <div class="energy-bar-container"><div class="energy-bar ep" id="epBar"></div></div>
+                            </div>
+                        </div>
+                        <div class="data-row">
+                            <span class="data-label">总能量 E</span>
+                            <div class="data-value-with-bar">
+                                <span class="data-value energy-total" id="dataTotalEnergy">0.0000 J</span>
+                                <div class="energy-bar-container"><div class="energy-bar et" id="etBar"></div></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="data-group">
+                        <h3 class="data-group-title">周期与时间</h3>
+                        <div class="data-row">
+                            <span class="data-label">理论周期 T</span>
+                            <span class="data-value" id="dataTheoreticalPeriod">0.000 s</span>
+                        </div>
+                        <div class="data-row">
+                            <span class="data-label">实测周期 T</span>
+                            <span class="data-value" id="dataMeasuredPeriod">—</span>
+                        </div>
+                        <div class="data-row">
+                            <span class="data-label">运行时间</span>
+                            <span class="data-value" id="dataTime">0.00 s</span>
+                        </div>
+                    </div>
+                </section>
+            </aside>
+        </div>
+    </div>
+
+    <script src="js/physics.js"></script>
+    <script src="js/renderer.js"></script>
+    <script src="js/interaction.js"></script>
+    <script src="js/controls.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
