@@ -1,0 +1,194 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: 'Baloo 2', 'Comic Sans MS', 'Comic Neue', cursive, sans-serif;
+}
+
+body {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+  background-attachment: fixed;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(255, 200, 100, 0.05) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.game-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  padding: 20px;
+  z-index: 1;
+  max-height: 100vh;
+  overflow: hidden;
+}
+
+.game-header {
+  text-align: center;
+  animation: fadeInDown 0.6s ease-out;
+}
+
+.game-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #FFF;
+  text-shadow: 
+    3px 3px 0 rgba(255, 107, 53, 0.8),
+    6px 6px 0 rgba(0, 0, 0, 0.2);
+  letter-spacing: 2px;
+  margin-bottom: 5px;
+}
+
+.game-subtitle {
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 400;
+  letter-spacing: 1px;
+}
+
+.game-container {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 
+    0 20px 60px rgba(0, 0, 0, 0.3),
+    0 0 0 4px rgba(255, 255, 255, 0.2),
+    inset 0 0 30px rgba(255, 255, 255, 0.1);
+  animation: fadeInUp 0.6s ease-out;
+}
+
+#gameCanvas {
+  display: block;
+  cursor: crosshair;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.game-footer {
+  text-align: center;
+  animation: fadeInUp 0.8s ease-out;
+}
+
+.game-instruction {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.95);
+  background: rgba(0, 0, 0, 0.2);
+  padding: 10px 20px;
+  border-radius: 25px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.game-title {
+  animation: fadeInDown 0.6s ease-out, float 3s ease-in-out 1s infinite;
+}
+
+@media (max-width: 640px) {
+  .game-wrapper {
+    padding: 10px;
+    gap: 10px;
+  }
+
+  .game-title {
+    font-size: 1.8rem;
+    text-shadow: 
+      2px 2px 0 rgba(255, 107, 53, 0.8),
+      4px 4px 0 rgba(0, 0, 0, 0.2);
+  }
+
+  .game-subtitle {
+    font-size: 0.9rem;
+  }
+
+  .game-instruction {
+    font-size: 0.8rem;
+    padding: 8px 15px;
+  }
+
+  .game-container {
+    border-radius: 15px;
+  }
+}
+
+@media (max-height: 700px) {
+  .game-title {
+    font-size: 1.5rem;
+    margin-bottom: 2px;
+  }
+
+  .game-subtitle {
+    display: none;
+  }
+
+  .game-wrapper {
+    gap: 8px;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 500px) {
+  .game-wrapper {
+    flex-direction: row;
+    padding: 10px 20px;
+  }
+
+  .game-header, .game-footer {
+    display: none;
+  }
+}

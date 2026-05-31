@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>接鸡蛋农场游戏 v2.0</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <div id="game-wrapper">
+        <div id="start-overlay">
+            <div id="start-card">
+                <h1 class="game-title">🐔 接鸡蛋农场 🥚</h1>
+                <div class="game-subtitle">v2.0 大型版本更新</div>
+                <div class="features-section">
+                    <div class="feature-item">✨ 多种掉落物</div>
+                    <div class="feature-item">🎁 道具系统</div>
+                    <div class="feature-item">🏠 农场升级</div>
+                    <div class="feature-item">🌈 多关卡场景</div>
+                    <div class="feature-item">🏆 成就收集</div>
+                    <div class="feature-item">👥 双人模式</div>
+                </div>
+                <button id="overlay-start-btn" class="game-btn start-btn-main">开始游戏</button>
+            </div>
+        </div>
+
+        <div id="main-menu" class="hidden">
+            <div id="menu-card">
+                <h1 class="menu-title">🏠 接鸡蛋农场</h1>
+                <div class="menu-stats">
+                    <div class="menu-stat">
+                        <span class="stat-icon">🏆</span>
+                        <span class="stat-label">最高分</span>
+                        <span class="stat-value" id="menu-high-score">0</span>
+                    </div>
+                    <div class="menu-stat">
+                        <span class="stat-icon">💰</span>
+                        <span class="stat-label">金币</span>
+                        <span class="stat-value" id="menu-coins">0</span>
+                    </div>
+                    <div class="menu-stat">
+                        <span class="stat-icon">⭐</span>
+                        <span class="stat-label">农场等级</span>
+                        <span class="stat-value" id="menu-farm-level">1</span>
+                    </div>
+                </div>
+                <div class="menu-buttons">
+                    <button id="menu-single" class="menu-btn primary">
+                        <span class="btn-icon">🎮</span>
+                        <span class="btn-text">单人游戏</span>
+                    </button>
+                    <button id="menu-two-player" class="menu-btn secondary">
+                        <span class="btn-icon">👥</span>
+                        <span class="btn-text">双人协作</span>
+                    </button>
+                    <button id="menu-upgrade" class="menu-btn tertiary">
+                        <span class="btn-icon">🏠</span>
+                        <span class="btn-text">升级农场</span>
+                    </button>
+                    <button id="menu-achievements" class="menu-btn tertiary">
+                        <span class="btn-icon">🏆</span>
+                        <span class="btn-text">成就图鉴</span>
+                    </button>
+                    <button id="menu-tasks" class="menu-btn tertiary">
+                        <span class="btn-icon">📋</span>
+                        <span class="btn-text">每日任务</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="level-select" class="hidden">
+            <div id="level-select-card">
+                <h2 class="level-select-title">🗺️ 选择关卡</h2>
+                <div id="level-grid"></div>
+                <div class="level-select-footer">
+                    <button id="level-back-btn" class="game-btn menu-btn-overlay">返回菜单</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="game-screen" class="hidden">
+            <div id="status-bar">
+                <div id="lives-display">
+                    <span class="lives-label">生命</span>
+                    <span id="lives-hearts"></span>
+                </div>
+                <div id="score-display">
+                    <span class="score-label">得分</span>
+                    <span id="score-value">0</span>
+                </div>
+                <div id="coins-display">
+                    <span class="coins-label">金币</span>
+                    <span id="coin-value">0</span>
+                </div>
+                <div id="farm-level-display-wrapper">
+                    <span class="farm-label">农场</span>
+                    <span id="farm-level-display">1</span>
+                </div>
+                <div id="difficulty-display">
+                    <span class="difficulty-label">难度</span>
+                    <span id="difficulty-value">1</span>
+                </div>
+                <div id="level-display">
+                    <span class="level-label">关卡</span>
+                    <span id="level-value">春日农场</span>
+                </div>
+                <div id="timer-display">
+                    <span class="timer-label">时间</span>
+                    <span id="timer-value">120</span>
+                </div>
+            </div>
+
+            <div id="powerups-bar"></div>
+
+            <div id="game-area">
+                <div id="sky-layer"></div>
+                <div id="cloud-layer">
+                    <div class="cloud cloud-1"></div>
+                    <div class="cloud cloud-2"></div>
+                    <div class="cloud cloud-3"></div>
+                </div>
+                <div id="hen-roof"></div>
+                <div id="ground-layer"></div>
+                <div id="fence-layer"></div>
+
+                <div id="hen" class="hen">
+                    <span class="hen-body">🐔</span>
+                </div>
+
+                <div id="basket">
+                    <div class="basket-inner"></div>
+                </div>
+
+                <div id="basket-2" class="basket hidden">
+                    <div class="basket-inner basket-2-inner"></div>
+                </div>
+
+                <div id="score-popup" class="score-popup hidden"></div>
+            </div>
+
+            <div id="controls">
+                <button id="start-btn" class="game-btn">开始游戏</button>
+                <button id="pause-btn" class="game-btn hidden">暂停</button>
+                <button id="back-btn" class="game-btn hidden">返回菜单</button>
+            </div>
+        </div>
+
+        <div id="game-over-overlay" class="hidden">
+            <div id="game-over-card">
+                <h2 id="game-over-title">游戏结束</h2>
+                <div id="final-score-section">
+                    <span class="final-label">最终得分</span>
+                    <span id="final-score">0</span>
+                </div>
+                <div id="coins-earned-section">
+                    <span class="coins-label">获得金币</span>
+                    <span id="coins-earned">0</span>
+                </div>
+                <div id="high-score-section">
+                    <span class="high-label">最高纪录</span>
+                    <span id="high-score">0</span>
+                </div>
+                <div id="new-record-badge" class="hidden">🎉 新纪录!</div>
+                <div class="game-over-buttons">
+                    <button id="restart-btn" class="game-btn restart-btn">再来一局</button>
+                    <button id="menu-btn" class="game-btn menu-btn-overlay">返回菜单</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/config.js"></script>
+    <script src="../js/game.js"></script>
+</body>
+</html>

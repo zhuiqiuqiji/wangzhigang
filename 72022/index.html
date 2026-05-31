@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>切绳子 - 物理益智游戏</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700&family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="game-wrapper">
+    <header class="game-header">
+      <h1 class="game-title">🍬 切绳子 🍬</h1>
+      <p class="game-subtitle">物理益智游戏</p>
+    </header>
+    
+    <main id="gameContainer" class="game-container">
+      <canvas id="gameCanvas"></canvas>
+    </main>
+    
+    <footer class="game-footer">
+      <p class="game-instruction">💡 用鼠标或手指滑动切断绳子，将糖果送入小怪物嘴里！</p>
+    </footer>
+  </div>
+
+  <script src="js/levels.js"></script>
+  <script src="js/physics.js"></script>
+  <script src="js/input.js"></script>
+  <script src="js/renderer.js"></script>
+  <script src="js/game.js"></script>
+</body>
+</html>

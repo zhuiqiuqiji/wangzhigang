@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>击球砖块弹射 - 关卡编辑器</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./css/style.css" />
+  <style>
+    #editor-container {
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+    #palette {
+      width: 200px;
+      background: rgba(0,0,0,0.3);
+      border-right: 1px solid rgba(0,212,255,0.2);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    #palette h2 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 16px;
+      color: #00d4ff;
+      margin-bottom: 8px;
+      text-align: center;
+    }
+    .palette-item {
+      padding: 12px;
+      border: 2px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.2s ease;
+    }
+    .palette-item:hover {
+      border-color: rgba(0,212,255,0.5);
+    }
+    .palette-item.selected {
+      border-color: #00d4ff;
+      box-shadow: 0 0 15px rgba(0,212,255,0.4);
+    }
+    .palette-color {
+      width: 30px;
+      height: 24px;
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+    .palette-label {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 13px;
+      color: rgba(255,255,255,0.8);
+    }
+    #editor-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+    }
+    #editor-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    #editor-header h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 24px;
+      color: #00d4ff;
+      text-shadow: 0 0 20px rgba(0,212,255,0.4);
+    }
+    #level-name-input {
+      background: rgba(0,0,0,0.3);
+      border: 1px solid rgba(0,212,255,0.3);
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 14px;
+      width: 200px;
+    }
+    #level-name-input:focus {
+      outline: none;
+      border-color: #00d4ff;
+      box-shadow: 0 0 10px rgba(0,212,255,0.3);
+    }
+    #editor-grid {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: auto;
+    }
+    .brick-grid {
+      display: grid;
+      gap: 4px;
+      padding: 20px;
+      background: rgba(0,0,0,0.2);
+      border-radius: 16px;
+      border: 1px solid rgba(0,212,255,0.2);
+    }
+    .grid-cell {
+      width: 56px;
+      height: 24px;
+      border-radius: 4px;
+      background: rgba(255,255,255,0.03);
+      border: 1px dashed rgba(255,255,255,0.1);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .grid-cell:hover {
+      background: rgba(0,212,255,0.1);
+      border-color: rgba(0,212,255,0.4);
+    }
+    .grid-cell.brick-1 { background: #00d4ff; border: none; box-shadow: 0 0 8px rgba(0,212,255,0.5); }
+    .grid-cell.brick-2 { background: #c0c0c0; border: none; box-shadow: 0 0 8px rgba(192,192,192,0.5); }
+    .grid-cell.brick-3 { background: #808080; border: none; box-shadow: 0 0 8px rgba(128,128,128,0.5); }
+    .grid-cell.brick-4 { background: #ff4444; border: none; box-shadow: 0 0 8px rgba(255,68,68,0.5); }
+    .grid-cell.brick-5 { background: #2a2a3e; border: none; }
+    #editor-buttons {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      padding: 20px 0;
+    }
+    .editor-btn {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 10px 24px;
+      border-radius: 50px;
+      cursor: pointer;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      transition: all 0.3s ease;
+      border: none;
+    }
+    .editor-btn.primary {
+      background: linear-gradient(135deg, #00d4ff, #00ff88);
+      color: #0a0e27;
+      box-shadow: 0 0 20px rgba(0,212,255,0.3);
+    }
+    .editor-btn.primary:hover {
+      box-shadow: 0 0 30px rgba(0,212,255,0.5);
+      transform: translateY(-2px);
+    }
+    .editor-btn.secondary {
+      background: linear-gradient(135deg, #8b5cf6, #ec4899);
+      color: #fff;
+      box-shadow: 0 0 20px rgba(139,92,246,0.3);
+    }
+    .editor-btn.secondary:hover {
+      box-shadow: 0 0 30px rgba(139,92,246,0.5);
+      transform: translateY(-2px);
+    }
+    .editor-btn.danger {
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+      color: #fff;
+      box-shadow: 0 0 20px rgba(239,68,68,0.3);
+    }
+    .editor-btn.danger:hover {
+      box-shadow: 0 0 30px rgba(239,68,68,0.5);
+      transform: translateY(-2px);
+    }
+    .editor-btn.back {
+      background: rgba(255,255,255,0.1);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    .editor-btn.back:hover {
+      background: rgba(255,255,255,0.15);
+      border-color: rgba(255,255,255,0.4);
+    }
+    .hp-label {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 10px;
+      color: #fff;
+      text-shadow: 0 0 3px rgba(0,0,0,0.8);
+    }
+  </style>
+</head>
+<body>
+  <div id="editor-container">
+    <div id="palette">
+      <h2>砖块类型</h2>
+      <div class="palette-item selected" data-type="0">
+        <div class="palette-color" style="background: rgba(255,255,255,0.03); border: 1px dashed rgba(255,255,255,0.2)"></div>
+        <span class="palette-label">橡皮擦</span>
+      </div>
+      <div class="palette-item" data-type="1">
+        <div class="palette-color" style="background: #00d4ff; box-shadow: 0 0 8px rgba(0,212,255,0.5)"></div>
+        <span class="palette-label">普通砖</span>
+      </div>
+      <div class="palette-item" data-type="2">
+        <div class="palette-color" style="background: #c0c0c0; box-shadow: 0 0 8px rgba(192,192,192,0.5)"></div>
+        <span class="palette-label">金属砖 (2血)</span>
+      </div>
+      <div class="palette-item" data-type="3">
+        <div class="palette-color" style="background: #808080; box-shadow: 0 0 8px rgba(128,128,128,0.5)"></div>
+        <span class="palette-label">金属砖 (3血)</span>
+      </div>
+      <div class="palette-item" data-type="4">
+        <div class="palette-color" style="background: #ff4444; box-shadow: 0 0 8px rgba(255,68,68,0.5)"></div>
+        <span class="palette-label">爆炸砖</span>
+      </div>
+      <div class="palette-item" data-type="5">
+        <div class="palette-color" style="background: #2a2a3e"></div>
+        <span class="palette-label">不可破坏</span>
+      </div>
+    </div>
+    <div id="editor-area">
+      <div id="editor-header">
+        <h1>关卡编辑器</h1>
+        <input type="text" id="level-name-input" placeholder="关卡名称" value="我的关卡" />
+      </div>
+      <div id="editor-grid">
+        <div class="brick-grid" id="brickGrid"></div>
+      </div>
+      <div id="editor-buttons">
+        <button class="editor-btn back" onclick="location.href='./level-select.html'">返回选关</button>
+        <button class="editor-btn danger" id="clearBtn">清空</button>
+        <button class="editor-btn secondary" id="testBtn">测试关卡</button>
+        <button class="editor-btn primary" id="saveBtn">保存关卡</button>
+      </div>
+    </div>
+  </div>
+  <script type="module" src="./js/editor.ts"></script>
+</body>
+</html>

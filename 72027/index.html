@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>平衡球走钢丝</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="game-container">
+        <canvas id="game-canvas"></canvas>
+
+        <div id="hud" class="hidden">
+            <div id="hud-timer">
+                <span class="hud-label">时间</span>
+                <span id="timer-value" class="hud-value">0.0s</span>
+            </div>
+            <div id="hud-progress">
+                <div id="progress-bar">
+                    <div id="progress-fill"></div>
+                </div>
+                <span id="progress-text" class="hud-value">0%</span>
+            </div>
+            <div id="hud-speed">
+                <span class="hud-label">速度</span>
+                <div id="speed-bar">
+                    <div id="speed-fill"></div>
+                </div>
+            </div>
+            <div id="hud-score">
+                <span class="hud-label">💰</span>
+                <span id="coins-value" class="hud-value">0</span>
+                <span class="hud-label">💎</span>
+                <span id="gems-value" class="hud-value">0</span>
+            </div>
+            <div id="hud-ghost" class="hidden">
+                <span class="hud-label">👻</span>
+                <span id="ghost-status" class="hud-value">幽灵车</span>
+            </div>
+        </div>
+
+        <div id="main-menu">
+            <div class="menu-content">
+                <h1 class="game-title">平衡球<br><span class="title-accent">走钢丝</span></h1>
+                <div class="menu-subtitle">BALANCE BALL ON THE WIRE</div>
+
+                <div class="menu-tabs">
+                    <button class="menu-tab active" data-tab="play">🎮 游戏</button>
+                    <button class="menu-tab" data-tab="levels">🗺️ 关卡</button>
+                    <button class="menu-tab" data-tab="skins">🎨 皮肤</button>
+                    <button class="menu-tab" data-tab="leaderboard">🏆 排行</button>
+                    <button class="menu-tab" data-tab="editor">✏️ 编辑器</button>
+                </div>
+
+                <div class="tab-content" id="tab-play">
+                    <button id="btn-start" class="neon-btn large">开始挑战</button>
+                    <div class="menu-options">
+                        <label class="menu-option">
+                            <input type="checkbox" id="ghost-mode">
+                            <span>幽灵车竞速</span>
+                        </label>
+                    </div>
+                    <div class="player-stats">
+                        <div class="stat-item">
+                            <span class="stat-label">总星数</span>
+                            <span class="stat-value" id="total-stars">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">总积分</span>
+                            <span class="stat-value" id="total-score">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content hidden" id="tab-levels">
+                    <div class="levels-grid" id="levels-grid"></div>
+                </div>
+
+                <div class="tab-content hidden" id="tab-skins">
+                    <div class="skins-grid" id="skins-grid"></div>
+                </div>
+
+                <div class="tab-content hidden" id="tab-leaderboard">
+                    <div class="leaderboard-select">
+                        <select id="leaderboard-level-select"></select>
+                    </div>
+                    <div class="leaderboard-list" id="leaderboard-list"></div>
+                </div>
+
+                <div class="tab-content hidden" id="tab-editor">
+                    <p class="editor-intro">设计属于你自己的轨道！</p>
+                    <button id="btn-open-editor" class="neon-btn">打开轨道编辑器</button>
+                    <div class="custom-levels-list" id="custom-levels-list"></div>
+                </div>
+
+                <div class="controls-info">
+                    <div class="control-item">
+                        <kbd>←</kbd><kbd>→</kbd>
+                        <span>键盘控制</span>
+                    </div>
+                    <div class="control-item">
+                        <span class="icon">📱</span>
+                        <span>陀螺仪</span>
+                    </div>
+                    <div class="control-item">
+                        <span class="icon">🎮</span>
+                        <span>游戏手柄</span>
+                    </div>
+                </div>
+                <div id="best-record" class="hidden">
+                    <span class="hud-label">最佳记录</span>
+                    <span id="best-time" class="hud-value">--</span>
+                    <span id="best-stars" class="star-display"></span>
+                </div>
+            </div>
+        </div>
+
+        <div id="result-screen" class="hidden">
+            <div class="result-content">
+                <h2 id="result-title"></h2>
+                <div id="result-stars" class="stars-container"></div>
+                <div id="result-time" class="result-time"></div>
+                <div id="result-rank" class="result-rank hidden"></div>
+                <div id="result-score" class="result-score">
+                    <span>💰 金币: <span id="result-coins">0</span></span>
+                    <span>💎 宝石: <span id="result-gems">0</span></span>
+                </div>
+                <div class="result-buttons">
+                    <button id="btn-restart" class="neon-btn">再来一次</button>
+                    <button id="btn-next-level" class="neon-btn primary hidden">下一关</button>
+                    <button id="btn-menu" class="neon-btn secondary">返回主界面</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="mobile-controls" class="hidden">
+            <button id="btn-left" class="mobile-btn" data-direction="left">◀</button>
+            <button id="btn-right" class="mobile-btn" data-direction="right">▶</button>
+        </div>
+
+        <div id="pause-menu" class="hidden">
+            <div class="pause-content">
+                <h2>游戏暂停</h2>
+                <div class="pause-buttons">
+                    <button id="btn-resume" class="neon-btn">继续游戏</button>
+                    <button id="btn-pause-restart" class="neon-btn">重新开始</button>
+                    <button id="btn-pause-menu" class="neon-btn secondary">返回主菜单</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/levels.js"></script>
+    <script src="js/skins.js"></script>
+    <script src="js/physics.js"></script>
+    <script src="js/input.js"></script>
+    <script src="js/track.js"></script>
+    <script src="js/collectibles.js"></script>
+    <script src="js/ball.js"></script>
+    <script src="js/camera.js"></script>
+    <script src="js/scene.js"></script>
+    <script src="js/ghost-car.js"></script>
+    <script src="js/leaderboard.js"></script>
+    <script src="js/track-editor.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

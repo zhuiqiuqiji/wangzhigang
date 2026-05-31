@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>单词风暴 v2.0 - 打字游戏</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-theme="cyberpunk">
+    <div id="stars-container"></div>
+    
+    <div id="game-container">
+        <div id="status-bar">
+            <div class="status-item">
+                <span class="status-label">得分</span>
+                <span class="status-value" id="score">0</span>
+            </div>
+            <div class="status-item">
+                <span class="status-label">生命</span>
+                <span class="status-value lives" id="lives">❤❤❤</span>
+            </div>
+            <div class="status-item">
+                <span class="status-label">连击</span>
+                <span class="status-value" id="combo">0</span>
+            </div>
+            <div class="status-item">
+                <span class="status-label">WPM</span>
+                <span class="status-value" id="wpm">0</span>
+            </div>
+            <div class="status-item">
+                <span class="status-label">准确率</span>
+                <span class="status-value" id="accuracy">100%</span>
+            </div>
+        </div>
+
+        <div id="combo-indicator" class="hidden">
+            <span class="combo-icon" id="combo-icon"></span>
+            <span class="combo-text" id="combo-text">普通</span>
+            <span class="combo-multiplier" id="combo-multiplier">x1.0</span>
+        </div>
+
+        <div id="boss-health-container" class="hidden">
+            <div class="boss-label">
+                <span class="boss-icon">👹</span>
+                <span class="boss-name" id="boss-name">BOSS</span>
+            </div>
+            <div class="boss-health-bar">
+                <div class="boss-health-fill" id="boss-health-fill"></div>
+                <span class="boss-health-text" id="boss-health-text">100%</span>
+            </div>
+        </div>
+
+        <div id="game-area">
+            <div id="letters-container"></div>
+            <div id="particles-container"></div>
+            <div id="score-popups-container"></div>
+            <div id="critical-effect" class="hidden"></div>
+        </div>
+
+        <div id="danger-flash"></div>
+
+        <div id="start-panel" class="overlay">
+            <div class="panel-content large-panel">
+                <h1 class="game-title">
+                    <span class="title-word">单词</span>
+                    <span class="title-word accent">风暴</span>
+                </h1>
+                <p class="game-subtitle">WORD STORM v2.0</p>
+
+                <div class="section-title">🎮 选择游戏模式</div>
+                <div class="mode-selector">
+                    <div class="mode-card active" data-mode="letter">
+                        <span class="mode-icon">🔤</span>
+                        <span class="mode-name">字母模式</span>
+                        <span class="mode-desc">单个字母下落</span>
+                        <span class="mode-difficulty">⭐</span>
+                    </div>
+                    <div class="mode-card" data-mode="word">
+                        <span class="mode-icon">📝</span>
+                        <span class="mode-name">单词模式</span>
+                        <span class="mode-desc">完整单词下落</span>
+                        <span class="mode-difficulty">⭐⭐</span>
+                    </div>
+                    <div class="mode-card" data-mode="sentence">
+                        <span class="mode-icon">📖</span>
+                        <span class="mode-name">短句模式</span>
+                        <span class="mode-desc">完整句子下落</span>
+                        <span class="mode-difficulty">⭐⭐⭐</span>
+                    </div>
+                    <div class="mode-card" data-mode="code">
+                        <span class="mode-icon">💻</span>
+                        <span class="mode-name">代码模式</span>
+                        <span class="mode-desc">代码片段下落</span>
+                        <span class="mode-difficulty">⭐⭐⭐⭐</span>
+                    </div>
+                </div>
+
+                <div class="settings-row">
+                    <div class="setting-group">
+                        <label class="setting-label">🌐 语言</label>
+                        <select class="setting-select" id="language-select">
+                            <option value="en">🇺🇸 English</option>
+                            <option value="zh">🇨🇳 中文拼音</option>
+                            <option value="ja">🇯🇵 日本語ローマ字</option>
+                            <option value="fr">🇫🇷 Français</option>
+                        </select>
+                    </div>
+                    <div class="setting-group">
+                        <label class="setting-label">🎨 主题</label>
+                        <select class="setting-select" id="theme-select">
+                            <option value="cyberpunk">🌃 赛博霓虹</option>
+                            <option value="minimal">⬜ 极简黑白</option>
+                            <option value="pixel">🎮 复古像素</option>
+                            <option value="forest">🌲 森林绿意</option>
+                            <option value="ocean">🌊 深海幽蓝</option>
+                            <option value="sunset">🌅 落日橙红</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button id="daily-challenge-btn" class="action-btn secondary">
+                        <span class="btn-icon">📅</span>
+                        <span class="btn-text">每日挑战</span>
+                    </button>
+                    <button id="leaderboard-btn" class="action-btn secondary">
+                        <span class="btn-icon">🏆</span>
+                        <span class="btn-text">排行榜</span>
+                    </button>
+                    <button id="import-btn" class="action-btn secondary">
+                        <span class="btn-icon">📁</span>
+                        <span class="btn-text">导入词库</span>
+                    </button>
+                </div>
+
+                <input type="file" id="file-import" accept=".txt,.json" style="display: none;">
+
+                <div class="game-instructions">
+                    <p>🎮 按下对应字母键消除下落的内容</p>
+                    <p>⚡ 连续击中获得连击倍率加成</p>
+                    <p>💥 10/25/50/100连击触发特殊状态</p>
+                    <p>👹 击败Boss获得丰厚奖励</p>
+                    <p>💔 内容落到底部将扣除生命</p>
+                </div>
+
+                <button id="start-btn" class="neon-btn large">开始游戏</button>
+                <p class="hint">按空格键也可开始</p>
+            </div>
+        </div>
+
+        <div id="game-over-panel" class="overlay hidden">
+            <div class="panel-content">
+                <h2 class="game-over-title">游戏结束</h2>
+                <div id="achievement-badges" class="achievement-badges"></div>
+                <div class="final-stats">
+                    <div class="stat-row">
+                        <span class="stat-label">最终得分</span>
+                        <span class="stat-value" id="final-score">0</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">最高连击</span>
+                        <span class="stat-value" id="final-combo">0</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">打字速度</span>
+                        <span class="stat-value" id="final-wpm">0 WPM</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">准确率</span>
+                        <span class="stat-value" id="final-accuracy">0%</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">游戏模式</span>
+                        <span class="stat-value" id="final-mode">字母模式</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">游戏时长</span>
+                        <span class="stat-value" id="final-time">0秒</span>
+                    </div>
+                    <div class="stat-row rank-row">
+                        <span class="stat-label">排名</span>
+                        <span class="stat-value" id="final-rank">-</span>
+                    </div>
+                </div>
+                <div class="end-buttons">
+                    <button id="restart-btn" class="neon-btn">再来一局</button>
+                    <button id="menu-btn" class="neon-btn secondary">返回菜单</button>
+                </div>
+                <p class="hint">按空格键重新开始</p>
+            </div>
+        </div>
+
+        <div id="leaderboard-panel" class="overlay hidden">
+            <div class="panel-content">
+                <h2 class="panel-title">🏆 排行榜</h2>
+                <div class="leaderboard-tabs">
+                    <button class="tab-btn active" data-mode="letter">字母模式</button>
+                    <button class="tab-btn" data-mode="word">单词模式</button>
+                    <button class="tab-btn" data-mode="sentence">短句模式</button>
+                    <button class="tab-btn" data-mode="code">代码模式</button>
+                </div>
+                <div id="leaderboard-list" class="leaderboard-list">
+                    <div class="empty-state">暂无记录，快去创造记录吧！</div>
+                </div>
+                <button id="close-leaderboard" class="neon-btn secondary small">关闭</button>
+            </div>
+        </div>
+
+        <div id="keyboard-hint">
+            <span class="hint-label">当前输入:</span>
+            <span id="active-letters"></span>
+        </div>
+    </div>
+
+    <script src="data/words-en.js"></script>
+    <script src="data/words-code.js"></script>
+    <script src="data/pinyin-map.js"></script>
+    <script src="data/romaji-map.js"></script>
+    <script src="js/game.js"></script>
+</body>
+</html>
